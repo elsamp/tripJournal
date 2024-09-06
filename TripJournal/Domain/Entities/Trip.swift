@@ -16,6 +16,7 @@ class Trip: ObservableObject, Identifiable, Hashable, Equatable {
     @Published var startDate: Date
     @Published var endDate: Date
     @Published var coverPhotoPath: String?
+    @Published var coverImageData: Data?
     @Published var creationDate: Date
     @Published var lastUpdateDate: Date
     @Published var lastSaveDate: Date?
@@ -51,6 +52,8 @@ class Trip: ObservableObject, Identifiable, Hashable, Equatable {
         self.creationDate = creationDate
         self.lastUpdateDate = lastUpdateDate
         self.lastSaveDate = lastSaveDate
+        
+        self.coverImageData = ImageHelperService.shared.imageDataFor(trip: self)
     }
     
     static func == (lhs: Trip, rhs: Trip) -> Bool {

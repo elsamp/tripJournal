@@ -81,9 +81,6 @@ struct TripView: View {
     
     var saveChangesButton: some View {
         Button {
-            //save Image to Documents Folder
-           
-            //persist data
             viewModel.save(trip: viewModel.trip)
             withAnimation{
                 isEditing = false

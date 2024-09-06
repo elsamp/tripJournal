@@ -99,6 +99,13 @@ struct TripSummaryView: View {
             
             if let image = coverImageFor(trip: trip) {
                 image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 300)
+                    .clipped()
+                    
+                    
             } else {
                 Rectangle()
                     .fill(.gray)
@@ -116,11 +123,12 @@ struct TripSummaryView: View {
     }
     
     func coverImageFor(trip: Trip) -> Image? {
+
+        if let data = trip.coverImageData, let uiImage = UIImage(data: data) {
+            return Image(uiImage: uiImage)
+        }
         
-        // load cover image
-        
-        //else
-        return Image(systemName: "photo")
+        return nil
     }
     
     func dateRange(for trip: Trip) -> String {

@@ -33,7 +33,9 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
     weak var tripUpdateDelegate: TripUpdateDelegateProtocol?
     
     var didUpdateCoverPhoto = false
-    public private(set)var coverImageData: Data?
+    var coverImageData: Data? {
+        trip.coverImageData
+    }
     
     var trip: Trip
     var days: [Day] {
@@ -52,13 +54,13 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
         self.saveTripUseCase = saveTripUseCase
         self.deleteTripUseCase = deleteTripUseCase
         self.tripUpdateDelegate = tripUpdateDelegate
-        self.coverImageData = ImageHelperService.shared.imageDataFor(trip: trip)
     }
     
     func save(trip: Trip) {
         if didUpdateCoverPhoto {
-            if let data = coverImageData {
+            if let data = trip.coverImageData {
                 saveTripUseCase.saveCoverImage(data: data, for: trip)
+                didUpdateCoverPhoto = false
             }
         }
         
@@ -68,7 +70,7 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
     }
     
     func updateCoverImage(data: Data) {
-        coverImageData = data
+        trip.coverImageData = data
         didUpdateCoverPhoto = true
     }
     
