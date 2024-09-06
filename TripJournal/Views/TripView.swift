@@ -21,17 +21,8 @@ struct TripView: View {
     var body: some View {
         ScrollView{
             LazyVStack {
-                if isEditing {
-                    TripSummaryEditView(trip: viewModel.trip)
-                    CoverPhotoPickerView(viewModel: viewModel)
-                } else {
-                    TripSummaryView(trip: viewModel.trip)
-                    if let data = viewModel.coverImageData, let uiImage = UIImage(data: data) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                    }
-                }
+                TripDetailsView(trip: viewModel.trip, isEditing: $isEditing)
+                CoverPhotoPickerView(viewModel: viewModel, isEditing: $isEditing)
                 DaySequenceView(days: viewModel.days)
                     .allowsHitTesting(!isEditing)
             }
@@ -95,10 +86,13 @@ struct TripView: View {
             //If trip was never saved, cancel returns user to timeline view
             if viewModel.trip.lastSaveDate == nil {
                 router.path.removeLast()
-            }
-            
-            withAnimation{
-                isEditing = false
+            } else {
+                
+                viewModel.cancelEdit()
+                
+                withAnimation{
+                    isEditing = false
+                }
             }
         } label: {
             Text("Cancel")
@@ -139,27 +133,79 @@ struct TripView: View {
 }
 
 
-struct TripSummaryEditView: View {
-    
+struct TripDetailsView: View {
+
     @ObservedObject var trip: Trip
+    @Binding var isEditing: Bool
     
     var body: some View {
         VStack {
-            TextField("My Trip", text: $trip.title)
-                .font(.title3)
-                .foregroundStyle(.black)
-                .padding(8)
-                .background(.textFieldBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-            HStack {
-                DatePicker("Start Date", selection: $trip.startDate, displayedComponents: .date)
-                    .labelsHidden()
-                Text("to")
-                DatePicker("End Date", selection: $trip.endDate, displayedComponents: .date)
-                    .labelsHidden()
+            //Trip Title
+            if isEditing {
+                TextField("My Trip", text: $trip.title)
+                    .font(.title3)
+                    .foregroundStyle(.black)
+                    .padding(8)
+                    .background(.textFieldBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                
+            } else {
+                Text(trip.title)
+                    .font(.title3)
+                    .foregroundStyle(.black)
+            }
+            
+            //Trip Start-End dates
+            if isEditing {
+                HStack {
+                    DatePicker("Start Date", selection: $trip.startDate, displayedComponents: .date)
+                        .labelsHidden()
+                    Text("to")
+                    DatePicker("End Date", selection: $trip.endDate, displayedComponents: .date)
+                        .labelsHidden()
+                }
+            } else {
+                Text(dateRange(for: trip))
+                    .font(.subheadline)
+                    .foregroundStyle(.black)
             }
         }
         .padding()
+    }
+    
+    func dateRange(for trip: Trip) -> String {
+        
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let startDay = calendar.component(.day, from: trip.startDate)
+        let startMonth = calendar.component(.month, from: trip.startDate)
+        
+        var dateComponents = DateComponents()
+        dateComponents.month = startMonth
+        dateComponents.day = startDay
+        
+        var dateRange = ""
+        
+        if let date = calendar.date(from: dateComponents) {
+            dateRange = formatter.string(from: date)
+        }
+        
+
+        let endDay = calendar.component(.day, from: trip.endDate)
+        let endMonth = calendar.component(.month, from: trip.endDate)
+        
+        dateComponents.month = endMonth
+        dateComponents.day = endDay
+        
+        if let date = calendar.date(from: dateComponents) {
+            dateRange.append(" - \(formatter.string(from: date))")
+        }
+        
+
+        print(dateRange)
+        return dateRange
     }
 }
 
@@ -170,11 +216,13 @@ struct CoverPhotoPickerView: View {
     @State private var selectedItem: PhotosPickerItem?
     @ObservedObject var trip: Trip
     var viewModel: TripViewModelProtocol
+    @Binding var isEditing: Bool
     
-    init(selectedItem: PhotosPickerItem? = nil, viewModel: TripViewModelProtocol) {
+    init(selectedItem: PhotosPickerItem? = nil, viewModel: TripViewModelProtocol, isEditing: Binding<Bool>) {
         self.selectedItem = selectedItem
         self.trip = viewModel.trip
         self.viewModel = viewModel
+        _isEditing = isEditing
     }
     
     var body: some View {
@@ -186,16 +234,18 @@ struct CoverPhotoPickerView: View {
                     .scaledToFit()
             }
             
-            PhotosPicker(selection: $selectedItem, matching: .images) {
-                Text("Select Cover Photo")
-                    .padding()
-            }
-            .onChange(of: selectedItem) { oldValue, newValue in
-                Task {
-                    if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
-                        
-                        if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
-                            viewModel.updateCoverImage(data: pngData)
+            if isEditing {
+                PhotosPicker(selection: $selectedItem, matching: .images) {
+                    Text("Select Cover Photo")
+                        .padding()
+                }
+                .onChange(of: selectedItem) { oldValue, newValue in
+                    Task {
+                        if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                            
+                            if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                                viewModel.updateCoverImage(data: pngData)
+                            }
                         }
                     }
                 }

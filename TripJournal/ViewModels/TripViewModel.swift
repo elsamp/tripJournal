@@ -13,6 +13,7 @@ protocol TripViewModelProtocol {
     var coverImageData: Data? { get }
     
     func save(trip: Trip)
+    func cancelEdit() 
     func delete(trip: Trip)
     func newDay() -> Day
     func updateCoverImage(data: Data)
@@ -72,6 +73,13 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
     func updateCoverImage(data: Data) {
         trip.coverImageData = data
         didUpdateCoverPhoto = true
+    }
+    
+    func cancelEdit() {
+        if didUpdateCoverPhoto {
+            trip.resetCoverPhotoData()
+            didUpdateCoverPhoto = false
+        }
     }
     
     func delete(trip: Trip) {

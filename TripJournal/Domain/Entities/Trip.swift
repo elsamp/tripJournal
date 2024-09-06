@@ -53,6 +53,10 @@ class Trip: ObservableObject, Identifiable, Hashable, Equatable {
         self.lastUpdateDate = lastUpdateDate
         self.lastSaveDate = lastSaveDate
         
+        resetCoverPhotoData()
+    }
+    
+    func resetCoverPhotoData() {
         self.coverImageData = ImageHelperService.shared.imageDataFor(trip: self)
     }
     
