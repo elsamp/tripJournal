@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol DayViewModelProtocol {
+protocol DayViewModelProtocol: PhotoDataUpdateDelegatProtocol {
     var day: Day { get }
     var contentSequence: ContentSequence { get }
     
@@ -16,15 +16,16 @@ protocol DayViewModelProtocol {
     func delete(day: Day)
 }
 
-class DayViewModel: DayViewModelProtocol {
-    
+class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol {
+
     private let contentSequenceProvider: ViewContentSequenceUseCaseProtocol
     private var saveDayUseCase: SaveDayUseCaseProtocol
     private var deleteDayUseCase: DeleteDayUseCaseProtocol
     
-    @Published var day: Day
-    
+    var day: Day
     let contentSequence: ContentSequence
+    
+    private var didUpdateCoverPhoto = false
     
     init(contentSequenceProvider: ViewContentSequenceUseCaseProtocol = ViewContentSequenceExampleUseCase(), 
          day: Day,
@@ -38,7 +39,24 @@ class DayViewModel: DayViewModelProtocol {
     }
     
     func save(day: Day) {
+        
+        if didUpdateCoverPhoto {
+            if let data = day.coverImageData {
+                saveDayUseCase.saveCoverImage(data: data, for: day)
+                didUpdateCoverPhoto = false
+            }
+        }
+        
         saveDayUseCase.save(day: day, for: day.trip)
+    }
+    
+    func updateCoverImage(data: Data) {
+        day.coverImageData = data
+        didUpdateCoverPhoto = true
+    }
+    
+    func imageDataUpdatedTo(_ data: Data) {
+        updateCoverImage(data: data)
     }
     
     func delete(day: Day) {

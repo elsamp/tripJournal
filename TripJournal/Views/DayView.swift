@@ -12,20 +12,19 @@ struct DayView: View {
     var viewModel: DayViewModelProtocol
     @State private var isEditing: Bool
     @StateObject var router = Router.shared
+    @ObservedObject var day: Day
     
     init(viewModel: DayViewModelProtocol) {
         self.viewModel = viewModel
         _isEditing = State(initialValue: viewModel.day.hasUnsavedChanges)
+        self.day = viewModel.day
     }
     
     var body: some View {
         ScrollView{
             LazyVStack(alignment: .leading) {
-                if isEditing {
-                    DayDetailsEditView(day: viewModel.day)
-                } else {
-                    DayDetailsView(day: viewModel.day)
-                }
+                DayDetailsView(day: viewModel.day, isEditing: $isEditing)
+                CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $day.coverImageData, isEditing: $isEditing)
                 ContentSequenceView(contentSequence: viewModel.contentSequence)
             }
         }
@@ -118,6 +117,7 @@ struct DayView: View {
 struct DayDetailsView: View {
     
     @ObservedObject var day: Day
+    @Binding var isEditing: Bool
     
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -127,57 +127,26 @@ struct DayDetailsView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(day.title)
-                    Text(dateFormatter.string(from: day.date))
-                }
-                Spacer()
-            }
             
-            if let imagePath = day.coverPhotoPath {
-                Image(imagePath)
-            } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(30)
-            }
-        }
-    }
-}
-
-struct DayDetailsEditView: View {
-    
-    @ObservedObject var day: Day
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            VStack {
+            if isEditing {
                 TextField("Day:", text: $day.title)
                     .font(.title3)
                     .foregroundStyle(.black)
                     .padding(8)
                     .background(.textFieldBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                HStack {
-                    DatePicker("Date", selection: $day.date, displayedComponents: .date)
-                        .labelsHidden()
-                }
-            }
-            .padding()
-            
-            if let imagePath = day.coverPhotoPath {
-                Image(imagePath)
+
+                DatePicker("Date", selection: $day.date, displayedComponents: .date)
+                    .labelsHidden()
+                
             } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(30)
+                Text(day.title)
+                Text(dateFormatter.string(from: day.date))
             }
         }
     }
 }
+
 
 struct ContentSequenceView: View {
     

@@ -12,17 +12,19 @@ struct TripView: View {
     let viewModel: TripViewModelProtocol
     @State private var isEditing: Bool
     @StateObject var router = Router.shared
+    @ObservedObject var trip: Trip
     
     init(viewModel: TripViewModelProtocol) {
         self.viewModel = viewModel
         _isEditing = State(initialValue: viewModel.trip.hasUnsavedChanges)
+        self.trip = viewModel.trip
     }
     
     var body: some View {
         ScrollView{
             LazyVStack {
                 TripDetailsView(trip: viewModel.trip, isEditing: $isEditing)
-                CoverPhotoPickerView(viewModel: viewModel, isEditing: $isEditing)
+                CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $trip.coverImageData, isEditing: $isEditing)
                 DaySequenceView(days: viewModel.days)
                     .allowsHitTesting(!isEditing)
             }
@@ -209,58 +211,7 @@ struct TripDetailsView: View {
     }
 }
 
-import PhotosUI
 
-struct CoverPhotoPickerView: View {
-    
-    @State private var selectedItem: PhotosPickerItem?
-    @ObservedObject var trip: Trip
-    var viewModel: TripViewModelProtocol
-    @Binding var isEditing: Bool
-    
-    init(selectedItem: PhotosPickerItem? = nil, viewModel: TripViewModelProtocol, isEditing: Binding<Bool>) {
-        self.selectedItem = selectedItem
-        self.trip = viewModel.trip
-        self.viewModel = viewModel
-        _isEditing = isEditing
-    }
-    
-    var body: some View {
-        
-        VStack {
-            if let imageData = viewModel.trip.coverImageData {
-                coverImage(data: imageData)?
-                    .resizable()
-                    .scaledToFit()
-            }
-            
-            if isEditing {
-                PhotosPicker(selection: $selectedItem, matching: .images) {
-                    Text("Select Cover Photo")
-                        .padding()
-                }
-                .onChange(of: selectedItem) { oldValue, newValue in
-                    Task {
-                        if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
-                            
-                            if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
-                                viewModel.updateCoverImage(data: pngData)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    func coverImage(data: Data) -> Image? {
-        if let uiImage = UIImage(data: data) {
-            return Image(uiImage: uiImage)
-        }
-        
-        return nil
-    }
-}
 
 struct DaySequenceView: View {
     
@@ -297,8 +248,11 @@ struct DaySequenceItemView: View {
             }
             .padding(.vertical)
             Spacer()
-            if let photoPath = day.coverPhotoPath {
-                Image(photoPath)
+            if let data = day.coverImageData, let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .containerRelativeFrame(.horizontal, count:3, spacing: 20)
             } else {
                 Image(systemName: "photo")
                     .resizable()

@@ -45,6 +45,8 @@
 		B04382E72C87A40800AC21E4 /* DayObjectModel+day.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */; };
 		B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */; };
 		B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */; };
+		B081EC2C2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */; };
+		B081EC2E2C8B87E100F26607 /* CoverPhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayObjectModel+day.swift"; sourceTree = "<group>"; };
 		B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDayUseCase.swift; sourceTree = "<group>"; };
 		B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTripUseCase.swift; sourceTree = "<group>"; };
+		B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDataProviderProtocol.swift; sourceTree = "<group>"; };
+		B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverPhotoPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +207,7 @@
 				B043827C2C7E5C7E00AC21E4 /* TripView.swift */,
 				B04382882C7ED19800AC21E4 /* DayView.swift */,
 				B042C3BC2C88D67000674B5D /* ImageHelperService.swift */,
+				B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,6 +215,7 @@
 		B043827E2C7E5EC400AC21E4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				B081EC2A2C8B81CA00F26607 /* Protocols */,
 				B04382792C7E3D5500AC21E4 /* TripSequenceViewModel.swift */,
 				B043827F2C7E5EE400AC21E4 /* TripViewModel.swift */,
 				B043828A2C7F656700AC21E4 /* DayViewModel.swift */,
@@ -281,6 +287,14 @@
 				B04382C42C8631C100AC21E4 /* TripSequence_Tests.swift */,
 			);
 			path = TripJournalUnitTests;
+			sourceTree = "<group>";
+		};
+		B081EC2A2C8B81CA00F26607 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -390,6 +404,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B04382A82C82646A00AC21E4 /* Router.swift in Sources */,
+				B081EC2E2C8B87E100F26607 /* CoverPhotoPickerView.swift in Sources */,
 				B04382872C7EC70A00AC21E4 /* PreviewHelper.swift in Sources */,
 				B04382782C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift in Sources */,
 				B04382E72C87A40800AC21E4 /* DayObjectModel+day.swift in Sources */,
@@ -422,6 +437,7 @@
 				B04382E32C879B1900AC21E4 /* DaySequence.swift in Sources */,
 				B043826E2C7E222E00AC21E4 /* Content.swift in Sources */,
 				B04382B32C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift in Sources */,
+				B081EC2C2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

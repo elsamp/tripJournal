@@ -7,11 +7,16 @@
 
 import Foundation
 
-struct PreviewHelper {
-    
+struct PreviewHelper: PhotoDataUpdateDelegatProtocol {
+
     static let shared = PreviewHelper()
     
     private init() {}
+    
+    //PhotoDataUpdateDelegatProtocol
+    func imageDataUpdatedTo(_ data: Data) {
+        //do nothing
+    }
     
     func mockTrip() -> Trip {
         

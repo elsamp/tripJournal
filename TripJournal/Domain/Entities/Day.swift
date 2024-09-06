@@ -15,6 +15,7 @@ class Day: ObservableObject, Identifiable, Hashable, Equatable {
     @Published var date: Date
     @Published var title: String
     @Published var coverPhotoPath: String?
+    @Published var coverImageData: Data?
     @Published var creationDate: Date
     @Published var lastUpdateDate: Date
     @Published var lastSaveDate: Date?
@@ -37,6 +38,8 @@ class Day: ObservableObject, Identifiable, Hashable, Equatable {
         self.creationDate = creationDate
         self.lastUpdateDate = lastUpdateDate
         self.lastSaveDate = lastSaveDate
+        
+        self.coverImageData = ImageHelperService.shared.imageDataFor(day: self)
     }
     
     static func == (lhs: Day, rhs: Day) -> Bool {

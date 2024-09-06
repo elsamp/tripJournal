@@ -9,6 +9,7 @@ import Foundation
 
 protocol SaveDayUseCaseProtocol {
     func save(day: Day, for trip: Trip)
+    func saveCoverImage(data: Data, for day: Day)
 }
 
 struct SaveDayUseCase: SaveDayUseCaseProtocol {
@@ -22,5 +23,16 @@ struct SaveDayUseCase: SaveDayUseCaseProtocol {
     func save(day: Day, for trip: Trip) {
         day.lastSaveDate = Date.now
         dataService.save(day: day, for: trip)
+    }
+    
+    func saveCoverImage(data: Data, for day: Day) {
+        
+        print("UseCase saving photo")
+        let imageHelper = ImageHelperService.shared
+
+        print(imageHelper.imageURL(for: day))
+        day.coverPhotoPath = imageHelper.imageURL(for: day).relativePath
+        imageHelper.saveImage(data: data, for: day)
+        
     }
 }

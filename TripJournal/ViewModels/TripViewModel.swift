@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol TripViewModelProtocol {
+protocol TripViewModelProtocol: PhotoDataUpdateDelegatProtocol {
     var trip: Trip { get }
     var days: [Day] { get }
     var coverImageData: Data? { get }
@@ -17,6 +17,7 @@ protocol TripViewModelProtocol {
     func delete(trip: Trip)
     func newDay() -> Day
     func updateCoverImage(data: Data)
+    func imageDataUpdatedTo(_ data: Data)
 }
 
 protocol DayUpdateDelegateProtocol: AnyObject {
@@ -24,8 +25,8 @@ protocol DayUpdateDelegateProtocol: AnyObject {
     func handleDeletion(of day: Day)
 }
 
-class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
-    
+class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol, PhotoDataUpdateDelegatProtocol {
+
     private var daySequenceProvider: ViewDaySequenceUseCaseProtocol
     private var daySequence: DaySequence
     private var saveTripUseCase: SaveTripUseCaseProtocol
@@ -67,8 +68,7 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
                 didUpdateCoverPhoto = false
             }
         }
-        
-        trip.lastUpdateDate = Date.now
+
         saveTripUseCase.save(trip: trip)
         tripUpdateDelegate?.handleChanges(for: trip)
     }
@@ -76,6 +76,10 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
     func updateCoverImage(data: Data) {
         trip.coverImageData = data
         didUpdateCoverPhoto = true
+    }
+    
+    func imageDataUpdatedTo(_ data: Data) {
+        updateCoverImage(data: data)
     }
     
     func cancelEdit() {
