@@ -168,24 +168,23 @@ import PhotosUI
 struct CoverPhotoPickerView: View {
     
     @State private var selectedItem: PhotosPickerItem?
-    @State private var coverImage: Image?
+    @ObservedObject var trip: Trip
     var viewModel: TripViewModelProtocol
     
-    init(viewModel: TripViewModelProtocol) {
-        self.selectedItem = nil
+    init(selectedItem: PhotosPickerItem? = nil, viewModel: TripViewModelProtocol) {
+        self.selectedItem = selectedItem
+        self.trip = viewModel.trip
         self.viewModel = viewModel
-        
-        if let data = viewModel.coverImageData {
-            self.coverImage = coverImage(data:data)
-        }
     }
     
     var body: some View {
         
         VStack {
-            coverImage?
-                .resizable()
-                .scaledToFit()
+            if let imageData = viewModel.trip.coverImageData {
+                coverImage(data: imageData)?
+                    .resizable()
+                    .scaledToFit()
+            }
             
             PhotosPicker(selection: $selectedItem, matching: .images) {
                 Text("Select Cover Photo")
@@ -197,7 +196,6 @@ struct CoverPhotoPickerView: View {
                         
                         if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
                             viewModel.updateCoverImage(data: pngData)
-                            coverImage = Image(uiImage: uiImage)
                         }
                     }
                 }
