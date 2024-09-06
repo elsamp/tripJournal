@@ -10,6 +10,7 @@ import RealmSwift
 
 protocol DataServiceProtocol {
     //Trips
+    func fetchTrip(for id: String) -> Trip?
     func fetchTrips() -> Set<Trip>
     func save(trip: Trip)
     func delete(trip: Trip)
@@ -24,6 +25,11 @@ protocol DataServiceProtocol {
 class RealmDataService: DataServiceProtocol {
     
     //MARK: Trips (CRUD)
+    
+    func fetchTrip(for id: String) -> Trip? {
+        let model = tripObjectModelFor(tripId: id)
+        return model?.trip()
+    }
     
     func fetchTrips() -> Set<Trip> {
         let realm = try! Realm()

@@ -44,6 +44,7 @@
 		B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */; };
 		B04382E72C87A40800AC21E4 /* DayObjectModel+day.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */; };
 		B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */; };
+		B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTripUseCase.swift; sourceTree = "<group>"; };
 		B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayObjectModel+day.swift"; sourceTree = "<group>"; };
 		B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDayUseCase.swift; sourceTree = "<group>"; };
+		B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTripUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +188,7 @@
 				B04382812C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift */,
 				B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */,
 				B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */,
+				B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */,
 				B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */,
 				B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */,
 				B042C3B82C88A6A200674B5D /* DeleteDayUseCase.swift */,
@@ -415,6 +418,7 @@
 				B043829B2C7F9A2D00AC21E4 /* DayObjectModel.swift in Sources */,
 				B04382702C7E23F000AC21E4 /* Day.swift in Sources */,
 				B042C3BD2C88D67000674B5D /* ImageHelperService.swift in Sources */,
+				B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */,
 				B04382E32C879B1900AC21E4 /* DaySequence.swift in Sources */,
 				B043826E2C7E222E00AC21E4 /* Content.swift in Sources */,
 				B04382B32C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift in Sources */,

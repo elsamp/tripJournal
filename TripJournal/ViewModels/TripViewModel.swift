@@ -29,6 +29,7 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
     private var daySequenceProvider: ViewDaySequenceUseCaseProtocol
     private var daySequence: DaySequence
     private var saveTripUseCase: SaveTripUseCaseProtocol
+    private var fetchTripUseCase: FetchTripUseCaseProtocol
     private var deleteTripUseCase: DeleteTripUseCaseProtocol
     
     weak var tripUpdateDelegate: TripUpdateDelegateProtocol?
@@ -47,6 +48,7 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
          trip:Trip,
          saveTripUseCase: SaveTripUseCaseProtocol = SaveTripUseCase(),
          deleteTripUseCase: DeleteTripUseCaseProtocol = DeleteTripUseCase(),
+         fetchTripUseCase: FetchTripUseCaseProtocol = FetchTripUseCase(),
          tripUpdateDelegate: TripUpdateDelegateProtocol?) {
         
         self.daySequenceProvider = daySequenceProvider
@@ -54,6 +56,7 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
         self.daySequence = daySequenceProvider.fetchDaysFor(trip: trip)
         self.saveTripUseCase = saveTripUseCase
         self.deleteTripUseCase = deleteTripUseCase
+        self.fetchTripUseCase = fetchTripUseCase
         self.tripUpdateDelegate = tripUpdateDelegate
     }
     
@@ -76,8 +79,8 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol {
     }
     
     func cancelEdit() {
-        if didUpdateCoverPhoto {
-            trip.resetCoverPhotoData()
+        if let lastSavedTripState = fetchTripUseCase.fetchTrip(for: trip.id) {
+            trip = lastSavedTripState
             didUpdateCoverPhoto = false
         }
     }
