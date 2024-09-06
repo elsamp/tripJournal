@@ -7,22 +7,106 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B042C3B92C88A6A200674B5D /* DeleteDayUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B042C3B82C88A6A200674B5D /* DeleteDayUseCase.swift */; };
+		B042C3BD2C88D67000674B5D /* ImageHelperService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B042C3BC2C88D67000674B5D /* ImageHelperService.swift */; };
 		B043825F2C7E217000AC21E4 /* TripJournalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043825E2C7E217000AC21E4 /* TripJournalApp.swift */; };
-		B04382612C7E217000AC21E4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382602C7E217000AC21E4 /* ContentView.swift */; };
+		B04382612C7E217000AC21E4 /* TripTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382602C7E217000AC21E4 /* TripTimelineView.swift */; };
 		B04382632C7E217500AC21E4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B04382622C7E217500AC21E4 /* Assets.xcassets */; };
 		B04382662C7E217500AC21E4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B04382652C7E217500AC21E4 /* Preview Assets.xcassets */; };
+		B043826E2C7E222E00AC21E4 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043826D2C7E222E00AC21E4 /* Content.swift */; };
+		B04382702C7E23F000AC21E4 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043826F2C7E23F000AC21E4 /* Day.swift */; };
+		B04382742C7E268600AC21E4 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382732C7E268600AC21E4 /* Trip.swift */; };
+		B04382782C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382772C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift */; };
+		B043827A2C7E3D5500AC21E4 /* TripSequenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382792C7E3D5500AC21E4 /* TripSequenceViewModel.swift */; };
+		B043827D2C7E5C7E00AC21E4 /* TripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043827C2C7E5C7E00AC21E4 /* TripView.swift */; };
+		B04382802C7E5EE400AC21E4 /* TripViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043827F2C7E5EE400AC21E4 /* TripViewModel.swift */; };
+		B04382822C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382812C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift */; };
+		B04382852C7EC1F500AC21E4 /* Date+SecondsForDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382842C7EC1F500AC21E4 /* Date+SecondsForDays.swift */; };
+		B04382872C7EC70A00AC21E4 /* PreviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382862C7EC70A00AC21E4 /* PreviewHelper.swift */; };
+		B04382892C7ED19800AC21E4 /* DayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382882C7ED19800AC21E4 /* DayView.swift */; };
+		B043828B2C7F656700AC21E4 /* DayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043828A2C7F656700AC21E4 /* DayViewModel.swift */; };
+		B043828D2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */; };
+		B043828F2C7F703E00AC21E4 /* SaveTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */; };
+		B04382942C7F963F00AC21E4 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B04382932C7F963F00AC21E4 /* RealmSwift */; };
+		B04382972C7F970900AC21E4 /* TripObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382962C7F970900AC21E4 /* TripObjectModel.swift */; };
+		B043829B2C7F9A2D00AC21E4 /* DayObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043829A2C7F9A2D00AC21E4 /* DayObjectModel.swift */; };
+		B043829F2C7F9C8800AC21E4 /* ContentObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043829E2C7F9C8800AC21E4 /* ContentObjectModel.swift */; };
+		B04382A12C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382A02C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift */; };
+		B04382A32C7FAC6600AC21E4 /* RealmDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382A22C7FAC6600AC21E4 /* RealmDataService.swift */; };
+		B04382A82C82646A00AC21E4 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382A72C82646A00AC21E4 /* Router.swift */; };
+		B04382B02C8502E200AC21E4 /* TripSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382AF2C8502E200AC21E4 /* TripSequence.swift */; };
+		B04382B32C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382B22C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift */; };
+		B04382B62C85129000AC21E4 /* TripObjectModel+trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382B52C85128F00AC21E4 /* TripObjectModel+trip.swift */; };
+		B04382BE2C86318A00AC21E4 /* TripJournalUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382BD2C86318A00AC21E4 /* TripJournalUnitTests.swift */; };
+		B04382C52C8631C100AC21E4 /* TripSequence_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382C42C8631C100AC21E4 /* TripSequence_Tests.swift */; };
+		B04382E12C8753AF00AC21E4 /* Trip+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E02C8753AE00AC21E4 /* Trip+Comparable.swift */; };
+		B04382E32C879B1900AC21E4 /* DaySequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E22C879B1800AC21E4 /* DaySequence.swift */; };
+		B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */; };
+		B04382E72C87A40800AC21E4 /* DayObjectModel+day.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */; };
+		B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B04382BF2C86318A00AC21E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B04382532C7E216E00AC21E4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B043825A2C7E216E00AC21E4;
+			remoteInfo = TripJournal;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		B042C3B82C88A6A200674B5D /* DeleteDayUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDayUseCase.swift; sourceTree = "<group>"; };
+		B042C3BC2C88D67000674B5D /* ImageHelperService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelperService.swift; sourceTree = "<group>"; };
 		B043825B2C7E216F00AC21E4 /* TripJournal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripJournal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B043825E2C7E217000AC21E4 /* TripJournalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripJournalApp.swift; sourceTree = "<group>"; };
-		B04382602C7E217000AC21E4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B04382602C7E217000AC21E4 /* TripTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripTimelineView.swift; sourceTree = "<group>"; };
 		B04382622C7E217500AC21E4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B04382652C7E217500AC21E4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B043826D2C7E222E00AC21E4 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
+		B043826F2C7E23F000AC21E4 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		B04382732C7E268600AC21E4 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		B04382772C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTripTimelineUseCase.swift; sourceTree = "<group>"; };
+		B04382792C7E3D5500AC21E4 /* TripSequenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripSequenceViewModel.swift; sourceTree = "<group>"; };
+		B043827C2C7E5C7E00AC21E4 /* TripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripView.swift; sourceTree = "<group>"; };
+		B043827F2C7E5EE400AC21E4 /* TripViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripViewModel.swift; sourceTree = "<group>"; };
+		B04382812C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDaySequenceUseCase.swift; sourceTree = "<group>"; };
+		B04382842C7EC1F500AC21E4 /* Date+SecondsForDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+SecondsForDays.swift"; sourceTree = "<group>"; };
+		B04382862C7EC70A00AC21E4 /* PreviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHelper.swift; sourceTree = "<group>"; };
+		B04382882C7ED19800AC21E4 /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
+		B043828A2C7F656700AC21E4 /* DayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayViewModel.swift; sourceTree = "<group>"; };
+		B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewContentSequenceUseCase.swift; sourceTree = "<group>"; };
+		B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTripUseCase.swift; sourceTree = "<group>"; };
+		B04382962C7F970900AC21E4 /* TripObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripObjectModel.swift; sourceTree = "<group>"; };
+		B043829A2C7F9A2D00AC21E4 /* DayObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayObjectModel.swift; sourceTree = "<group>"; };
+		B043829E2C7F9C8800AC21E4 /* ContentObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentObjectModel.swift; sourceTree = "<group>"; };
+		B04382A02C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSequenceObjectModel.swift; sourceTree = "<group>"; };
+		B04382A22C7FAC6600AC21E4 /* RealmDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataService.swift; sourceTree = "<group>"; };
+		B04382A72C82646A00AC21E4 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		B04382AF2C8502E200AC21E4 /* TripSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripSequence.swift; sourceTree = "<group>"; };
+		B04382B22C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTripTimelineExampleUseCase.swift; sourceTree = "<group>"; };
+		B04382B52C85128F00AC21E4 /* TripObjectModel+trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TripObjectModel+trip.swift"; sourceTree = "<group>"; };
+		B04382BB2C86318900AC21E4 /* TripJournalUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripJournalUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B04382BD2C86318A00AC21E4 /* TripJournalUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripJournalUnitTests.swift; sourceTree = "<group>"; };
+		B04382C42C8631C100AC21E4 /* TripSequence_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripSequence_Tests.swift; sourceTree = "<group>"; };
+		B04382E02C8753AE00AC21E4 /* Trip+Comparable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trip+Comparable.swift"; sourceTree = "<group>"; };
+		B04382E22C879B1800AC21E4 /* DaySequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySequence.swift; sourceTree = "<group>"; };
+		B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTripUseCase.swift; sourceTree = "<group>"; };
+		B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayObjectModel+day.swift"; sourceTree = "<group>"; };
+		B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDayUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B04382582C7E216E00AC21E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B04382942C7F963F00AC21E4 /* RealmSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B04382B82C86318900AC21E4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -36,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				B043825D2C7E217000AC21E4 /* TripJournal */,
+				B04382BC2C86318A00AC21E4 /* TripJournalUnitTests */,
 				B043825C2C7E216F00AC21E4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -44,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				B043825B2C7E216F00AC21E4 /* TripJournal.app */,
+				B04382BB2C86318900AC21E4 /* TripJournalUnitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -51,8 +137,13 @@
 		B043825D2C7E217000AC21E4 /* TripJournal */ = {
 			isa = PBXGroup;
 			children = (
+				B04382832C7EC1BF00AC21E4 /* Extensions */,
+				B043826C2C7E220000AC21E4 /* Models */,
+				B04382A62C82644A00AC21E4 /* Services */,
+				B04382752C7E319600AC21E4 /* Domain */,
+				B043827E2C7E5EC400AC21E4 /* ViewModels */,
+				B043827B2C7E45FE00AC21E4 /* Views */,
 				B043825E2C7E217000AC21E4 /* TripJournalApp.swift */,
-				B04382602C7E217000AC21E4 /* ContentView.swift */,
 				B04382622C7E217500AC21E4 /* Assets.xcassets */,
 				B04382642C7E217500AC21E4 /* Preview Content */,
 			);
@@ -63,8 +154,130 @@
 			isa = PBXGroup;
 			children = (
 				B04382652C7E217500AC21E4 /* Preview Assets.xcassets */,
+				B04382862C7EC70A00AC21E4 /* PreviewHelper.swift */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B043826C2C7E220000AC21E4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B04382B42C85110F00AC21E4 /* DataMapping */,
+				B04382952C7F96E100AC21E4 /* Realm Object Models */,
+				B04382A22C7FAC6600AC21E4 /* RealmDataService.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B04382752C7E319600AC21E4 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B04382AE2C8502B300AC21E4 /* Entities */,
+				B04382762C7E31AE00AC21E4 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B04382762C7E31AE00AC21E4 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B04382B12C850F3B00AC21E4 /* Mocks */,
+				B04382772C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift */,
+				B04382812C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift */,
+				B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */,
+				B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */,
+				B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */,
+				B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */,
+				B042C3B82C88A6A200674B5D /* DeleteDayUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B043827B2C7E45FE00AC21E4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B04382602C7E217000AC21E4 /* TripTimelineView.swift */,
+				B043827C2C7E5C7E00AC21E4 /* TripView.swift */,
+				B04382882C7ED19800AC21E4 /* DayView.swift */,
+				B042C3BC2C88D67000674B5D /* ImageHelperService.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B043827E2C7E5EC400AC21E4 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B04382792C7E3D5500AC21E4 /* TripSequenceViewModel.swift */,
+				B043827F2C7E5EE400AC21E4 /* TripViewModel.swift */,
+				B043828A2C7F656700AC21E4 /* DayViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		B04382832C7EC1BF00AC21E4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B04382842C7EC1F500AC21E4 /* Date+SecondsForDays.swift */,
+				B04382E02C8753AE00AC21E4 /* Trip+Comparable.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B04382952C7F96E100AC21E4 /* Realm Object Models */ = {
+			isa = PBXGroup;
+			children = (
+				B04382962C7F970900AC21E4 /* TripObjectModel.swift */,
+				B043829A2C7F9A2D00AC21E4 /* DayObjectModel.swift */,
+				B04382A02C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift */,
+				B043829E2C7F9C8800AC21E4 /* ContentObjectModel.swift */,
+			);
+			path = "Realm Object Models";
+			sourceTree = "<group>";
+		};
+		B04382A62C82644A00AC21E4 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B04382A72C82646A00AC21E4 /* Router.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B04382AE2C8502B300AC21E4 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				B04382AF2C8502E200AC21E4 /* TripSequence.swift */,
+				B04382732C7E268600AC21E4 /* Trip.swift */,
+				B04382E22C879B1800AC21E4 /* DaySequence.swift */,
+				B043826F2C7E23F000AC21E4 /* Day.swift */,
+				B043826D2C7E222E00AC21E4 /* Content.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		B04382B12C850F3B00AC21E4 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				B04382B22C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		B04382B42C85110F00AC21E4 /* DataMapping */ = {
+			isa = PBXGroup;
+			children = (
+				B04382B52C85128F00AC21E4 /* TripObjectModel+trip.swift */,
+				B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */,
+			);
+			path = DataMapping;
+			sourceTree = "<group>";
+		};
+		B04382BC2C86318A00AC21E4 /* TripJournalUnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				B04382BD2C86318A00AC21E4 /* TripJournalUnitTests.swift */,
+				B04382C42C8631C100AC21E4 /* TripSequence_Tests.swift */,
+			);
+			path = TripJournalUnitTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,9 +296,30 @@
 			dependencies = (
 			);
 			name = TripJournal;
+			packageProductDependencies = (
+				B04382932C7F963F00AC21E4 /* RealmSwift */,
+			);
 			productName = TripJournal;
 			productReference = B043825B2C7E216F00AC21E4 /* TripJournal.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B04382BA2C86318900AC21E4 /* TripJournalUnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B04382C12C86318A00AC21E4 /* Build configuration list for PBXNativeTarget "TripJournalUnitTests" */;
+			buildPhases = (
+				B04382B72C86318900AC21E4 /* Sources */,
+				B04382B82C86318900AC21E4 /* Frameworks */,
+				B04382B92C86318900AC21E4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B04382C02C86318A00AC21E4 /* PBXTargetDependency */,
+			);
+			name = TripJournalUnitTests;
+			productName = TripJournalUnitTests;
+			productReference = B04382BB2C86318900AC21E4 /* TripJournalUnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -100,6 +334,10 @@
 					B043825A2C7E216E00AC21E4 = {
 						CreatedOnToolsVersion = 15.4;
 					};
+					B04382BA2C86318900AC21E4 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = B043825A2C7E216E00AC21E4;
+					};
 				};
 			};
 			buildConfigurationList = B04382562C7E216E00AC21E4 /* Build configuration list for PBXProject "TripJournal" */;
@@ -111,11 +349,15 @@
 				Base,
 			);
 			mainGroup = B04382522C7E216E00AC21E4;
+			packageReferences = (
+				B04382902C7F963F00AC21E4 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			productRefGroup = B043825C2C7E216F00AC21E4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				B043825A2C7E216E00AC21E4 /* TripJournal */,
+				B04382BA2C86318900AC21E4 /* TripJournalUnitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -130,6 +372,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B04382B92C86318900AC21E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -137,12 +386,59 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B04382612C7E217000AC21E4 /* ContentView.swift in Sources */,
+				B04382A82C82646A00AC21E4 /* Router.swift in Sources */,
+				B04382872C7EC70A00AC21E4 /* PreviewHelper.swift in Sources */,
+				B04382782C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift in Sources */,
+				B04382E72C87A40800AC21E4 /* DayObjectModel+day.swift in Sources */,
+				B042C3B92C88A6A200674B5D /* DeleteDayUseCase.swift in Sources */,
+				B04382802C7E5EE400AC21E4 /* TripViewModel.swift in Sources */,
+				B04382742C7E268600AC21E4 /* Trip.swift in Sources */,
+				B043828F2C7F703E00AC21E4 /* SaveTripUseCase.swift in Sources */,
+				B04382612C7E217000AC21E4 /* TripTimelineView.swift in Sources */,
+				B04382852C7EC1F500AC21E4 /* Date+SecondsForDays.swift in Sources */,
+				B043828D2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift in Sources */,
 				B043825F2C7E217000AC21E4 /* TripJournalApp.swift in Sources */,
+				B04382E12C8753AF00AC21E4 /* Trip+Comparable.swift in Sources */,
+				B04382892C7ED19800AC21E4 /* DayView.swift in Sources */,
+				B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */,
+				B043827A2C7E3D5500AC21E4 /* TripSequenceViewModel.swift in Sources */,
+				B04382B02C8502E200AC21E4 /* TripSequence.swift in Sources */,
+				B04382972C7F970900AC21E4 /* TripObjectModel.swift in Sources */,
+				B043829F2C7F9C8800AC21E4 /* ContentObjectModel.swift in Sources */,
+				B043827D2C7E5C7E00AC21E4 /* TripView.swift in Sources */,
+				B04382B62C85129000AC21E4 /* TripObjectModel+trip.swift in Sources */,
+				B04382A12C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift in Sources */,
+				B043828B2C7F656700AC21E4 /* DayViewModel.swift in Sources */,
+				B04382822C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift in Sources */,
+				B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */,
+				B04382A32C7FAC6600AC21E4 /* RealmDataService.swift in Sources */,
+				B043829B2C7F9A2D00AC21E4 /* DayObjectModel.swift in Sources */,
+				B04382702C7E23F000AC21E4 /* Day.swift in Sources */,
+				B042C3BD2C88D67000674B5D /* ImageHelperService.swift in Sources */,
+				B04382E32C879B1900AC21E4 /* DaySequence.swift in Sources */,
+				B043826E2C7E222E00AC21E4 /* Content.swift in Sources */,
+				B04382B32C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B04382B72C86318900AC21E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B04382BE2C86318A00AC21E4 /* TripJournalUnitTests.swift in Sources */,
+				B04382C52C8631C100AC21E4 /* TripSequence_Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B04382C02C86318A00AC21E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B043825A2C7E216E00AC21E4 /* TripJournal */;
+			targetProxy = B04382BF2C86318A00AC21E4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B04382672C7E217500AC21E4 /* Debug */ = {
@@ -322,6 +618,42 @@
 			};
 			name = Release;
 		};
+		B04382C22C86318A00AC21E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A32G58NZ3G;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ericasampson.TripJournalUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripJournal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TripJournal";
+			};
+			name = Debug;
+		};
+		B04382C32C86318A00AC21E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A32G58NZ3G;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ericasampson.TripJournalUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripJournal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TripJournal";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -343,7 +675,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		B04382C12C86318A00AC21E4 /* Build configuration list for PBXNativeTarget "TripJournalUnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B04382C22C86318A00AC21E4 /* Debug */,
+				B04382C32C86318A00AC21E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B04382902C7F963F00AC21E4 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B04382932C7F963F00AC21E4 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B04382902C7F963F00AC21E4 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B04382532C7E216E00AC21E4 /* Project object */;
 }
