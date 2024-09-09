@@ -14,7 +14,7 @@ class DayObjectModel: Object, ObjectKeyIdentifiable {
     @Persisted var date: Date
     @Persisted var title: String
     @Persisted var coverPhotoPath: String?
-    @Persisted var contentSequence: ContentSequenceObjectModel?
+    @Persisted var contentSequence: List<ContentObjectModel>
     @Persisted var creationDate: Date
     @Persisted var lastUpdateDate: Date
     @Persisted var lastSaveDate: Date

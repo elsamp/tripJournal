@@ -19,15 +19,14 @@ struct TripTimelineView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             ScrollView {
-                LazyVStack {
+                VStack(alignment: .center) {
                     ForEach(viewModel.tripYears, id: \.self) { year in
                         TripYearHeaderView(year: year)
                         TripYearView(trips: viewModel.trips(for: year))
                     }
                 }
             }
-            .navigationTitle("My Trips")
-            .navigationBarTitleDisplayMode(.inline)
+            .frame(maxWidth: .infinity)
             .navigationDestination(for: Trip.self) { trip in
                 TripView(viewModel: TripViewModel(trip: trip, tripUpdateDelegate: viewModel))
             }
@@ -47,6 +46,7 @@ struct TripTimelineView: View {
                  
             }
             .toolbarBackground(.hidden, for: .bottomBar)
+            .background(.white)
         }
     }
 }
@@ -56,13 +56,14 @@ struct TripYearView: View {
     let trips: [Trip]
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             ForEach(trips) { trip in
                 
                 NavigationLink(value: trip) {
                     TripSummaryView(trip: trip)
-                        .padding(.vertical, 20)
                 }
+                .padding(.horizontal, 10)
+                
             }
         }
     }
@@ -75,100 +76,14 @@ struct TripYearHeaderView: View {
     var body: some View {
         HStack {
             Text(verbatim: "\(year)")
-                .font(.largeTitle)
+                .font(.system(size: 60))
+                .fontWeight(.ultraLight)
+                .foregroundStyle(.textTitle)
+                .padding(.bottom, 10)
         }
     }
 }
-
-struct TripSummaryView: View {
-    
-    @ObservedObject var trip: Trip
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(trip.title)
-                    .font(.title3)
-                    .foregroundStyle(.black)
-                Spacer()
-                Text(dateRange(for: trip))
-                    .font(.subheadline)
-                    .foregroundStyle(.black)
-            }
-            .padding(.horizontal)
-            
-            if let image = coverImageFor(trip: trip) {
-                image
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 300)
-                    .clipped()
-                    
-                    
-            } else {
-                Rectangle()
-                    .fill(.gray)
-                    .containerRelativeFrame(.vertical, count: 7, span: 3, spacing: 0)
-            }
-            
-            if !trip.description.isEmpty {
-                Text(trip.description)
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal)
-                    .foregroundStyle(.black)
-            }
-            
-        }
-    }
-    
-    func coverImageFor(trip: Trip) -> Image? {
-
-        if let data = trip.coverImageData, let uiImage = UIImage(data: data) {
-            return Image(uiImage: uiImage)
-        }
-        
-        return nil
-    }
-    
-    func dateRange(for trip: Trip) -> String {
-        
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
-        
-        let calendar = Calendar(identifier: .gregorian)
-        let startDay = calendar.component(.day, from: trip.startDate)
-        let startMonth = calendar.component(.month, from: trip.startDate)
-        
-        var dateComponents = DateComponents()
-        dateComponents.month = startMonth
-        dateComponents.day = startDay
-        
-        var dateRange = ""
-        
-        if let date = calendar.date(from: dateComponents) {
-            dateRange = formatter.string(from: date)
-        }
-        
-
-        let endDay = calendar.component(.day, from: trip.endDate)
-        let endMonth = calendar.component(.month, from: trip.endDate)
-        
-        dateComponents.month = endMonth
-        dateComponents.day = endDay
-        
-        if let date = calendar.date(from: dateComponents) {
-            dateRange.append(" - \(formatter.string(from: date))")
-        }
-        
-
-        print(dateRange)
-        return dateRange
-    }
-}
-
-
 
 #Preview {
-    TripTimelineView()
+    TripTimelineView(viewModel: TripSequenceViewModel(tripSequenceProvider: PreviewViewTripTimelineUseCase()))
 }

@@ -22,12 +22,20 @@ struct ImageHelperService {
         return "\(day.id).png"
     }
     
+    func fileName(for content: Content) -> String {
+        return "\(content.id).png"
+    }
+    
     func imageURL(for trip: Trip) -> URL {
         return directoryURLFor(trip: trip).appending(path: fileName(for: trip))
     }
     
     func imageURL(for day: Day) -> URL {
         return directoryURLFor(day: day).appending(path: fileName(for: day))
+    }
+    
+    func imageURL(for content: Content) -> URL {
+        return directoryURLFor(day: content.day).appending(path: fileName(for: content))
     }
     
     func directoryURLFor(trip: Trip) -> URL {
@@ -38,6 +46,10 @@ struct ImageHelperService {
         return directoryURLFor(trip: day.trip).appending(path: day.id)
     }
     
+    func directoryURLFor(content: Content) -> URL {
+        return directoryURLFor(day: content.day)
+    }
+    
     func saveImage(data: Data, for day: Day) {
         saveImage(data: data, directory: directoryURLFor(day: day), fileName: fileName(for: day))
     }
@@ -45,6 +57,11 @@ struct ImageHelperService {
     func saveImage(data: Data, for trip: Trip) {
         print("ImageHelper: saving data for trip")
         saveImage(data: data, directory: directoryURLFor(trip: trip), fileName: fileName(for: trip))
+    }
+    
+    func saveImage(data: Data, for content: Content) {
+        print("ImageHelper: saving data for content")
+        saveImage(data: data, directory: directoryURLFor(content: content), fileName: fileName(for: content))
     }
     
     private func saveImage(data: Data, directory: URL, fileName: String) {
@@ -68,6 +85,10 @@ struct ImageHelperService {
     
     func imageDataFor(day: Day) -> Data? {
         imageDataFor(fileURL: directoryURLFor(day: day).appending(path: fileName(for: day)))
+    }
+    
+    func imageDataFor(content: Content) -> Data? {
+        imageDataFor(fileURL: directoryURLFor(day: content.day).appending(path: fileName(for: content)))
     }
     
     func imageDataFor(fileURL: URL) -> Data? {

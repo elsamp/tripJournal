@@ -7,7 +7,9 @@
 
 import Foundation
 
-struct PreviewHelper: PhotoDataUpdateDelegatProtocol {
+struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProtocol {
+    
+    
 
     static let shared = PreviewHelper()
     
@@ -36,7 +38,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol {
                     coverPhotoPath: nil,
                     creationDate: startDate1 ?? Date.now,
                     lastUpdateDate: Date.now,
-                    lastSaveDate: nil)
+                    lastSaveDate: Date.now)
     }
     
     func mockDay() -> Day {
@@ -56,6 +58,10 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol {
                    coverPhotoPath: nil,
                    creationDate: Date.now,
                    lastUpdateDate: Date.now)
+    }
+    
+    func fetchDaysFor(trip: Trip) -> DaySequence {
+        return DaySequence(id: UUID().uuidString, days: [mockDay(), mockDay(), mockDay()])
     }
     
 }

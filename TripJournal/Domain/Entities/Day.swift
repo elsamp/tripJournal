@@ -8,7 +8,7 @@
 import Foundation
 
 
-class Day: ObservableObject, Identifiable, Hashable, Equatable {
+class Day: ObservableObject, Identifiable, Hashable, Equatable, Comparable {
     
     let id: String
     let trip: Trip
@@ -16,17 +16,23 @@ class Day: ObservableObject, Identifiable, Hashable, Equatable {
     @Published var title: String
     @Published var coverPhotoPath: String?
     @Published var coverImageData: Data?
-    @Published var creationDate: Date
-    @Published var lastUpdateDate: Date
-    @Published var lastSaveDate: Date?
+    let creationDate: Date
+    var lastUpdateDate: Date
+    var lastSaveDate: Date?
     var hasUnsavedChanges: Bool {
         
         if let saveDate = lastSaveDate {
             return lastUpdateDate > saveDate
         } else {
-            //Trip has never been saved.
+            //Day has never been saved.
             return true
         }
+    }
+    
+    var tripDayIndex: Int {
+        
+        return Calendar.current.daysBetween(trip.startDate, and: date) + 1
+        
     }
     
     init(id: String, trip: Trip, date: Date, title: String, coverPhotoPath: String? = nil, creationDate: Date, lastUpdateDate: Date, lastSaveDate: Date? = nil) {
@@ -44,6 +50,10 @@ class Day: ObservableObject, Identifiable, Hashable, Equatable {
     
     static func == (lhs: Day, rhs: Day) -> Bool {
         lhs.id == rhs.id
+    }
+    
+    static func < (lhs: Day, rhs: Day) -> Bool {
+        lhs.date < rhs.date
     }
     
     func hash(into hasher: inout Hasher) {

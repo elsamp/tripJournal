@@ -31,7 +31,6 @@
 		B04382972C7F970900AC21E4 /* TripObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382962C7F970900AC21E4 /* TripObjectModel.swift */; };
 		B043829B2C7F9A2D00AC21E4 /* DayObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043829A2C7F9A2D00AC21E4 /* DayObjectModel.swift */; };
 		B043829F2C7F9C8800AC21E4 /* ContentObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B043829E2C7F9C8800AC21E4 /* ContentObjectModel.swift */; };
-		B04382A12C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382A02C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift */; };
 		B04382A32C7FAC6600AC21E4 /* RealmDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382A22C7FAC6600AC21E4 /* RealmDataService.swift */; };
 		B04382A82C82646A00AC21E4 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382A72C82646A00AC21E4 /* Router.swift */; };
 		B04382B02C8502E200AC21E4 /* TripSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382AF2C8502E200AC21E4 /* TripSequence.swift */; };
@@ -39,7 +38,6 @@
 		B04382B62C85129000AC21E4 /* TripObjectModel+trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382B52C85128F00AC21E4 /* TripObjectModel+trip.swift */; };
 		B04382BE2C86318A00AC21E4 /* TripJournalUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382BD2C86318A00AC21E4 /* TripJournalUnitTests.swift */; };
 		B04382C52C8631C100AC21E4 /* TripSequence_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382C42C8631C100AC21E4 /* TripSequence_Tests.swift */; };
-		B04382E12C8753AF00AC21E4 /* Trip+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E02C8753AE00AC21E4 /* Trip+Comparable.swift */; };
 		B04382E32C879B1900AC21E4 /* DaySequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E22C879B1800AC21E4 /* DaySequence.swift */; };
 		B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */; };
 		B04382E72C87A40800AC21E4 /* DayObjectModel+day.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */; };
@@ -47,6 +45,15 @@
 		B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */; };
 		B081EC2C2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */; };
 		B081EC2E2C8B87E100F26607 /* CoverPhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */; };
+		B081EC302C8BCE5700F26607 /* ContentSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2F2C8BCE5700F26607 /* ContentSequence.swift */; };
+		B081EC322C8C90C500F26607 /* ContentObjectModel+content.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC312C8C90C500F26607 /* ContentObjectModel+content.swift */; };
+		B081EC342C8CACA100F26607 /* SaveContentUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC332C8CACA100F26607 /* SaveContentUseCase.swift */; };
+		B081EC362C8CD2DA00F26607 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC352C8CD2DA00F26607 /* ContentView.swift */; };
+		B081EC382C8E3A9400F26607 /* TripHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC372C8E3A9400F26607 /* TripHeaderView.swift */; };
+		B081EC3A2C8E3C0D00F26607 /* TripSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC392C8E3C0D00F26607 /* TripSummaryView.swift */; };
+		B081EC3D2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC3C2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift */; };
+		B0D09E2C2C8F767A003AA492 /* DaySequenceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E2B2C8F767A003AA492 /* DaySequenceItemView.swift */; };
+		B0D09E2E2C8F854E003AA492 /* Calendar+daysBetween.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E2D2C8F854E003AA492 /* Calendar+daysBetween.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,7 +91,6 @@
 		B04382962C7F970900AC21E4 /* TripObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripObjectModel.swift; sourceTree = "<group>"; };
 		B043829A2C7F9A2D00AC21E4 /* DayObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayObjectModel.swift; sourceTree = "<group>"; };
 		B043829E2C7F9C8800AC21E4 /* ContentObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentObjectModel.swift; sourceTree = "<group>"; };
-		B04382A02C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSequenceObjectModel.swift; sourceTree = "<group>"; };
 		B04382A22C7FAC6600AC21E4 /* RealmDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataService.swift; sourceTree = "<group>"; };
 		B04382A72C82646A00AC21E4 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		B04382AF2C8502E200AC21E4 /* TripSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripSequence.swift; sourceTree = "<group>"; };
@@ -93,7 +99,6 @@
 		B04382BB2C86318900AC21E4 /* TripJournalUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripJournalUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B04382BD2C86318A00AC21E4 /* TripJournalUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripJournalUnitTests.swift; sourceTree = "<group>"; };
 		B04382C42C8631C100AC21E4 /* TripSequence_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripSequence_Tests.swift; sourceTree = "<group>"; };
-		B04382E02C8753AE00AC21E4 /* Trip+Comparable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trip+Comparable.swift"; sourceTree = "<group>"; };
 		B04382E22C879B1800AC21E4 /* DaySequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySequence.swift; sourceTree = "<group>"; };
 		B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTripUseCase.swift; sourceTree = "<group>"; };
 		B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayObjectModel+day.swift"; sourceTree = "<group>"; };
@@ -101,6 +106,15 @@
 		B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTripUseCase.swift; sourceTree = "<group>"; };
 		B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDataProviderProtocol.swift; sourceTree = "<group>"; };
 		B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverPhotoPickerView.swift; sourceTree = "<group>"; };
+		B081EC2F2C8BCE5700F26607 /* ContentSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSequence.swift; sourceTree = "<group>"; };
+		B081EC312C8C90C500F26607 /* ContentObjectModel+content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentObjectModel+content.swift"; sourceTree = "<group>"; };
+		B081EC332C8CACA100F26607 /* SaveContentUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveContentUseCase.swift; sourceTree = "<group>"; };
+		B081EC352C8CD2DA00F26607 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B081EC372C8E3A9400F26607 /* TripHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripHeaderView.swift; sourceTree = "<group>"; };
+		B081EC392C8E3C0D00F26607 /* TripSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripSummaryView.swift; sourceTree = "<group>"; };
+		B081EC3C2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview-ViewTripTimelineUseCase.swift"; sourceTree = "<group>"; };
+		B0D09E2B2C8F767A003AA492 /* DaySequenceItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySequenceItemView.swift; sourceTree = "<group>"; };
+		B0D09E2D2C8F854E003AA492 /* Calendar+daysBetween.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+daysBetween.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +173,7 @@
 		B04382642C7E217500AC21E4 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				B081EC3B2C8E3CAF00F26607 /* UseCases */,
 				B04382652C7E217500AC21E4 /* Preview Assets.xcassets */,
 				B04382862C7EC70A00AC21E4 /* PreviewHelper.swift */,
 			);
@@ -189,13 +204,14 @@
 			children = (
 				B04382B12C850F3B00AC21E4 /* Mocks */,
 				B04382772C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift */,
-				B04382812C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift */,
-				B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */,
-				B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */,
 				B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */,
+				B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */,
+				B04382812C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift */,
 				B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */,
 				B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */,
 				B042C3B82C88A6A200674B5D /* DeleteDayUseCase.swift */,
+				B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */,
+				B081EC332C8CACA100F26607 /* SaveContentUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -204,8 +220,12 @@
 			isa = PBXGroup;
 			children = (
 				B04382602C7E217000AC21E4 /* TripTimelineView.swift */,
+				B081EC392C8E3C0D00F26607 /* TripSummaryView.swift */,
 				B043827C2C7E5C7E00AC21E4 /* TripView.swift */,
+				B081EC372C8E3A9400F26607 /* TripHeaderView.swift */,
 				B04382882C7ED19800AC21E4 /* DayView.swift */,
+				B0D09E2B2C8F767A003AA492 /* DaySequenceItemView.swift */,
+				B081EC352C8CD2DA00F26607 /* ContentView.swift */,
 				B042C3BC2C88D67000674B5D /* ImageHelperService.swift */,
 				B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */,
 			);
@@ -227,7 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				B04382842C7EC1F500AC21E4 /* Date+SecondsForDays.swift */,
-				B04382E02C8753AE00AC21E4 /* Trip+Comparable.swift */,
+				B0D09E2D2C8F854E003AA492 /* Calendar+daysBetween.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -237,7 +257,6 @@
 			children = (
 				B04382962C7F970900AC21E4 /* TripObjectModel.swift */,
 				B043829A2C7F9A2D00AC21E4 /* DayObjectModel.swift */,
-				B04382A02C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift */,
 				B043829E2C7F9C8800AC21E4 /* ContentObjectModel.swift */,
 			);
 			path = "Realm Object Models";
@@ -258,6 +277,7 @@
 				B04382732C7E268600AC21E4 /* Trip.swift */,
 				B04382E22C879B1800AC21E4 /* DaySequence.swift */,
 				B043826F2C7E23F000AC21E4 /* Day.swift */,
+				B081EC2F2C8BCE5700F26607 /* ContentSequence.swift */,
 				B043826D2C7E222E00AC21E4 /* Content.swift */,
 			);
 			path = Entities;
@@ -276,6 +296,7 @@
 			children = (
 				B04382B52C85128F00AC21E4 /* TripObjectModel+trip.swift */,
 				B04382E62C87A40700AC21E4 /* DayObjectModel+day.swift */,
+				B081EC312C8C90C500F26607 /* ContentObjectModel+content.swift */,
 			);
 			path = DataMapping;
 			sourceTree = "<group>";
@@ -295,6 +316,14 @@
 				B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		B081EC3B2C8E3CAF00F26607 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B081EC3C2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift */,
+			);
+			path = UseCases;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -411,27 +440,34 @@
 				B042C3B92C88A6A200674B5D /* DeleteDayUseCase.swift in Sources */,
 				B04382802C7E5EE400AC21E4 /* TripViewModel.swift in Sources */,
 				B04382742C7E268600AC21E4 /* Trip.swift in Sources */,
+				B081EC362C8CD2DA00F26607 /* ContentView.swift in Sources */,
+				B0D09E2C2C8F767A003AA492 /* DaySequenceItemView.swift in Sources */,
 				B043828F2C7F703E00AC21E4 /* SaveTripUseCase.swift in Sources */,
 				B04382612C7E217000AC21E4 /* TripTimelineView.swift in Sources */,
 				B04382852C7EC1F500AC21E4 /* Date+SecondsForDays.swift in Sources */,
 				B043828D2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift in Sources */,
+				B081EC322C8C90C500F26607 /* ContentObjectModel+content.swift in Sources */,
+				B081EC3D2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift in Sources */,
 				B043825F2C7E217000AC21E4 /* TripJournalApp.swift in Sources */,
-				B04382E12C8753AF00AC21E4 /* Trip+Comparable.swift in Sources */,
 				B04382892C7ED19800AC21E4 /* DayView.swift in Sources */,
+				B081EC342C8CACA100F26607 /* SaveContentUseCase.swift in Sources */,
 				B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */,
 				B043827A2C7E3D5500AC21E4 /* TripSequenceViewModel.swift in Sources */,
+				B0D09E2E2C8F854E003AA492 /* Calendar+daysBetween.swift in Sources */,
 				B04382B02C8502E200AC21E4 /* TripSequence.swift in Sources */,
 				B04382972C7F970900AC21E4 /* TripObjectModel.swift in Sources */,
 				B043829F2C7F9C8800AC21E4 /* ContentObjectModel.swift in Sources */,
+				B081EC302C8BCE5700F26607 /* ContentSequence.swift in Sources */,
 				B043827D2C7E5C7E00AC21E4 /* TripView.swift in Sources */,
 				B04382B62C85129000AC21E4 /* TripObjectModel+trip.swift in Sources */,
-				B04382A12C7F9F3300AC21E4 /* ContentSequenceObjectModel.swift in Sources */,
 				B043828B2C7F656700AC21E4 /* DayViewModel.swift in Sources */,
 				B04382822C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift in Sources */,
 				B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */,
 				B04382A32C7FAC6600AC21E4 /* RealmDataService.swift in Sources */,
 				B043829B2C7F9A2D00AC21E4 /* DayObjectModel.swift in Sources */,
 				B04382702C7E23F000AC21E4 /* Day.swift in Sources */,
+				B081EC3A2C8E3C0D00F26607 /* TripSummaryView.swift in Sources */,
+				B081EC382C8E3A9400F26607 /* TripHeaderView.swift in Sources */,
 				B042C3BD2C88D67000674B5D /* ImageHelperService.swift in Sources */,
 				B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */,
 				B04382E32C879B1900AC21E4 /* DaySequence.swift in Sources */,

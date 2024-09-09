@@ -22,18 +22,22 @@ struct TripView: View {
     
     var body: some View {
         ScrollView{
-            LazyVStack {
-                TripDetailsView(trip: viewModel.trip, isEditing: $isEditing)
+            LazyVStack(alignment: .leading) {
                 CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $trip.coverImageData, isEditing: $isEditing)
+                
+                TripHeaderView(trip: viewModel.trip, isEditing: $isEditing)
+                    .offset(y: -35)
+                
                 DaySequenceView(days: viewModel.days)
                     .allowsHitTesting(!isEditing)
+                    .padding(.horizontal, 40)
             }
         }
+        .ignoresSafeArea(edges: .top)
         .navigationDestination(for: Day.self) { day in
             DayView(viewModel: DayViewModel(day: day))
         }
-        .navigationTitle(viewModel.trip.title)
-        .navigationBarBackButtonHidden(isEditing)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             
             if !isEditing {
@@ -42,6 +46,9 @@ struct TripView: View {
                 }
                 ToolbarItem(placement: .bottomBar) {
                     addDayButton
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    backButton
                 }
             } else {
                 ToolbarItem(placement: .primaryAction) {
@@ -68,7 +75,11 @@ struct TripView: View {
                 isEditing = true
             }
         } label: {
-            Text("Edit")
+            Image(systemName: "pencil.circle.fill")
+                .font(.title2)
+                .foregroundStyle(.accentMain)
+                .background(.white)
+                .clipShape(.circle)
         }
     }
     
@@ -80,6 +91,13 @@ struct TripView: View {
             }
         } label: {
             Text("Save")
+                .font(.headline)
+                .fontWeight(.regular)
+                .foregroundStyle(.white)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .background(.accentMain)
+                .clipShape(.capsule)
         }
     }
     
@@ -98,6 +116,13 @@ struct TripView: View {
             }
         } label: {
             Text("Cancel")
+                .font(.headline)
+                .fontWeight(.regular)
+                .foregroundStyle(.white)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .background(.gray)
+                .clipShape(.capsule)
         }
     }
     
@@ -108,13 +133,14 @@ struct TripView: View {
         } label: {
             HStack {
                 Image(systemName: "trash")
+                    .font(.caption)
                 Text("Delete Trip")
             }
         }
         .frame(maxWidth: .infinity)
         .frame(height: 60)
-        .background(.red)
-        .foregroundStyle(.white)
+        .background(.white)
+        .foregroundStyle(.red)
         .clipShape(.capsule)
     }
     
@@ -123,93 +149,34 @@ struct TripView: View {
             router.path.append(viewModel.newDay())
         } label: {
             HStack {
-                Text("New Day")
+                Image(systemName: "plus.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                Text("Add Day")
             }
         }
         .frame(maxWidth: .infinity)
         .frame(height: 60)
-        .background(.black)
+        .background(.accentMain)
         .foregroundStyle(.white)
         .clipShape(.capsule)
     }
-}
-
-
-struct TripDetailsView: View {
-
-    @ObservedObject var trip: Trip
-    @Binding var isEditing: Bool
     
-    var body: some View {
-        VStack {
-            //Trip Title
-            if isEditing {
-                TextField("My Trip", text: $trip.title)
-                    .font(.title3)
-                    .foregroundStyle(.black)
-                    .padding(8)
-                    .background(.textFieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                
-            } else {
-                Text(trip.title)
-                    .font(.title3)
-                    .foregroundStyle(.black)
-            }
-            
-            //Trip Start-End dates
-            if isEditing {
-                HStack {
-                    DatePicker("Start Date", selection: $trip.startDate, displayedComponents: .date)
-                        .labelsHidden()
-                    Text("to")
-                    DatePicker("End Date", selection: $trip.endDate, displayedComponents: .date)
-                        .labelsHidden()
-                }
-            } else {
-                Text(dateRange(for: trip))
-                    .font(.subheadline)
-                    .foregroundStyle(.black)
-            }
+    var backButton: some View {
+        Button() {
+            router.path.removeLast()
+        } label: {
+            Image(systemName: "chevron.backward.circle.fill")
+                .font(.title2)
+                .foregroundStyle(.accentMain)
+                .background(.white)
+                .clipShape(.circle)
         }
-        .padding()
-    }
-    
-    func dateRange(for trip: Trip) -> String {
-        
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
-        
-        let calendar = Calendar(identifier: .gregorian)
-        let startDay = calendar.component(.day, from: trip.startDate)
-        let startMonth = calendar.component(.month, from: trip.startDate)
-        
-        var dateComponents = DateComponents()
-        dateComponents.month = startMonth
-        dateComponents.day = startDay
-        
-        var dateRange = ""
-        
-        if let date = calendar.date(from: dateComponents) {
-            dateRange = formatter.string(from: date)
-        }
-        
-
-        let endDay = calendar.component(.day, from: trip.endDate)
-        let endMonth = calendar.component(.month, from: trip.endDate)
-        
-        dateComponents.month = endMonth
-        dateComponents.day = endDay
-        
-        if let date = calendar.date(from: dateComponents) {
-            dateRange.append(" - \(formatter.string(from: date))")
-        }
-        
-
-        print(dateRange)
-        return dateRange
     }
 }
+
+
+
 
 
 
@@ -218,11 +185,12 @@ struct DaySequenceView: View {
     let days: [Day]
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             
             ForEach(days) { day in
                 NavigationLink(value: day) {
                     DaySequenceItemView(day: day)
+                        .padding(.vertical, 8)
                 }
             }
              
@@ -230,44 +198,11 @@ struct DaySequenceView: View {
     }
 }
 
-struct DaySequenceItemView: View {
-    
-    @ObservedObject var day: Day
-    
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
-        return formatter
-    }
-    
-    var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading) {
-                Text(day.title)
-                Text(dateFormatter.string(from: day.date))
-            }
-            .padding(.vertical)
-            Spacer()
-            if let data = day.coverImageData, let uiImage = UIImage(data: data) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .containerRelativeFrame(.horizontal, count:3, spacing: 20)
-            } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .containerRelativeFrame(.horizontal, count:3, spacing: 20)
-            }
-        }
-        .padding()
-    }
-}
 
 #Preview {
     NavigationStack {
         ZStack{
-            TripView(viewModel: TripViewModel(trip: PreviewHelper.shared.mockTrip(), tripUpdateDelegate: nil))
+            TripView(viewModel: TripViewModel(daySequenceProvider: PreviewHelper.shared, trip: PreviewHelper.shared.mockTrip(), tripUpdateDelegate: nil))
         }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 
-class Trip: ObservableObject, Identifiable, Hashable, Equatable {
+class Trip: ObservableObject, Identifiable, Hashable, Equatable, Comparable {
 
     let id: String
     @Published var title: String
@@ -17,9 +17,9 @@ class Trip: ObservableObject, Identifiable, Hashable, Equatable {
     @Published var endDate: Date
     @Published var coverPhotoPath: String?
     @Published var coverImageData: Data?
-    @Published var creationDate: Date
-    @Published var lastUpdateDate: Date
-    @Published var lastSaveDate: Date?
+    let creationDate: Date
+    var lastUpdateDate: Date
+    var lastSaveDate: Date?
     var hasUnsavedChanges: Bool {
         
         if let saveDate = lastSaveDate {
@@ -62,6 +62,10 @@ class Trip: ObservableObject, Identifiable, Hashable, Equatable {
     
     static func == (lhs: Trip, rhs: Trip) -> Bool {
         lhs.id == rhs.id
+    }
+    
+    static func < (lhs: Trip, rhs: Trip) -> Bool {
+        lhs.startDate < rhs.startDate
     }
     
     func hash(into hasher: inout Hasher) {

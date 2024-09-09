@@ -24,17 +24,34 @@ struct CoverPhotoPickerView: View {
     
     var body: some View {
         
-        VStack {
-            if let imageData = imageData {
-                coverImage(data: imageData)?
-                    .resizable()
-                    .scaledToFit()
+        ZStack(alignment: .center) {
+
+            if let imageData = imageData, let image = coverImage(data: imageData) {
+                Color.clear
+                    .overlay (
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 300)
+                            .clipped()
+                    )
+                    .frame(height: 300)
+                    .clipped()
+                    .opacity(isEditing ? 0.7 : 1)
+            } else {
+                Color.gray // Acts as a placeholder.
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 300)
             }
             
-            if isEditing {
+            if (isEditing) {
                 PhotosPicker(selection: $selectedItem, matching: .images) {
-                    Text("Select Cover Photo")
-                        .padding()
+                    Image(systemName: "photo.badge.plus.fill")
+                        .font(.system(size: 60))
+                        .padding(5)
+                        .foregroundColor(.white)
+                    
                 }
                 .onChange(of: selectedItem) { oldValue, newValue in
                     Task {
@@ -62,7 +79,7 @@ struct CoverPhotoPickerView: View {
 #Preview {
     struct Preview: View {
         
-        @State private var isEditing = false
+        @State private var isEditing = true
         @State private var imageData: Data? = nil
         
         var body: some View {

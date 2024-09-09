@@ -12,10 +12,11 @@ import RealmSwift
 class ContentObjectModel: Object, ObjectKeyIdentifiable {
     
     @Persisted(primaryKey: true) var id: String
+    @Persisted var sequenceIndex: Int
     @Persisted var type: String
-    @Persisted var filePath: String?
+    @Persisted var fileName: String?
     @Persisted var text: String?
     @Persisted var creationDate: Date
     @Persisted var lastUpdateDate: Date
-    
+    @Persisted var lastSaveDate: Date
 }

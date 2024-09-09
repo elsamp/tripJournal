@@ -45,7 +45,7 @@ class TripSequenceViewModel: TripSequenceViewModelProtocol, TripUpdateDelegatePr
     }
     
     func trips(for year: Int) -> [Trip] {
-        tripSequence.trips(for: year)
+        tripSequence.trips(for: year).sorted()
     }
     
     //Update

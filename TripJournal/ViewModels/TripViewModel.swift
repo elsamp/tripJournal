@@ -42,7 +42,7 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol, PhotoData
     
     var trip: Trip
     var days: [Day] {
-        Array(daySequence.days)
+        Array(daySequence.days).sorted()
     }
     
     init(daySequenceProvider: ViewDaySequenceUseCaseProtocol = ViewDaySequenceUseCase(), 

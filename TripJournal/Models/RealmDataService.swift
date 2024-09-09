@@ -20,6 +20,11 @@ protocol DataServiceProtocol {
     func save(day: Day, for trip: Trip)
     func delete(day: Day)
     
+    //Content
+    func fetchContentFor(day: Day) -> Set<Content>
+    func save(content: Content, for day: Day)
+    func deleteContent(content: Content)
+    
 }
 
 class RealmDataService: DataServiceProtocol {
@@ -103,14 +108,21 @@ class RealmDataService: DataServiceProtocol {
     }
     
     private func tripObjectModelFor(tripId: String) -> TripObjectModel? {
-        let realm = try! Realm()
-        let tripObjects = realm.objects(TripObjectModel.self)
         
-        let results = tripObjects.where {
-            $0.id == tripId
+        do {
+            let realm = try Realm()
+            let tripObjects = realm.objects(TripObjectModel.self)
+            
+            let results = tripObjects.where {
+                $0.id == tripId
+            }
+            
+            return results.first
+        } catch {
+            print(error.localizedDescription)
         }
         
-        return results.first
+        return nil
     }
     
     
@@ -202,4 +214,120 @@ class RealmDataService: DataServiceProtocol {
         
         return results.first
     }
+    
+    //MARK: Content
+    
+    func fetchContentFor(day: Day) -> Set<Content> {
+        
+        if let dayObject = dayObjectModelFor(dayId: day.id) {
+                
+            print("found dayObject")
+            var contentSet = Set<Content>()
+            
+            for contentObject in dayObject.contentSequence {
+                contentSet.insert(contentObject.content(for: day))
+            }
+            print("returning content \(contentSet.count)")
+            return contentSet
+        }
+        
+        return []
+        
+    }
+    
+    
+    func save(content: Content, for day: Day) {
+        if let contentObject = contentObjectModelFor(contentId: day.id) {
+            print("attempting to UPDATE content of type: \(content.type) id: \(content.id)")
+            update(objectModel: contentObject, for: content)
+            print("Successfully UPDATED content type: \(content.type) id: \(content.id)")
+        } else {
+            print("attempting to CREATE NEW content of type: \(content.type) id: \(content.id)")
+            createContentObjectModel(for: content, day: day)
+            print("Successfully CREATED content type: \(content.type) id: \(content.id)")
+        }
+    
+    }
+    
+    private func createContentObjectModel(for content: Content, day: Day) {
+        
+        print("creating new text content")
+        
+        if let dayObjectModel = dayObjectModelFor(dayId: content.day.id) {
+            
+            let objectModel = ContentObjectModel()
+            objectModel.id = content.id
+            objectModel.sequenceIndex = content.sequenceIndex
+            objectModel.type = content.type.rawValue
+            objectModel.fileName = content.photoFileName
+            objectModel.text = content.text
+            objectModel.lastUpdateDate = content.lastUpdateDate
+            objectModel.lastSaveDate = content.lastSaveDate ?? Date.now
+            
+            let realm = try! Realm()
+            
+            do {
+                try realm.write {
+                    realm.add(objectModel)
+                    dayObjectModel.contentSequence.append(objectModel)
+                    print("Realm: saved new Content")
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+    }
+    
+    private func update(objectModel: ContentObjectModel, for content: Content) {
+        
+        let realm = try! Realm()
+            
+        try! realm.write {
+            objectModel.sequenceIndex = content.sequenceIndex
+            objectModel.type = content.type.rawValue
+            objectModel.fileName = content.photoFileName
+            objectModel.text = content.text
+            objectModel.lastUpdateDate = content.lastUpdateDate
+            objectModel.lastSaveDate = content.lastSaveDate ?? Date.now
+        }
+        
+    }
+    
+    func deleteContent(content: Content) {
+        
+        if let objectModel = contentObjectModelFor(contentId: content.id) {
+            
+            let realm = try! Realm()
+            
+            try! realm.write {
+                realm.delete(objectModel)
+            }
+        }
+    }
+    
+    //TODO: unify with other objects by using generics
+    private func contentObjectModelFor(contentId: String) -> ContentObjectModel? {
+        let realm = try! Realm()
+        let contentObjects = realm.objects(ContentObjectModel.self)
+        
+        let results = contentObjects.where {
+            $0.id == contentId
+        }
+        
+        return results.first
+    }
+    
+    /*
+    private func objectModelFor<Element>(id: String, objectType: Element.Type) -> Element? where Element : RealmFetchable & ObjectKeyIdentifiable {
+        let realm = try! Realm()
+        let objects = realm.objects(objectType.self)
+        
+        let results = objects.where {
+            $0.id == id
+        }
+        
+        return results.first
+    }
+     */
 }

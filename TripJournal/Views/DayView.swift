@@ -13,11 +13,13 @@ struct DayView: View {
     @State private var isEditing: Bool
     @StateObject var router = Router.shared
     @ObservedObject var day: Day
+    @ObservedObject var contentSequence: ContentSequence
     
     init(viewModel: DayViewModelProtocol) {
         self.viewModel = viewModel
         _isEditing = State(initialValue: viewModel.day.hasUnsavedChanges)
         self.day = viewModel.day
+        self.contentSequence = viewModel.contentSequence
     }
     
     var body: some View {
@@ -25,7 +27,7 @@ struct DayView: View {
             LazyVStack(alignment: .leading) {
                 DayDetailsView(day: viewModel.day, isEditing: $isEditing)
                 CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $day.coverImageData, isEditing: $isEditing)
-                ContentSequenceView(contentSequence: viewModel.contentSequence)
+                ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
             }
         }
         .navigationTitle(viewModel.day.title)
@@ -36,11 +38,11 @@ struct DayView: View {
                 ToolbarItem(placement: .primaryAction) {
                     editDayButton
                 }
-                /*
+                
                 ToolbarItem(placement: .bottomBar) {
                     addContentButton
                 }
-                 */
+                
             } else {
                 ToolbarItem(placement: .primaryAction) {
                     saveChangesButton
@@ -112,6 +114,22 @@ struct DayView: View {
         .foregroundStyle(.white)
         .clipShape(.capsule)
     }
+    
+    var addContentButton: some View {
+        Button {
+            viewModel.addNewTextContent(type: .text, for: day)
+            print("Adding Text Content")
+        } label: {
+            HStack {
+                Text("New Content")
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 60)
+        .background(.black)
+        .foregroundStyle(.white)
+        .clipShape(.capsule)
+    }
 }
 
 struct DayDetailsView: View {
@@ -147,52 +165,42 @@ struct DayDetailsView: View {
     }
 }
 
+import PhotosUI
 
 struct ContentSequenceView: View {
     
-    let contentSequence: ContentSequence
+    var viewModel: DayViewModelProtocol
+    @ObservedObject var contentSequence: ContentSequence
+    @State private var selectedItem: PhotosPickerItem?
     
     var body: some View {
-        VStack {
-            ForEach(contentSequence.sequence) { content in
-                contentView(for: content)
+        VStack(alignment: .leading) {
+            ForEach(contentSequence.contentItems) { content in
+                ContentView(content: content)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                
+                PhotosPicker(selection: $selectedItem, matching: .images) {
+                    Image(systemName: "photo")
+                }
+                .onChange(of: selectedItem) { oldValue, newValue in
+                    Task {
+                        if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                            
+                            if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                                viewModel.addNewPhotoContent(with: pngData, for: viewModel.day)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    
-    @ViewBuilder func contentView(for content: Content) -> some View {
-        switch content.type {
-            case .photo:
-            PhotoContentView(content: content)
-            case .text:
-            TextContentView(content: content)
-        }
-    }
 }
 
-struct TextContentView: View {
-    
-    var content: Content
-    
-    var body: some View {
-        
-        if let text = content.description {
-            Text(text)
-        }
-    }
-}
 
-struct PhotoContentView: View {
-    
-    var content: Content
-    
-    var body: some View {
-        
-        if let filePath = content.filePath {
-            Image(filePath)
-        }
-    }
-}
 
 #Preview {
     DayView(viewModel: DayViewModel(day: PreviewHelper.shared.mockDay()))
