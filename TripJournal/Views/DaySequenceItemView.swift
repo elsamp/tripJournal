@@ -20,6 +20,7 @@ struct DaySequenceItemView: View {
     var body: some View {
         HStack(alignment: .center) {
             
+            //TODO: make this async
             if let data = day.coverImageData, let uiImage = UIImage(data: data) {
                 Circle()
                     .overlay (

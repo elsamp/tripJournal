@@ -32,19 +32,6 @@ struct TripHeaderView: View {
                     DatePicker("End Date", selection: $trip.endDate, displayedComponents: .date)
                         .labelsHidden()
                 }
-                /*
-                Button() {
-                    withAnimation {
-                        isEditing = false
-                    }
-                    //TODO: save changes
-                } label: {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title2)
-                        .padding(.vertical, 3)
-                        .foregroundStyle(.accentMain)
-                }
-                 */
                 
             } else {
                 Text(trip.title)
@@ -56,18 +43,6 @@ struct TripHeaderView: View {
                     .font(.caption)
                     .fontWeight(.light)
                     .foregroundStyle(.textSubheader)
-                
-                /*
-                Button() {
-                    withAnimation {
-                        isEditing = true
-                    }
-                    
-                } label: {
-                    Image(systemName: "pencil")
-                        .padding(.vertical, 3)
-                        .foregroundStyle(.accentMain)
-                }*/
             }
             
         }

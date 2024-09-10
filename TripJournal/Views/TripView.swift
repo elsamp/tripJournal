@@ -21,88 +21,90 @@ struct TripView: View {
     }
     
     var body: some View {
-        ScrollView{
-            LazyVStack(alignment: .leading) {
-                CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $trip.coverImageData, isEditing: $isEditing)
-                
-                TripHeaderView(trip: viewModel.trip, isEditing: $isEditing)
-                    .offset(y: -35)
-                
-                DaySequenceView(days: viewModel.days)
-                    .allowsHitTesting(!isEditing)
-                    .padding(.horizontal, 40)
-            }
-        }
-        .ignoresSafeArea(edges: .top)
-        .navigationDestination(for: Day.self) { day in
-            DayView(viewModel: DayViewModel(day: day))
-        }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            
-            if !isEditing {
-                ToolbarItem(placement: .primaryAction) {
-                    editTripButton
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    addDayButton
-                }
-                ToolbarItem(placement: .topBarLeading) {
-                    backButton
-                }
-            } else {
-                ToolbarItem(placement: .primaryAction) {
-                    saveChangesButton
-                }
-                
-                ToolbarItem(placement: .cancellationAction) {
-                    cancelEditButton
-                }
-                
-                if viewModel.trip.lastSaveDate != nil {
-                    ToolbarItem(placement: .bottomBar) {
-                        deleteTripButton
+        ScrollViewReader { reader in
+            ScrollView{
+                LazyVStack(alignment: .leading) {
+                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $trip.coverImageData, isEditing: $isEditing)
+                        .id("Top")
+                    
+                    TripHeaderView(trip: viewModel.trip, isEditing: $isEditing)
+                        .offset(y: -35)
+                    ZStack {
+                        DaySequenceView(days: viewModel.days)
+                            .allowsHitTesting(!isEditing)
+                            .padding(.horizontal, 40)
+                        
+                        Color.white
+                            .opacity(isEditing ? 0.5 : 0)
                     }
                 }
             }
+            .onChange(of: isEditing, {
+                withAnimation {
+                    reader.scrollTo("Top", anchor: .top) // scroll to Top
+                }
+            })
+            .scrollDisabled(isEditing)
+            .ignoresSafeArea(edges: .top)
+            .navigationDestination(for: Day.self) { day in
+                DayView(viewModel: DayViewModel(day: day))
+            }
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                
+                if !isEditing {
+                    ToolbarItem(placement: .primaryAction) {
+                        editTripButton
+                    }
+                    ToolbarItem(placement: .bottomBar) {
+                        addDayButton
+                    }
+                    ToolbarItem(placement: .topBarLeading) {
+                        backButton
+                    }
+                } else {
+                    ToolbarItem(placement: .primaryAction) {
+                        saveChangesButton
+                    }
+                    
+                    ToolbarItem(placement: .cancellationAction) {
+                        cancelEditButton
+                    }
+                    
+                    if viewModel.trip.lastSaveDate != nil {
+                        ToolbarItem(placement: .bottomBar) {
+                            deleteTripButton
+                        }
+                    }
+                }
+            }
+            .toolbarBackground(.hidden, for: .bottomBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
         }
-        .toolbarBackground(.hidden, for: .bottomBar)
     }
     
     var editTripButton: some View {
-        Button {
+        
+        EditItemButton {
             withAnimation {
                 isEditing = true
             }
-        } label: {
-            Image(systemName: "pencil.circle.fill")
-                .font(.title2)
-                .foregroundStyle(.accentMain)
-                .background(.white)
-                .clipShape(.circle)
         }
     }
     
     var saveChangesButton: some View {
-        Button {
+        
+        SaveButton {
             viewModel.save(trip: viewModel.trip)
             withAnimation{
                 isEditing = false
             }
-        } label: {
-            Text("Save")
-                .font(.headline)
-                .fontWeight(.regular)
-                .foregroundStyle(.white)
-                .padding(.vertical, 4)
-                .padding(.horizontal, 10)
-                .background(.accentMain)
-                .clipShape(.capsule)
         }
     }
     
     var cancelEditButton: some View {
-        Button {
+        
+        CancelButton {
             //If trip was never saved, cancel returns user to timeline view
             if viewModel.trip.lastSaveDate == nil {
                 router.path.removeLast()
@@ -114,70 +116,31 @@ struct TripView: View {
                     isEditing = false
                 }
             }
-        } label: {
-            Text("Cancel")
-                .font(.headline)
-                .fontWeight(.regular)
-                .foregroundStyle(.white)
-                .padding(.vertical, 4)
-                .padding(.horizontal, 10)
-                .background(.gray)
-                .clipShape(.capsule)
         }
     }
     
     var deleteTripButton: some View {
-        Button {
+        
+        DeleteButton {
             viewModel.delete(trip: viewModel.trip)
             router.path.removeLast()
-        } label: {
-            HStack {
-                Image(systemName: "trash")
-                    .font(.caption)
-                Text("Delete Trip")
-            }
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 60)
-        .background(.white)
-        .foregroundStyle(.red)
-        .clipShape(.capsule)
     }
     
     var addDayButton: some View {
-        Button {
+        
+        AddItemButton {
             router.path.append(viewModel.newDay())
-        } label: {
-            HStack {
-                Image(systemName: "plus.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                Text("Add Day")
-            }
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 60)
-        .background(.accentMain)
-        .foregroundStyle(.white)
-        .clipShape(.capsule)
     }
     
     var backButton: some View {
-        Button() {
+        
+        BackButton {
             router.path.removeLast()
-        } label: {
-            Image(systemName: "chevron.backward.circle.fill")
-                .font(.title2)
-                .foregroundStyle(.accentMain)
-                .background(.white)
-                .clipShape(.circle)
         }
     }
 }
-
-
-
-
 
 
 struct DaySequenceView: View {

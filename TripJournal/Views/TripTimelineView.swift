@@ -20,6 +20,11 @@ struct TripTimelineView: View {
         NavigationStack(path: $router.path) {
             ScrollView {
                 VStack(alignment: .center) {
+                    
+                    Text("Trip Journal")
+                        .font(.custom("BradleyHandITCTT-Bold", size: 30))
+                        .foregroundStyle(.accentMain)
+                    
                     ForEach(viewModel.tripYears, id: \.self) { year in
                         TripYearHeaderView(year: year)
                         TripYearView(trips: viewModel.trips(for: year))
@@ -39,7 +44,7 @@ struct TripTimelineView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 60)
-                    .background(.black)
+                    .background(.accentMain)
                     .foregroundStyle(.white)
                     .clipShape(.capsule)
                 }

@@ -54,6 +54,12 @@
 		B081EC3D2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC3C2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift */; };
 		B0D09E2C2C8F767A003AA492 /* DaySequenceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E2B2C8F767A003AA492 /* DaySequenceItemView.swift */; };
 		B0D09E2E2C8F854E003AA492 /* Calendar+daysBetween.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E2D2C8F854E003AA492 /* Calendar+daysBetween.swift */; };
+		B0D09E312C907F1D003AA492 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E302C907F1D003AA492 /* BackButton.swift */; };
+		B0D09E332C907FCC003AA492 /* AddItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E322C907FCC003AA492 /* AddItemButton.swift */; };
+		B0D09E352C90802C003AA492 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E342C90802C003AA492 /* DeleteButton.swift */; };
+		B0D09E372C9080BF003AA492 /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E362C9080BF003AA492 /* CancelButton.swift */; };
+		B0D09E392C908160003AA492 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E382C908160003AA492 /* SaveButton.swift */; };
+		B0D09E3B2C9081B4003AA492 /* EditItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E3A2C9081B4003AA492 /* EditItemButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +121,12 @@
 		B081EC3C2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview-ViewTripTimelineUseCase.swift"; sourceTree = "<group>"; };
 		B0D09E2B2C8F767A003AA492 /* DaySequenceItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySequenceItemView.swift; sourceTree = "<group>"; };
 		B0D09E2D2C8F854E003AA492 /* Calendar+daysBetween.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+daysBetween.swift"; sourceTree = "<group>"; };
+		B0D09E302C907F1D003AA492 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
+		B0D09E322C907FCC003AA492 /* AddItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemButton.swift; sourceTree = "<group>"; };
+		B0D09E342C90802C003AA492 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
+		B0D09E362C9080BF003AA492 /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
+		B0D09E382C908160003AA492 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
+		B0D09E3A2C9081B4003AA492 /* EditItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +231,7 @@
 		B043827B2C7E45FE00AC21E4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B0D09E2F2C907EDA003AA492 /* Buttons */,
 				B04382602C7E217000AC21E4 /* TripTimelineView.swift */,
 				B081EC392C8E3C0D00F26607 /* TripSummaryView.swift */,
 				B043827C2C7E5C7E00AC21E4 /* TripView.swift */,
@@ -324,6 +337,19 @@
 				B081EC3C2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift */,
 			);
 			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B0D09E2F2C907EDA003AA492 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				B0D09E302C907F1D003AA492 /* BackButton.swift */,
+				B0D09E322C907FCC003AA492 /* AddItemButton.swift */,
+				B0D09E342C90802C003AA492 /* DeleteButton.swift */,
+				B0D09E362C9080BF003AA492 /* CancelButton.swift */,
+				B0D09E382C908160003AA492 /* SaveButton.swift */,
+				B0D09E3A2C9081B4003AA492 /* EditItemButton.swift */,
+			);
+			path = Buttons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -443,18 +469,24 @@
 				B081EC362C8CD2DA00F26607 /* ContentView.swift in Sources */,
 				B0D09E2C2C8F767A003AA492 /* DaySequenceItemView.swift in Sources */,
 				B043828F2C7F703E00AC21E4 /* SaveTripUseCase.swift in Sources */,
+				B0D09E372C9080BF003AA492 /* CancelButton.swift in Sources */,
 				B04382612C7E217000AC21E4 /* TripTimelineView.swift in Sources */,
+				B0D09E3B2C9081B4003AA492 /* EditItemButton.swift in Sources */,
 				B04382852C7EC1F500AC21E4 /* Date+SecondsForDays.swift in Sources */,
 				B043828D2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift in Sources */,
+				B0D09E352C90802C003AA492 /* DeleteButton.swift in Sources */,
 				B081EC322C8C90C500F26607 /* ContentObjectModel+content.swift in Sources */,
 				B081EC3D2C8E3CE100F26607 /* Preview-ViewTripTimelineUseCase.swift in Sources */,
 				B043825F2C7E217000AC21E4 /* TripJournalApp.swift in Sources */,
 				B04382892C7ED19800AC21E4 /* DayView.swift in Sources */,
+				B0D09E312C907F1D003AA492 /* BackButton.swift in Sources */,
 				B081EC342C8CACA100F26607 /* SaveContentUseCase.swift in Sources */,
 				B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */,
 				B043827A2C7E3D5500AC21E4 /* TripSequenceViewModel.swift in Sources */,
+				B0D09E332C907FCC003AA492 /* AddItemButton.swift in Sources */,
 				B0D09E2E2C8F854E003AA492 /* Calendar+daysBetween.swift in Sources */,
 				B04382B02C8502E200AC21E4 /* TripSequence.swift in Sources */,
+				B0D09E392C908160003AA492 /* SaveButton.swift in Sources */,
 				B04382972C7F970900AC21E4 /* TripObjectModel.swift in Sources */,
 				B043829F2C7F9C8800AC21E4 /* ContentObjectModel.swift in Sources */,
 				B081EC302C8BCE5700F26607 /* ContentSequence.swift in Sources */,

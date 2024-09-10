@@ -23,69 +23,79 @@ struct DayView: View {
     }
     
     var body: some View {
-        ScrollView{
-            LazyVStack(alignment: .leading) {
-                DayDetailsView(day: viewModel.day, isEditing: $isEditing)
-                CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $day.coverImageData, isEditing: $isEditing)
-                ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
+        ScrollViewReader { reader in
+            ScrollView{
+                LazyVStack(alignment: .leading) {
+                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $day.coverImageData, isEditing: $isEditing)
+                        .id("Top")
+                    DayHeaderView(day: viewModel.day, isEditing: $isEditing)
+                        .offset(y: -35)
+                    
+                    ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
+                }
             }
-        }
-        .navigationTitle(viewModel.day.title)
-        .navigationBarBackButtonHidden(isEditing)
-        .toolbar {
-            
-            if !isEditing {
-                ToolbarItem(placement: .primaryAction) {
-                    editDayButton
+            .onChange(of: isEditing, {
+                withAnimation {
+                    reader.scrollTo("Top", anchor: .top) // scroll to Top
                 }
+            })
+            .scrollDisabled(isEditing)
+            .ignoresSafeArea(edges: .top)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
                 
-                ToolbarItem(placement: .bottomBar) {
-                    addContentButton
-                }
-                
-            } else {
-                ToolbarItem(placement: .primaryAction) {
-                    saveChangesButton
-                }
-                
-                ToolbarItem(placement: .cancellationAction) {
-                    cancelEditButton
-                }
-                
-                if viewModel.day.lastSaveDate != nil {
+                if !isEditing {
+                    ToolbarItem(placement: .primaryAction) {
+                        editDayButton
+                    }
                     ToolbarItem(placement: .bottomBar) {
-                        deleteTripButton
+                        addContentButton
+                    }
+                    ToolbarItem(placement: .topBarLeading) {
+                        backButton
+                    }
+                } else {
+                    ToolbarItem(placement: .primaryAction) {
+                        saveChangesButton
+                    }
+                    ToolbarItem(placement: .cancellationAction) {
+                        cancelEditButton
+                    }
+                    if viewModel.day.lastSaveDate != nil {
+                        ToolbarItem(placement: .bottomBar) {
+                            deleteDayButton
+                        }
                     }
                 }
             }
+            .toolbarBackground(.hidden, for: .bottomBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
         }
-        .toolbarBackground(.hidden, for: .bottomBar)
     }
     
     var editDayButton: some View {
-        Button {
+        
+        EditItemButton {
             withAnimation {
                 isEditing = true
             }
-        } label: {
-            Text("Edit")
         }
     }
     
     var saveChangesButton: some View {
-        Button {
+        
+        SaveButton {
             viewModel.save(day: viewModel.day)
             withAnimation{
                 isEditing = false
             }
-        } label: {
-            Text("Save")
         }
     }
     
     var cancelEditButton: some View {
-        Button {
-            //If trip was never saved, cancel returns user to timeline view
+        
+        CancelButton {
+            //If day was never saved, cancel returns user to timeline view
             if viewModel.day.lastSaveDate == nil {
                 router.path.removeLast()
             }
@@ -93,46 +103,34 @@ struct DayView: View {
             withAnimation{
                 isEditing = false
             }
-        } label: {
-            Text("Cancel")
         }
     }
     
-    var deleteTripButton: some View {
-        Button {
+    var deleteDayButton: some View {
+        
+        DeleteButton {
             viewModel.delete(day: viewModel.day)
             router.path.removeLast()
-        } label: {
-            HStack {
-                Image(systemName: "trash")
-                Text("Delete Day")
-            }
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 60)
-        .background(.red)
-        .foregroundStyle(.white)
-        .clipShape(.capsule)
+    }
+    
+    var backButton: some View {
+        
+        BackButton {
+            router.path.removeLast()
+        }
     }
     
     var addContentButton: some View {
-        Button {
+        
+        AddItemButton {
             viewModel.addNewTextContent(type: .text, for: day)
             print("Adding Text Content")
-        } label: {
-            HStack {
-                Text("New Content")
-            }
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 60)
-        .background(.black)
-        .foregroundStyle(.white)
-        .clipShape(.capsule)
     }
 }
 
-struct DayDetailsView: View {
+struct DayHeaderView: View {
     
     @ObservedObject var day: Day
     @Binding var isEditing: Bool
@@ -144,24 +142,38 @@ struct DayDetailsView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             
             if isEditing {
                 TextField("Day:", text: $day.title)
                     .font(.title3)
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(.black)
                     .padding(8)
                     .background(.textFieldBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.horizontal, 10)
 
                 DatePicker("Date", selection: $day.date, displayedComponents: .date)
                     .labelsHidden()
                 
             } else {
                 Text(day.title)
+                    .font(.title3)
+                    .fontWeight(.light)
+                    .foregroundStyle(.textTitle)
+                
                 Text(dateFormatter.string(from: day.date))
+                    .font(.caption)
+                    .fontWeight(.light)
+                    .foregroundStyle(.textSubheader)
             }
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal, 20)
     }
 }
 
