@@ -21,9 +21,9 @@ protocol DataServiceProtocol {
     func delete(day: Day)
     
     //Content
-    func fetchContentFor(day: Day) -> Set<Content>
-    func save(content: Content, for day: Day)
-    func deleteContent(content: Content)
+    func fetchContentFor(day: Day) -> Set<ContentItem>
+    func save(content: ContentItem, for day: Day)
+    func deleteContent(content: ContentItem)
     
 }
 
@@ -217,12 +217,12 @@ class RealmDataService: DataServiceProtocol {
     
     //MARK: Content
     
-    func fetchContentFor(day: Day) -> Set<Content> {
+    func fetchContentFor(day: Day) -> Set<ContentItem> {
         
         if let dayObject = dayObjectModelFor(dayId: day.id) {
                 
             print("found dayObject")
-            var contentSet = Set<Content>()
+            var contentSet = Set<ContentItem>()
             
             for contentObject in dayObject.contentSequence {
                 contentSet.insert(contentObject.content(for: day))
@@ -236,8 +236,8 @@ class RealmDataService: DataServiceProtocol {
     }
     
     
-    func save(content: Content, for day: Day) {
-        if let contentObject = contentObjectModelFor(contentId: day.id) {
+    func save(content: ContentItem, for day: Day) {
+        if let contentObject = contentObjectModelFor(contentId: content.id) {
             print("attempting to UPDATE content of type: \(content.type) id: \(content.id)")
             update(objectModel: contentObject, for: content)
             print("Successfully UPDATED content type: \(content.type) id: \(content.id)")
@@ -249,7 +249,7 @@ class RealmDataService: DataServiceProtocol {
     
     }
     
-    private func createContentObjectModel(for content: Content, day: Day) {
+    private func createContentObjectModel(for content: ContentItem, day: Day) {
         
         print("creating new text content")
         
@@ -279,7 +279,7 @@ class RealmDataService: DataServiceProtocol {
         
     }
     
-    private func update(objectModel: ContentObjectModel, for content: Content) {
+    private func update(objectModel: ContentObjectModel, for content: ContentItem) {
         
         let realm = try! Realm()
             
@@ -294,7 +294,7 @@ class RealmDataService: DataServiceProtocol {
         
     }
     
-    func deleteContent(content: Content) {
+    func deleteContent(content: ContentItem) {
         
         if let objectModel = contentObjectModelFor(contentId: content.id) {
             
@@ -314,7 +314,8 @@ class RealmDataService: DataServiceProtocol {
         let results = contentObjects.where {
             $0.id == contentId
         }
-        
+
+        print("found \(results.count) content item with ID \(contentId)")
         return results.first
     }
     

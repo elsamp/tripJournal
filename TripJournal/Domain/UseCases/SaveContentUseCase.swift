@@ -8,8 +8,8 @@
 import Foundation
 
 protocol SaveContentUseCaseProtocol {
-    func save(content: Content, for day: Day)
-    func saveImageDataFor(content: Content, data: Data)
+    func save(content: ContentItem, for day: Day)
+    func saveImageDataFor(content: ContentItem, data: Data)
 }
 
 struct SaveContentUseCase: SaveContentUseCaseProtocol {
@@ -20,12 +20,12 @@ struct SaveContentUseCase: SaveContentUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func save(content: Content, for day: Day) {
+    func save(content: ContentItem, for day: Day) {
         content.lastSaveDate = Date.now
         dataService.save(content: content, for: day)
     }
     
-    func saveImageDataFor(content: Content, data: Data) {
+    func saveImageDataFor(content: ContentItem, data: Data) {
         
         print("UseCase saving photo")
         let imageHelper = ImageHelperService.shared

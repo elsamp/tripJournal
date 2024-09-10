@@ -9,13 +9,13 @@ import Foundation
 
 extension ContentObjectModel {
     
-    func content(for day: Day) -> Content {
-        return Content(id: self.id, 
+    func content(for day: Day) -> ContentItem {
+        return ContentItem(id: self.id, 
                        day: day,
                        sequenceIndex: self.sequenceIndex,
                        type: ContentType(rawValue: self.type) ?? .text,
                        photoFileName: self.fileName,
-                       text: self.text,
+                       text: self.text ?? "",
                        creationDate: self.creationDate,
                        lastUpdateDate: self.lastUpdateDate,
                        lastSaveDate: self.lastSaveDate )

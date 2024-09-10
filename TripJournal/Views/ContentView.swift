@@ -8,92 +8,255 @@
 import SwiftUI
 
 struct ContentView: View {
+    var viewModel: ContentViewModelProtocol
+    var isSelected: Bool
+    @ObservedObject var content: ContentItem
     
-    @ObservedObject var content: Content
+    init(viewModel: ContentViewModelProtocol, isSelected: Bool, content: ContentItem) {
+        self.viewModel = viewModel
+        self.isSelected = isSelected
+        self.content = viewModel.content
+    }
     
     @ViewBuilder
     var body: some View {
         switch content.type {
             case .photo:
                 if let unwrappedPhotoData = Binding($content.photoData) {
-                    ContentPhotoView(imageData: unwrappedPhotoData)
-                    /*
-                    AsyncImage(url: ImageHelperService.shared.imageURL(for: content)) { phase in
-                        if let image = phase.image {
-                            image // Displays the loaded image.
-                                .resizable()
-                                .scaledToFill()
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 300)
-                                .clipped()
-                        } else if phase.error != nil {
-                            Color.red // Indicates an error.
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 300)
-                        } else {
-                            Color.blue // Acts as a placeholder.
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 300)
-                        }
-                    }
-                     */
+                    ContentPhotoView(viewModel: viewModel,
+                                     isSelected: isSelected,
+                                     photoDataUpdateDelegate: viewModel)
                 }
             case .text:
-                if let unwrappedText = Binding($content.text) {
-                    ContentTextView(text: unwrappedText)
+                ContentTextView(viewModel: viewModel, isSelected: isSelected)
+                .onChange(of: isSelected) { oldValue, newValue in
+                    if newValue == false {
+                        viewModel.save(content: content)
+                    }
                 }
+                
         }
     }
 }
 
 struct ContentTextView: View {
     
-    @Binding var text: String
+    var viewModel: ContentViewModelProtocol
+    @ObservedObject var content: ContentItem
+    var isSelected = true
+    
+    init(viewModel: ContentViewModelProtocol, isSelected: Bool = false) {
+        self.viewModel = viewModel
+        self.content = viewModel.content
+        self.isSelected = isSelected
+        
+        print("content view init \(content.id), IsSelected \(isSelected)")
+    }
     
     var body: some View {
-        VStack {
-            TextEditor(text: $text)
-                .background(.textFieldBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .frame(maxWidth: .infinity)
-                .frame(minHeight: 50)
+        if isSelected {
+            VStack(alignment: .leading) {
+                
+                HStack {
+                    DatePicker("", selection: $content.lastUpdateDate, displayedComponents: .hourAndMinute)
+                        .fixedSize()
+                        .labelsHidden()
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 0)
+                    
+                    Spacer()
+                    
+                    Button {
+                        viewModel.delete(content: content)
+                    } label: {
+                        Image(systemName: "trash.circle.fill")
+                            .font(.title)
+                            .foregroundStyle(.red)
+                            .background(.white)
+                            .clipShape(.circle)
+                    }
+                    .padding(.horizontal, 8)
+                }
+                
+                
+                TextField("Today I ...", text: $content.text, axis: .vertical)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.textFieldBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(2)
+                    .background(.accentMain)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .foregroundColor(.black)
+                    .multilineTextAlignment(.leading)
+                
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 10)
+            .padding(.horizontal, 10)
+        } else {
+            VStack(alignment: .leading) {
+                Text(content.creationDate, format: .dateTime)
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .padding(.bottom, 2)
+                    .padding(.horizontal, 28)
+                
+                Text(content.text)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 30)
+                    .padding(.horizontal, 24)
+
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 15)
         }
-        .padding(40)
+        
+    }
+    
+    func saveChanges() {
         
     }
 }
 
+import PhotosUI
+
 struct ContentPhotoView: View {
     
-    @Binding var imageData: Data
+    @State private var selectedItem: PhotosPickerItem?
+    var photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol
+    var viewModel: ContentViewModelProtocol
+    @ObservedObject var content: ContentItem
+    var isSelected = true
+    @State private var updatedImage: Image?
+    
+    init(viewModel: ContentViewModelProtocol, isSelected: Bool = false, photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol) {
+        self.viewModel = viewModel
+        self.content = viewModel.content
+        self.isSelected = isSelected
+        self.photoDataUpdateDelegate = photoDataUpdateDelegate
+        
+        print("content view init \(content.id), IsSelected \(isSelected)")
+    }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             
-            if let uiImage = UIImage(data: imageData) {
-
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 300)
-                    .clipped()
+            if isSelected {
+                HStack {
+                    DatePicker("", selection: $content.lastUpdateDate, displayedComponents: .hourAndMinute)
+                        .fixedSize()
+                        .labelsHidden()
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 0)
+                    
+                    Spacer()
+                    
+                    Button {
+                        viewModel.delete(content: content)
+                    } label: {
+                        Image(systemName: "trash.circle.fill")
+                            .font(.title)
+                            .foregroundStyle(.red)
+                            .background(.white)
+                            .clipShape(.circle)
+                    }
+                    .padding(.horizontal, 8)
+                }
+            } else {
+                Text(content.creationDate, format: .dateTime)
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .padding(.bottom, 2)
+                    .padding(.horizontal, 28)
+                    .padding(.top, 15)
             }
-            //Add Picker Button
+            
+            ZStack(alignment: .center) {
+                
+                if isSelected {
+                    Rectangle()
+                        .fill(.accentMain)
+                }
+                
+                Group {
+                    if updatedImage != nil {
+                        updatedImage?
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity)
+                            .opacity(isSelected ? 0.7 : 1)
+                    } else {
+                        AsyncImage(url: ImageHelperService.shared.imageURL(for: content)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity)
+                                    .opacity(isSelected ? 0.7 : 1)
+                            } else if phase.error != nil {
+                                Color.red // Indicates an error.
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 300)
+                            } else {
+                                Color.gray // Acts as a placeholder.
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 300)
+                            }
+                        }
+                    }
+                    
+                    if (isSelected) {
+                        PhotosPicker(selection: $selectedItem, matching: .images) {
+                            Image(systemName: "photo.badge.plus.fill")
+                                .font(.system(size: 60))
+                                .padding(5)
+                                .foregroundColor(.white)
+                            
+                        }
+                        .onChange(of: selectedItem) { oldValue, newValue in
+                            Task {
+                                if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                                    
+                                    if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                                        photoDataUpdateDelegate.imageDataUpdatedTo(pngData)
+                                        updatedImage = Image(uiImage: uiImage)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(isSelected ? 2 : 0)
+            }
         }
         
     }
 }
 
 #Preview {
-    struct PreviewHelperView: View {
+    VStack {
+        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
+                                                    contentChangeDelegate: PreviewHelper.shared),
+                        isSelected: true)
         
-        @State private var text = "This is some text"
+        ContentPhotoView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
+                                                     contentChangeDelegate: PreviewHelper.shared),
+                         isSelected: true,
+                         photoDataUpdateDelegate: PreviewHelper.shared)
         
-        var body: some View {
-            ContentTextView(text: $text)
-        }
+        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
+                                                    contentChangeDelegate: PreviewHelper.shared),
+                        isSelected: false)
+        /*
+        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContentWith(text: ""),
+                                                    contentChangeDelegate: PreviewHelper.shared),
+                        isSelected: false)
+        
+        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContentWith(text: "Sample Text"),
+                                                    contentChangeDelegate: PreviewHelper.shared),
+                        isSelected: false)
+         */
     }
-    
-    return PreviewHelperView()
 }

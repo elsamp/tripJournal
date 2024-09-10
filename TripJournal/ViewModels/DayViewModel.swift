@@ -8,18 +8,23 @@
 import Foundation
 
 
-protocol DayViewModelProtocol: PhotoDataUpdateDelegatProtocol {
+protocol DayViewModelProtocol: PhotoDataUpdateDelegatProtocol, ContentChangeDelegateProtocol {
     var day: Day { get }
     var contentSequence: ContentSequence { get }
-    var contentArray: [Content] { get }
+    var contentArray: [ContentItem] { get }
     
     func save(day: Day)
     func delete(day: Day)
-    func addNewTextContent(type: ContentType, for day: Day)
+    func addNewTextContent(for day: Day)
     func addNewPhotoContent(with data: Data, for day: Day)
+    func select(content: ContentItem)
+    func deselectAll()
+    func isSelected(content: ContentItem) -> Bool
+    func isAnySelected() -> Bool
+    
 }
 
-class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol {
+class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, ContentChangeDelegateProtocol {
 
     private let contentSequenceProvider: ViewContentSequenceUseCaseProtocol
     private var saveDayUseCase: SaveDayUseCaseProtocol
@@ -28,7 +33,7 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol {
     
     public private(set) var day: Day
     public private(set) var contentSequence: ContentSequence
-    var contentArray: [Content] {
+    var contentArray: [ContentItem] {
         contentSequence.contentItems.sorted()
     }
     
@@ -82,40 +87,72 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol {
     func addNewPhotoContent(with data: Data, for day: Day) {
         
         print("saving new photo content. SequenceCount \(contentSequence.contentItems.count)")
-        let newContent = Content(id: UUID().uuidString,
-                                 day: day,
+        let newContent = ContentItem(id: UUID().uuidString,
+                                 day:  day,
                                  sequenceIndex: contentSequence.contentItems.count, //Place at the end
                                  type: .photo,
                                  photoFileName: nil,
-                                 text: nil,
+                                 text: "",
                                  creationDate: Date.now,
                                  lastUpdateDate: Date.now,
                                  lastSaveDate: nil)
         
+        newContent.photoData = data
         saveContentUseCase.saveImageDataFor(content: newContent, data: data)
         
         contentSequence.add(content: newContent)
-        saveContentUseCase.save(content: newContent, for: day)
+        contentSequence.select(content: newContent)
+        saveContentUseCase.save(content: newContent, for:  day)
         
         print("saved new photo content. SequenceCount \(contentSequence.contentItems.count)")
     }
     
-    func addNewTextContent(type: ContentType, for day: Day) {
+    func addNewTextContent(for day: Day) {
         print("saving new text content. SequenceCount \(contentSequence.contentItems.count)")
         
-        let newContent = Content(id: UUID().uuidString,
+        let newContent = ContentItem(id: UUID().uuidString,
                                  day: day,
                                  sequenceIndex: contentSequence.contentItems.count, //Place at the end
                                  type: .text,
                                  photoFileName: nil,
-                                 text: "Testing",
+                                 text: "",
                                  creationDate: Date.now,
                                  lastUpdateDate: Date.now,
                                  lastSaveDate: nil)
         
         contentSequence.add(content: newContent)
-        saveContentUseCase.save(content: newContent, for: day)
+        contentSequence.select(content: newContent)
+        saveContentUseCase.save(content: newContent, for:  day)
         
         print("saved new text content. SequenceCount \(contentSequence.contentItems.count)")
+    }
+    
+    func select(content: ContentItem) {
+        contentSequence.select(content: content)
+    }
+    
+    func deselectAll() {
+        contentSequence.deselectAll()
+    }
+    
+    func isSelected(content: ContentItem) -> Bool {
+        if let selectedContent = contentSequence.selectedItem {
+            
+            
+            if content.id == selectedContent.id {
+                print("returning TRUE: \(content.id) == \(selectedContent.id)")
+                return true
+            } else {
+                print("returning FALSE: \(content.id) == \(selectedContent.id)")
+                return false
+            }
+        }
+        
+        print("no item selected to compare against")
+        return false
+    }
+    
+    func isAnySelected() -> Bool {
+        contentSequence.selectedItem != nil
     }
 }

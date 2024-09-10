@@ -9,23 +9,24 @@ import Foundation
 
 class ContentSequence: ObservableObject, Identifiable {
     let id: String
-    @Published var contentItems: [Content]
+    @Published var contentItems: [ContentItem]
+    @Published var selectedItem: ContentItem? = nil
 
-    init(id: String, contentItems: [Content]) {
+    init(id: String, contentItems: [ContentItem]) {
         self.id = id
         self.contentItems = contentItems.sorted()
     }
     
-    func add(content: Content) {
+    func add(content: ContentItem) {
         contentItems.append(content)
     }
     
-    func add(content: Content, at index: Int) {
+    func add(content: ContentItem, at index: Int) {
         contentItems.insert(content, at: index)
         resetContentIdices()
     }
     
-    func remove(content: Content) {
+    func remove(content: ContentItem) {
         contentItems.remove(at: content.sequenceIndex)
         resetContentIdices()
     }
@@ -34,6 +35,15 @@ class ContentSequence: ObservableObject, Identifiable {
         for i in 0..<contentItems.count {
             contentItems[i].sequenceIndex = i
         }
+    }
+    
+    func select(content: ContentItem) {
+        selectedItem = content
+        print("Selected \(content.id)")
+    }
+    
+    func deselectAll() {
+        selectedItem = nil
     }
 
 }

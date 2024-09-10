@@ -23,6 +23,7 @@ struct DayView: View {
     }
     
     var body: some View {
+        
         ScrollViewReader { reader in
             ScrollView{
                 LazyVStack(alignment: .leading) {
@@ -34,9 +35,23 @@ struct DayView: View {
                     ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
                 }
             }
+            .onTapGesture {
+                print("tapped scrollview")
+                withAnimation {
+                    viewModel.deselectAll()
+                }
+            }
             .onChange(of: isEditing, {
                 withAnimation {
                     reader.scrollTo("Top", anchor: .top) // scroll to Top
+                }
+            })
+            .onChange(of: contentSequence.selectedItem, {
+                
+                if let id = contentSequence.selectedItem?.id {
+                    withAnimation {
+                        reader.scrollTo(id, anchor: .top) // scroll to selected item
+                    }
                 }
             })
             .scrollDisabled(isEditing)
@@ -47,9 +62,6 @@ struct DayView: View {
                 if !isEditing {
                     ToolbarItem(placement: .primaryAction) {
                         editDayButton
-                    }
-                    ToolbarItem(placement: .bottomBar) {
-                        addContentButton
                     }
                     ToolbarItem(placement: .topBarLeading) {
                         backButton
@@ -117,15 +129,10 @@ struct DayView: View {
     var backButton: some View {
         
         BackButton {
+            if contentSequence.selectedItem != nil {
+                //TODO: save selected content
+            }
             router.path.removeLast()
-        }
-    }
-    
-    var addContentButton: some View {
-        
-        AddItemButton {
-            viewModel.addNewTextContent(type: .text, for: day)
-            print("Adding Text Content")
         }
     }
 }
@@ -184,36 +191,107 @@ struct ContentSequenceView: View {
     var viewModel: DayViewModelProtocol
     @ObservedObject var contentSequence: ContentSequence
     @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedContent: ContentItem? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
             ForEach(contentSequence.contentItems) { content in
-                ContentView(content: content)
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                
-                PhotosPicker(selection: $selectedItem, matching: .images) {
-                    Image(systemName: "photo")
-                }
-                .onChange(of: selectedItem) { oldValue, newValue in
-                    Task {
-                        if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
-                            
-                            if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
-                                viewModel.addNewPhotoContent(with: pngData, for: viewModel.day)
+                ContentView(viewModel: ContentViewModel(content: content, 
+                                                        contentChangeDelegate: viewModel),
+                            isSelected: viewModel.isSelected(content: content),
+                            content: content)
+                .id(content.id)
+                .onTapGesture {
+                    print("tapped content view!")
+                    withAnimation {
+                        if !viewModel.isSelected(content: content) {
+                            if viewModel.isAnySelected() {
+                                viewModel.deselectAll()
+                            } else {
+                                viewModel.select(content: content)
                             }
                         }
                     }
                 }
             }
+            
+            
+            
+            Spacer()
+                .frame(height: 100)
         }
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                addContentButtons
+            }
+        }
+    }
+    
+    var addContentButtons: some View {
+        
+        HStack(alignment: .center) {
+
+            Button {
+                viewModel.addNewTextContent(for: viewModel.day)
+                print("Adding Text Content")
+            } label: {
+                ZStack(alignment: .center) {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(.accentMain)
+                        .frame(height: 40)
+                    
+                    HStack{
+                        Image(systemName: "note.text.badge.plus")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .offset(y: 2)
+                        
+                        Text("Add Text")
+                            .foregroundStyle(.white)
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .padding(.horizontal, 5)
+            }
+            
+            PhotosPicker(selection: $selectedItem, matching: .images) {
+                ZStack(alignment: .center) {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(.accentMain)
+                        .frame(height: 40)
+                    
+                    HStack {
+                        Image(systemName: "photo.badge.plus.fill")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .offset(y: 2)
+                        
+                        Text("Add Photo")
+                            .foregroundStyle(.white)
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .padding(.horizontal, 5)
+            }
+            .onChange(of: selectedItem) { oldValue, newValue in
+                Task {
+                    if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                        
+                        if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                            viewModel.addNewPhotoContent(with: pngData, for: viewModel.day)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 40)
+        
     }
 }
 
 
 
 #Preview {
-    DayView(viewModel: DayViewModel(day: PreviewHelper.shared.mockDay()))
+    DayView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProtocol {
+struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProtocol, ContentChangeDelegateProtocol {
     
     
 
@@ -58,6 +58,40 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                    coverPhotoPath: nil,
                    creationDate: Date.now,
                    lastUpdateDate: Date.now)
+    }
+    
+    func mockTextContent() -> ContentItem {
+        
+        let text =
+            """
+            This is a longer bit of text to help me see what it looks like in the preview.
+            
+            It would be nice if I also had a way to do this for pictures, but alas,
+            I havn't figured out how to do that yet. Perhaps soon...
+            """
+        
+        return ContentItem(id: UUID().uuidString,
+                day: mockDay(),
+                sequenceIndex: 1,
+                type: .text,
+                photoFileName: nil,
+                text: text,
+                creationDate: Date.now,
+                lastUpdateDate: Date.now,
+                lastSaveDate: Date.now)
+    }
+    
+    func mockTextContentWith(text: String) -> ContentItem {
+        
+        return ContentItem(id: UUID().uuidString,
+                day: mockDay(),
+                sequenceIndex: 1,
+                type: .text,
+                photoFileName: nil,
+                text: text,
+                creationDate: Date.now,
+                lastUpdateDate: Date.now,
+                lastSaveDate: Date.now)
     }
     
     func fetchDaysFor(trip: Trip) -> DaySequence {

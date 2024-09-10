@@ -13,13 +13,13 @@ enum ContentType: String {
     //case video
 }
 
-class Content: ObservableObject, Identifiable, Hashable, Comparable {
+class ContentItem: ObservableObject, Identifiable, Hashable, Comparable, Equatable {
     
     let id: String
     let day: Day
     @Published var sequenceIndex: Int
     @Published var type: ContentType
-    @Published var text: String?
+    @Published var text: String
     @Published var photoFileName: String?
     @Published var photoData: Data?
     let creationDate: Date
@@ -35,7 +35,7 @@ class Content: ObservableObject, Identifiable, Hashable, Comparable {
         }
     }
     
-    init(id: String, day: Day, sequenceIndex: Int, type: ContentType, photoFileName: String?, text: String?, creationDate: Date, lastUpdateDate: Date, lastSaveDate: Date?) {
+    init(id: String, day: Day, sequenceIndex: Int, type: ContentType, photoFileName: String?, text: String, creationDate: Date, lastUpdateDate: Date, lastSaveDate: Date?) {
         self.id = id
         self.day = day
         self.sequenceIndex = sequenceIndex
@@ -49,11 +49,11 @@ class Content: ObservableObject, Identifiable, Hashable, Comparable {
         self.photoData = ImageHelperService.shared.imageDataFor(content: self)
     }
     
-    static func == (lhs: Content, rhs: Content) -> Bool {
+    static func == (lhs: ContentItem, rhs: ContentItem) -> Bool {
         lhs.id == rhs.id
     }
     
-    static func <(lhs: Content, rhs: Content) -> Bool {
+    static func <(lhs: ContentItem, rhs: ContentItem) -> Bool {
         lhs.sequenceIndex < rhs.sequenceIndex
     }
     

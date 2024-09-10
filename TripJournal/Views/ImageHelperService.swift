@@ -22,7 +22,7 @@ struct ImageHelperService {
         return "\(day.id).png"
     }
     
-    func fileName(for content: Content) -> String {
+    func fileName(for content: ContentItem) -> String {
         return "\(content.id).png"
     }
     
@@ -34,7 +34,7 @@ struct ImageHelperService {
         return directoryURLFor(day: day).appending(path: fileName(for: day))
     }
     
-    func imageURL(for content: Content) -> URL {
+    func imageURL(for content: ContentItem) -> URL {
         return directoryURLFor(day: content.day).appending(path: fileName(for: content))
     }
     
@@ -46,7 +46,7 @@ struct ImageHelperService {
         return directoryURLFor(trip: day.trip).appending(path: day.id)
     }
     
-    func directoryURLFor(content: Content) -> URL {
+    func directoryURLFor(content: ContentItem) -> URL {
         return directoryURLFor(day: content.day)
     }
     
@@ -59,7 +59,7 @@ struct ImageHelperService {
         saveImage(data: data, directory: directoryURLFor(trip: trip), fileName: fileName(for: trip))
     }
     
-    func saveImage(data: Data, for content: Content) {
+    func saveImage(data: Data, for content: ContentItem) {
         print("ImageHelper: saving data for content")
         saveImage(data: data, directory: directoryURLFor(content: content), fileName: fileName(for: content))
     }
@@ -87,7 +87,7 @@ struct ImageHelperService {
         imageDataFor(fileURL: directoryURLFor(day: day).appending(path: fileName(for: day)))
     }
     
-    func imageDataFor(content: Content) -> Data? {
+    func imageDataFor(content: ContentItem) -> Data? {
         imageDataFor(fileURL: directoryURLFor(day: content.day).appending(path: fileName(for: content)))
     }
     
