@@ -8,8 +8,6 @@
 import Foundation
 
 struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProtocol, ContentChangeDelegateProtocol {
-    
-    
 
     static let shared = PreviewHelper()
     
@@ -98,4 +96,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
         return DaySequence(id: UUID().uuidString, days: [mockDay(), mockDay(), mockDay()])
     }
     
+    func delete(content: ContentItem) {
+        //do nothing
+    }
 }

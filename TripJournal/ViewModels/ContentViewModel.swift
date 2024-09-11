@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ContentChangeDelegateProtocol {
-    
+    func delete(content: ContentItem)
 }
 
 protocol ContentViewModelProtocol: PhotoDataUpdateDelegatProtocol  {
@@ -37,8 +37,7 @@ class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol
     }
     
     func delete(content: ContentItem) {
-        //TODO: Implement
-        print("Delete not yet implemented!")
+        contentChangeDelegate.delete(content: content)
     }
     
     func imageDataUpdatedTo(_ data: Data) {

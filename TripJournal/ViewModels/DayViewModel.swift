@@ -30,6 +30,7 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
     private var saveDayUseCase: SaveDayUseCaseProtocol
     private var saveContentUseCase: SaveContentUseCaseProtocol
     private var deleteDayUseCase: DeleteDayUseCaseProtocol
+    private var deleteContentUseCase: DeleteContentUseCaseProtocol
     
     public private(set) var day: Day
     public private(set) var contentSequence: ContentSequence
@@ -43,13 +44,15 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
          day: Day,
          saveDayUseCase: SaveDayUseCaseProtocol = SaveDayUseCase(),
          saveContentUseCase: SaveContentUseCaseProtocol = SaveContentUseCase(),
-         deleteDayUseCase: DeleteDayUseCaseProtocol = DeleteDayUseCase()) {
+         deleteDayUseCase: DeleteDayUseCaseProtocol = DeleteDayUseCase(),
+         deleteContentUseCase: DeleteContentUseCaseProtocol = DeleteContentUseCase()) {
         self.contentSequenceProvider = contentSequenceProvider
         self.day = day
         self.contentSequence = contentSequenceProvider.fetchContentSquence(for: day)
         self.saveDayUseCase = saveDayUseCase
         self.saveContentUseCase = saveContentUseCase
         self.deleteDayUseCase = deleteDayUseCase
+        self.deleteContentUseCase = deleteContentUseCase
     }
     
     func save(day: Day) {
@@ -154,5 +157,11 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
     
     func isAnySelected() -> Bool {
         contentSequence.selectedItem != nil
+    }
+    
+    func delete(content: ContentItem) {
+        deselectAll()
+        contentSequence.remove(content: content)
+        deleteContentUseCase.delete(content: content)
     }
 }

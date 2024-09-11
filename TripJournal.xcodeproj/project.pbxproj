@@ -62,6 +62,7 @@
 		B0D09E3B2C9081B4003AA492 /* EditItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E3A2C9081B4003AA492 /* EditItemButton.swift */; };
 		B0D09E3D2C90AD3E003AA492 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E3C2C90AD3E003AA492 /* ContentViewModel.swift */; };
 		B0D09E3F2C91EBB0003AA492 /* ContentSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E3E2C91EBB0003AA492 /* ContentSequenceView.swift */; };
+		B0D09E412C91F075003AA492 /* DeleteContentUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E402C91F075003AA492 /* DeleteContentUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,7 @@
 		B0D09E3A2C9081B4003AA492 /* EditItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemButton.swift; sourceTree = "<group>"; };
 		B0D09E3C2C90AD3E003AA492 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		B0D09E3E2C91EBB0003AA492 /* ContentSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSequenceView.swift; sourceTree = "<group>"; };
+		B0D09E402C91F075003AA492 /* DeleteContentUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteContentUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +230,7 @@
 				B042C3B82C88A6A200674B5D /* DeleteDayUseCase.swift */,
 				B043828C2C7F659C00AC21E4 /* ViewContentSequenceUseCase.swift */,
 				B081EC332C8CACA100F26607 /* SaveContentUseCase.swift */,
+				B0D09E402C91F075003AA492 /* DeleteContentUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				B0D09E312C907F1D003AA492 /* BackButton.swift in Sources */,
 				B081EC342C8CACA100F26607 /* SaveContentUseCase.swift in Sources */,
 				B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */,
+				B0D09E412C91F075003AA492 /* DeleteContentUseCase.swift in Sources */,
 				B043827A2C7E3D5500AC21E4 /* TripSequenceViewModel.swift in Sources */,
 				B0D09E332C907FCC003AA492 /* AddItemButton.swift in Sources */,
 				B0D09E2E2C8F854E003AA492 /* Calendar+daysBetween.swift in Sources */,
