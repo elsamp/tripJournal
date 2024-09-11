@@ -24,7 +24,7 @@ struct TripView: View {
         ScrollViewReader { reader in
             ScrollView{
                 LazyVStack(alignment: .leading) {
-                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $trip.coverImageData, isEditing: $isEditing)
+                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURL(for: trip), isEditing: $isEditing)
                         .id("Top")
                     
                     TripHeaderView(trip: viewModel.trip, isEditing: $isEditing)

@@ -12,13 +12,14 @@ struct CoverPhotoPickerView: View {
     
     @State private var selectedItem: PhotosPickerItem?
     var photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol
-    @Binding var imageData: Data?
+    var imageURL: URL
     @Binding var isEditing: Bool
+    @State private var updatedImage: Image?
     
-    init(selectedItem: PhotosPickerItem? = nil, photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol, imageData: Binding<Data?>, isEditing: Binding<Bool>) {
+    init(selectedItem: PhotosPickerItem? = nil, photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol, imageURL: URL, isEditing: Binding<Bool>) {
         self.selectedItem = selectedItem
         self.photoDataUpdateDelegate = photoDataUpdateDelegate
-        _imageData = imageData
+        self.imageURL = imageURL
         _isEditing = isEditing
     }
     
@@ -26,25 +27,41 @@ struct CoverPhotoPickerView: View {
         
         ZStack(alignment: .center) {
 
-            if let imageData = imageData, let image = coverImage(data: imageData) {
-                Color.clear
-                    .overlay (
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 300)
-                            .clipped()
-                    )
+            Color.clear
+                .overlay (
+                    Group {
+                        if updatedImage != nil {
+                            updatedImage?
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity)
+                                .opacity(isEditing ? 0.7 : 1)
+                        } else {
+                            
+                            AsyncImage(url: imageURL) { phase in
+                                if let image = phase.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(maxWidth: .infinity)
+                                        .opacity(isEditing ? 0.7 : 1)
+                                } else if phase.error != nil {
+                                    Color.red // Indicates an error.
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 300)
+                                } else {
+                                    Color.gray // Acts as a placeholder.
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 300)
+                                }
+                            }
+                        }
+                    }
+                )
                     .frame(height: 300)
                     .clipped()
                     .opacity(isEditing ? 0.7 : 1)
-            } else {
-                Color.gray // Acts as a placeholder.
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 300)
-            }
-            
+
             if (isEditing) {
                 PhotosPicker(selection: $selectedItem, matching: .images) {
                     Image(systemName: "photo.badge.plus.fill")
@@ -59,6 +76,7 @@ struct CoverPhotoPickerView: View {
                             
                             if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
                                 photoDataUpdateDelegate.imageDataUpdatedTo(pngData)
+                                updatedImage = Image(uiImage: uiImage)
                             }
                         }
                     }
@@ -83,7 +101,7 @@ struct CoverPhotoPickerView: View {
         @State private var imageData: Data? = nil
         
         var body: some View {
-            CoverPhotoPickerView(photoDataUpdateDelegate: PreviewHelper.shared, imageData: $imageData, isEditing: $isEditing)
+            CoverPhotoPickerView(photoDataUpdateDelegate: PreviewHelper.shared, imageURL: ImageHelperService.shared.imageURL(for: PreviewHelper.shared.mockDay()), isEditing: $isEditing)
         }
     }
     

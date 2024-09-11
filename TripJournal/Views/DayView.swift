@@ -40,12 +40,12 @@ struct DayView: View {
         ScrollViewReader { reader in
             ScrollView{
                 LazyVStack(alignment: .leading) {
-                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageData: $day.coverImageData, isEditing: $isEditing)
+                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURL(for: day), isEditing: $isEditing)
                         .id("Top")
                     DayHeaderView(day: viewModel.day, isEditing: $isEditing)
                         .offset(y: -35)
                     
-                    ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
+                    ContentSequenceView(viewModel: viewModel)
                         .allowsHitTesting(!isEditing)
                         .opacity(isEditing ? 0.5 : 1)
                 }
@@ -154,7 +154,7 @@ struct DayView: View {
     var addContentButtons: some View {
         
         HStack(alignment: .center) {
-
+            
             Button {
                 viewModel.addNewTextContent(for: viewModel.day)
                 print("Adding Text Content")
@@ -210,91 +210,55 @@ struct DayView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 40)
-}
-
-    struct DayHeaderView: View {
-        
-        @ObservedObject var day: Day
-        @Binding var isEditing: Bool
-        
-        var dateFormatter: DateFormatter {
-            let formatter = DateFormatter()
-            formatter.setLocalizedDateFormatFromTemplate("MMMdd")
-            return formatter
-        }
-        
-        var body: some View {
-            VStack(alignment: .center) {
-                
-                if isEditing {
-                    TextField("Day:", text: $day.title)
-                        .font(.title3)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.black)
-                        .padding(8)
-                        .background(.textFieldBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.horizontal, 10)
-                    
-                    DatePicker("Date", selection: $day.date, displayedComponents: .date)
-                        .labelsHidden()
-                    
-                } else {
-                    Text(day.title)
-                        .font(.title3)
-                        .fontWeight(.light)
-                        .foregroundStyle(.textTitle)
-                    
-                    Text(dateFormatter.string(from: day.date))
-                        .font(.caption)
-                        .fontWeight(.light)
-                        .foregroundStyle(.textSubheader)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .padding(.horizontal, 20)
-        }
     }
 }
 
-
-
-struct ContentSequenceView: View {
+struct DayHeaderView: View {
     
-    var viewModel: DayViewModelProtocol
-    @ObservedObject var contentSequence: ContentSequence
+    @ObservedObject var day: Day
+    @Binding var isEditing: Bool
+    
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
+        return formatter
+    }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ForEach(contentSequence.contentItems) { content in
-                ContentView(viewModel: ContentViewModel(content: content, 
-                                                        contentChangeDelegate: viewModel),
-                            isSelected: viewModel.isSelected(content: content),
-                            content: content)
-                .id(content.id)
-                .onTapGesture {
-                    print("tapped content view!")
-                    withAnimation {
-                        if !viewModel.isSelected(content: content) {
-                            if viewModel.isAnySelected() {
-                                viewModel.deselectAll()
-                            } else {
-                                viewModel.select(content: content)
-                            }
-                        }
-                    }
-                }
+        VStack(alignment: .center) {
+            
+            if isEditing {
+                TextField("Day:", text: $day.title)
+                    .font(.title3)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.black)
+                    .padding(8)
+                    .background(.textFieldBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.horizontal, 10)
                 
+                DatePicker("Date", selection: $day.date, displayedComponents: .date)
+                    .labelsHidden()
+                
+            } else {
+                Text(day.title)
+                    .font(.title3)
+                    .fontWeight(.light)
+                    .foregroundStyle(.textTitle)
+                
+                Text(dateFormatter.string(from: day.date))
+                    .font(.caption)
+                    .fontWeight(.light)
+                    .foregroundStyle(.textSubheader)
             }
-            Spacer()
-                .frame(height: 100)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal, 20)
     }
 }
-
 
 
 #Preview {
