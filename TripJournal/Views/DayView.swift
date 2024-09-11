@@ -76,8 +76,14 @@ struct DayView: View {
                     ToolbarItem(placement: .topBarLeading) {
                         backButton
                     }
-                    ToolbarItem(placement: .bottomBar) {
-                        addContentButtons
+                    if !viewModel.isAnySelected() {
+                        ToolbarItem(placement: .bottomBar) {
+                            addContentButtons
+                        }
+                    } else {
+                        ToolbarItem(placement: .bottomBar) {
+                            saveContentChangesButton
+                        }
                     }
                 } else {
                     ToolbarItem(placement: .primaryAction) {
@@ -116,6 +122,24 @@ struct DayView: View {
                 isEditing = false
             }
         }
+    }
+    var saveContentChangesButton: some View {
+        
+        Button {
+            viewModel.deselectAll()
+        } label: {
+            HStack {
+                Image(systemName: "checkmark")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                Text("Done")
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 60)
+        .background(.green)
+        .foregroundStyle(.white)
+        .clipShape(.capsule)
     }
     
     var cancelEditButton: some View {

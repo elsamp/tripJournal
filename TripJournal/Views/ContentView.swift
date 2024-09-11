@@ -126,10 +126,6 @@ struct ContentTextView: View {
         }
         
     }
-    
-    func saveChanges() {
-        
-    }
 }
 
 import PhotosUI
