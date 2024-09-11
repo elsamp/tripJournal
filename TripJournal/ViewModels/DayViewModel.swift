@@ -85,6 +85,7 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
     
     func delete(day: Day) {
         deleteDayUseCase.delete(day: day)
+
     }
     
     func addNewPhotoContent(with data: Data, for day: Day) {
@@ -165,5 +166,12 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
         deselectAll()
         contentSequence.remove(content: content)
         deleteContentUseCase.delete(content: content)
+        
+        //saving all other content sequence items as indeces are updated
+        for item in contentSequence.contentItems {
+            saveContentUseCase.save(content:item, for: item.day)
+        }
     }
+    
+    
 }

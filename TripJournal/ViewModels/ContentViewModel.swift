@@ -31,7 +31,6 @@ class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol
         self.saveContentUseCase = saveContentUseCase
     }
 
-    
     func save(content: ContentItem) {
         saveContentUseCase.save(content: content, for: content.day)
     }

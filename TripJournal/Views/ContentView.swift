@@ -62,7 +62,9 @@ struct ContentTextView: View {
                         .labelsHidden()
                         .padding(.horizontal, 8)
                         .padding(.vertical, 0)
-                    
+                    /*
+                    Spacer()
+                    Text("\(content.sequenceIndex)")*/
                     Spacer()
                     
                     Button {
@@ -99,11 +101,17 @@ struct ContentTextView: View {
             .padding(.horizontal, 10)
         } else {
             VStack(alignment: .leading) {
-                Text(content.displayTimestamp, style: .time)
-                    .font(.caption)
-                    .foregroundStyle(.gray)
-                    .padding(.bottom, 2)
-                    .padding(.horizontal, 28)
+                HStack {
+                    Text(content.displayTimestamp, style: .time)
+                        .font(.caption)
+                        .foregroundStyle(.gray)
+                        .padding(.bottom, 2)
+                        .padding(.horizontal, 28)
+                    /*
+                    Spacer()
+                    Text("\(content.sequenceIndex)")*/
+                    
+                }
                 
                 Text(content.text)
                     .multilineTextAlignment(.leading)

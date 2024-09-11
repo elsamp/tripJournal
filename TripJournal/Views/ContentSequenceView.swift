@@ -19,7 +19,7 @@ struct ContentSequenceView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            ForEach(contentSequence.contentItems) { content in
+            ForEach(contentSequence.sortedContentItems()) { content in
                 ContentView(viewModel: ContentViewModel(content: content,
                                                         contentChangeDelegate: viewModel),
                             isSelected: viewModel.isSelected(content: content),

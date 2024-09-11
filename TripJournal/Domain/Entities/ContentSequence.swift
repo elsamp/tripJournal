@@ -17,21 +17,29 @@ class ContentSequence: ObservableObject, Identifiable {
         self.contentItems = contentItems.sorted()
     }
     
+    func sortedContentItems() -> [ContentItem]{
+        contentItems.sorted()
+    }
+    
     func add(content: ContentItem) {
         contentItems.append(content)
     }
     
     func add(content: ContentItem, at index: Int) {
+        contentItems.sort()
         contentItems.insert(content, at: index)
         resetContentIdices()
     }
     
     func remove(content: ContentItem) {
-        contentItems.remove(at: content.sequenceIndex)
+        contentItems.sort()
+        contentItems.removeAll { item in
+            item.id == content.id
+        }
         resetContentIdices()
     }
     
-    func resetContentIdices() {
+    private func resetContentIdices() {
         for i in 0..<contentItems.count {
             contentItems[i].sequenceIndex = i
         }
