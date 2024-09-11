@@ -97,6 +97,7 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
                                  photoFileName: nil,
                                  text: "",
                                  creationDate: Date.now,
+                                 displayTimestamp: Date.now,
                                  lastUpdateDate: Date.now,
                                  lastSaveDate: nil)
         
@@ -120,6 +121,7 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
                                  photoFileName: nil,
                                  text: "",
                                  creationDate: Date.now,
+                                 displayTimestamp: Date.now,
                                  lastUpdateDate: Date.now,
                                  lastSaveDate: nil)
         

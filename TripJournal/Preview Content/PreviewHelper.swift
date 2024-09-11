@@ -75,6 +75,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 photoFileName: nil,
                 text: text,
                 creationDate: Date.now,
+                displayTimestamp: Date.now,
                 lastUpdateDate: Date.now,
                 lastSaveDate: Date.now)
     }
@@ -88,6 +89,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 photoFileName: nil,
                 text: text,
                 creationDate: Date.now,
+                displayTimestamp: Date.now,
                 lastUpdateDate: Date.now,
                 lastSaveDate: Date.now)
     }

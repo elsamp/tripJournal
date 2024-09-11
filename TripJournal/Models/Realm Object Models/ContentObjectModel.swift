@@ -17,6 +17,7 @@ class ContentObjectModel: Object, ObjectKeyIdentifiable {
     @Persisted var fileName: String?
     @Persisted var text: String?
     @Persisted var creationDate: Date
+    @Persisted var displayTimestamp: Date
     @Persisted var lastUpdateDate: Date
     @Persisted var lastSaveDate: Date
 }

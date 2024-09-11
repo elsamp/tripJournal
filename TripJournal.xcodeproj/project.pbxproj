@@ -63,6 +63,8 @@
 		B0D09E3D2C90AD3E003AA492 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E3C2C90AD3E003AA492 /* ContentViewModel.swift */; };
 		B0D09E3F2C91EBB0003AA492 /* ContentSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E3E2C91EBB0003AA492 /* ContentSequenceView.swift */; };
 		B0D09E412C91F075003AA492 /* DeleteContentUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E402C91F075003AA492 /* DeleteContentUseCase.swift */; };
+		B0D09E432C9208AA003AA492 /* ImageLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E422C9208AA003AA492 /* ImageLoadingView.swift */; };
+		B0D09E452C920960003AA492 /* ImageMissingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D09E442C920960003AA492 /* ImageMissingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +135,8 @@
 		B0D09E3C2C90AD3E003AA492 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		B0D09E3E2C91EBB0003AA492 /* ContentSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSequenceView.swift; sourceTree = "<group>"; };
 		B0D09E402C91F075003AA492 /* DeleteContentUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteContentUseCase.swift; sourceTree = "<group>"; };
+		B0D09E422C9208AA003AA492 /* ImageLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoadingView.swift; sourceTree = "<group>"; };
+		B0D09E442C920960003AA492 /* ImageMissingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMissingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +252,8 @@
 				B0D09E3E2C91EBB0003AA492 /* ContentSequenceView.swift */,
 				B081EC352C8CD2DA00F26607 /* ContentView.swift */,
 				B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */,
+				B0D09E422C9208AA003AA492 /* ImageLoadingView.swift */,
+				B0D09E442C920960003AA492 /* ImageMissingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -480,6 +486,7 @@
 				B043828F2C7F703E00AC21E4 /* SaveTripUseCase.swift in Sources */,
 				B0D09E372C9080BF003AA492 /* CancelButton.swift in Sources */,
 				B04382612C7E217000AC21E4 /* TripTimelineView.swift in Sources */,
+				B0D09E432C9208AA003AA492 /* ImageLoadingView.swift in Sources */,
 				B0D09E3B2C9081B4003AA492 /* EditItemButton.swift in Sources */,
 				B04382852C7EC1F500AC21E4 /* Date+SecondsForDays.swift in Sources */,
 				B0D09E3F2C91EBB0003AA492 /* ContentSequenceView.swift in Sources */,
@@ -506,6 +513,7 @@
 				B043828B2C7F656700AC21E4 /* DayViewModel.swift in Sources */,
 				B04382822C7E5F7F00AC21E4 /* ViewDaySequenceUseCase.swift in Sources */,
 				B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */,
+				B0D09E452C920960003AA492 /* ImageMissingView.swift in Sources */,
 				B04382A32C7FAC6600AC21E4 /* RealmDataService.swift in Sources */,
 				B0D09E3D2C90AD3E003AA492 /* ContentViewModel.swift in Sources */,
 				B043829B2C7F9A2D00AC21E4 /* DayObjectModel.swift in Sources */,

@@ -57,7 +57,7 @@ struct ContentTextView: View {
             VStack(alignment: .leading) {
                 
                 HStack {
-                    DatePicker("", selection: $content.lastUpdateDate, displayedComponents: .hourAndMinute)
+                    DatePicker("", selection: $content.displayTimestamp, displayedComponents: .hourAndMinute)
                         .fixedSize()
                         .labelsHidden()
                         .padding(.horizontal, 8)
@@ -99,7 +99,7 @@ struct ContentTextView: View {
             .padding(.horizontal, 10)
         } else {
             VStack(alignment: .leading) {
-                Text(content.creationDate, format: .dateTime)
+                Text(content.displayTimestamp, style: .time)
                     .font(.caption)
                     .foregroundStyle(.gray)
                     .padding(.bottom, 2)
@@ -149,7 +149,7 @@ struct ContentPhotoView: View {
             
             if isSelected {
                 HStack {
-                    DatePicker("", selection: $content.lastUpdateDate, displayedComponents: .hourAndMinute)
+                    DatePicker("", selection: $content.displayTimestamp, displayedComponents: .hourAndMinute)
                         .fixedSize()
                         .labelsHidden()
                         .padding(.horizontal, 18)
@@ -169,7 +169,7 @@ struct ContentPhotoView: View {
                     .padding(.horizontal, 8)
                 }
             } else {
-                Text(content.creationDate, format: .dateTime)
+                Text(content.displayTimestamp, style: .time)
                     .font(.caption)
                     .foregroundStyle(.gray)
                     .padding(.bottom, 2)
@@ -193,21 +193,21 @@ struct ContentPhotoView: View {
                             .opacity(isSelected ? 0.7 : 1)
                     } else {
                         AsyncImage(url: ImageHelperService.shared.imageURL(for: content)) { phase in
-                            if let image = phase.image {
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(maxWidth: .infinity)
-                                    .opacity(isSelected ? 0.7 : 1)
-                            } else if phase.error != nil {
-                                Color.red // Indicates an error.
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 300)
-                            } else {
-                                Color.gray // Acts as a placeholder.
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 300)
-                            }
+                                if let image = phase.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(maxWidth: .infinity)
+                                        .opacity(isSelected ? 0.7 : 1)
+                                } else if phase.error != nil {
+                                    ImageMissingView() // Indicates an error.
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 300)
+                                } else {
+                                    ImageLoadingView() // Acts as a placeholder.
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 300)
+                                }
                         }
                     }
                     

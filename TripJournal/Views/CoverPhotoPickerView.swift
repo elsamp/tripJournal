@@ -46,11 +46,11 @@ struct CoverPhotoPickerView: View {
                                         .frame(maxWidth: .infinity)
                                         .opacity(isEditing ? 0.7 : 1)
                                 } else if phase.error != nil {
-                                    Color.red // Indicates an error.
+                                    ImageMissingView() // Indicates an error.
                                         .frame(maxWidth: .infinity)
                                         .frame(height: 300)
                                 } else {
-                                    Color.gray // Acts as a placeholder.
+                                    ImageLoadingView() // Acts as a placeholder.
                                         .frame(maxWidth: .infinity)
                                         .frame(height: 300)
                                 }

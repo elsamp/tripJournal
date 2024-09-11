@@ -39,6 +39,7 @@ struct ViewContentSequenceUseCase: ViewContentSequenceUseCaseProtocol {
                      photoFileName: nil,
                      text: "I had a really great time today at the beach with Bean. We walked along the whole length and picked up shells and other small pebbles",
                      creationDate: Date.now,
+                     displayTimestamp: Date.now,
                      lastUpdateDate: Date.now,
                      lastSaveDate: Date.now),
          ContentItem(id: "2",
@@ -48,6 +49,7 @@ struct ViewContentSequenceUseCase: ViewContentSequenceUseCaseProtocol {
                      photoFileName: nil,
                      text: "",
                      creationDate: Date.now,
+                     displayTimestamp: Date.now,
                      lastUpdateDate: Date.now,
                      lastSaveDate: Date.now)
          ]

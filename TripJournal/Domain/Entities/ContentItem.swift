@@ -23,6 +23,7 @@ class ContentItem: ObservableObject, Identifiable, Hashable, Comparable, Equatab
     @Published var photoFileName: String?
     @Published var photoData: Data?
     let creationDate: Date
+    var displayTimestamp: Date
     var lastUpdateDate: Date
     var lastSaveDate: Date?
     var hasUnsavedChanges: Bool {
@@ -35,7 +36,7 @@ class ContentItem: ObservableObject, Identifiable, Hashable, Comparable, Equatab
         }
     }
     
-    init(id: String, day: Day, sequenceIndex: Int, type: ContentType, photoFileName: String?, text: String, creationDate: Date, lastUpdateDate: Date, lastSaveDate: Date?) {
+    init(id: String, day: Day, sequenceIndex: Int, type: ContentType, photoFileName: String?, text: String, creationDate: Date, displayTimestamp: Date, lastUpdateDate: Date, lastSaveDate: Date?) {
         self.id = id
         self.day = day
         self.sequenceIndex = sequenceIndex
@@ -43,6 +44,7 @@ class ContentItem: ObservableObject, Identifiable, Hashable, Comparable, Equatab
         self.photoFileName = photoFileName
         self.text = text
         self.creationDate = creationDate
+        self.displayTimestamp = displayTimestamp
         self.lastUpdateDate = lastUpdateDate
         self.lastSaveDate = lastSaveDate
         

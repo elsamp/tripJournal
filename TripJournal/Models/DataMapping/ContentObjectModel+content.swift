@@ -17,6 +17,7 @@ extension ContentObjectModel {
                        photoFileName: self.fileName,
                        text: self.text ?? "",
                        creationDate: self.creationDate,
+                       displayTimestamp: self.displayTimestamp,
                        lastUpdateDate: self.lastUpdateDate,
                        lastSaveDate: self.lastSaveDate )
     }

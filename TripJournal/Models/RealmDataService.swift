@@ -261,6 +261,8 @@ class RealmDataService: DataServiceProtocol {
             objectModel.type = content.type.rawValue
             objectModel.fileName = content.photoFileName
             objectModel.text = content.text
+            objectModel.creationDate = content.creationDate
+            objectModel.displayTimestamp = content.displayTimestamp
             objectModel.lastUpdateDate = content.lastUpdateDate
             objectModel.lastSaveDate = content.lastSaveDate ?? Date.now
             
@@ -288,6 +290,7 @@ class RealmDataService: DataServiceProtocol {
             objectModel.type = content.type.rawValue
             objectModel.fileName = content.photoFileName
             objectModel.text = content.text
+            objectModel.displayTimestamp = content.displayTimestamp
             objectModel.lastUpdateDate = content.lastUpdateDate
             objectModel.lastSaveDate = content.lastSaveDate ?? Date.now
         }

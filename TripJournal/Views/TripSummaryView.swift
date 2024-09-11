@@ -13,15 +13,6 @@ struct TripSummaryView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            /*
-            RoundedRectangle(cornerRadius: 10)
-                .fill(.gray)
-                .frame(maxWidth: .infinity)
-                .frame(height: 40)
-                .opacity(0.3)
-                .offset(y: 2)
-             */
-            
             VStack(alignment: .leading) {
                 Color.clear
                     .overlay (
@@ -34,11 +25,11 @@ struct TripSummaryView: View {
                                     .frame(height: 300)
                                     .clipped()
                             } else if phase.error != nil {
-                                Color.red // Indicates an error.
+                                ImageMissingView() // Indicates an error.
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 300)
                             } else {
-                                Color.gray // Acts as a placeholder.
+                                ImageLoadingView() // Acts as a placeholder.
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 300)
                             }
