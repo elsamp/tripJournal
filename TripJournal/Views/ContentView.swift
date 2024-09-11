@@ -108,6 +108,7 @@ struct ContentTextView: View {
                 Text(content.text)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                     .padding(.bottom, 30)
                     .padding(.horizontal, 24)
 
