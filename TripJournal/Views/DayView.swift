@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct DayView: View {
     
@@ -14,6 +15,8 @@ struct DayView: View {
     @StateObject var router = Router.shared
     @ObservedObject var day: Day
     @ObservedObject var contentSequence: ContentSequence
+    
+    @State private var selectedItem: PhotosPickerItem?
     
     private var tapGesture: some Gesture {
         TapGesture()
@@ -72,6 +75,9 @@ struct DayView: View {
                     }
                     ToolbarItem(placement: .topBarLeading) {
                         backButton
+                    }
+                    ToolbarItem(placement: .bottomBar) {
+                        addContentButtons
                     }
                 } else {
                     ToolbarItem(placement: .primaryAction) {
@@ -144,94 +150,6 @@ struct DayView: View {
             router.path.removeLast()
         }
     }
-}
-
-struct DayHeaderView: View {
-    
-    @ObservedObject var day: Day
-    @Binding var isEditing: Bool
-    
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
-        return formatter
-    }
-    
-    var body: some View {
-        VStack(alignment: .center) {
-            
-            if isEditing {
-                TextField("Day:", text: $day.title)
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.black)
-                    .padding(8)
-                    .background(.textFieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 10)
-
-                DatePicker("Date", selection: $day.date, displayedComponents: .date)
-                    .labelsHidden()
-                
-            } else {
-                Text(day.title)
-                    .font(.title3)
-                    .fontWeight(.light)
-                    .foregroundStyle(.textTitle)
-                
-                Text(dateFormatter.string(from: day.date))
-                    .font(.caption)
-                    .fontWeight(.light)
-                    .foregroundStyle(.textSubheader)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 14)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .padding(.horizontal, 20)
-    }
-}
-
-import PhotosUI
-
-struct ContentSequenceView: View {
-    
-    var viewModel: DayViewModelProtocol
-    @ObservedObject var contentSequence: ContentSequence
-    @State private var selectedItem: PhotosPickerItem?
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            ForEach(contentSequence.contentItems) { content in
-                ContentView(viewModel: ContentViewModel(content: content, 
-                                                        contentChangeDelegate: viewModel),
-                            isSelected: viewModel.isSelected(content: content),
-                            content: content)
-                .id(content.id)
-                .onTapGesture {
-                    print("tapped content view!")
-                    withAnimation {
-                        if !viewModel.isSelected(content: content) {
-                            if viewModel.isAnySelected() {
-                                viewModel.deselectAll()
-                            } else {
-                                viewModel.select(content: content)
-                            }
-                        }
-                    }
-                }
-                
-            }
-            Spacer()
-                .frame(height: 100)
-        }
-        .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                addContentButtons
-            }
-        }
-    }
     
     var addContentButtons: some View {
         
@@ -292,7 +210,88 @@ struct ContentSequenceView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 40)
+}
+
+    struct DayHeaderView: View {
         
+        @ObservedObject var day: Day
+        @Binding var isEditing: Bool
+        
+        var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.setLocalizedDateFormatFromTemplate("MMMdd")
+            return formatter
+        }
+        
+        var body: some View {
+            VStack(alignment: .center) {
+                
+                if isEditing {
+                    TextField("Day:", text: $day.title)
+                        .font(.title3)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.black)
+                        .padding(8)
+                        .background(.textFieldBackground)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .padding(.horizontal, 10)
+                    
+                    DatePicker("Date", selection: $day.date, displayedComponents: .date)
+                        .labelsHidden()
+                    
+                } else {
+                    Text(day.title)
+                        .font(.title3)
+                        .fontWeight(.light)
+                        .foregroundStyle(.textTitle)
+                    
+                    Text(dateFormatter.string(from: day.date))
+                        .font(.caption)
+                        .fontWeight(.light)
+                        .foregroundStyle(.textSubheader)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .padding(.horizontal, 20)
+        }
+    }
+}
+
+
+
+struct ContentSequenceView: View {
+    
+    var viewModel: DayViewModelProtocol
+    @ObservedObject var contentSequence: ContentSequence
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            ForEach(contentSequence.contentItems) { content in
+                ContentView(viewModel: ContentViewModel(content: content, 
+                                                        contentChangeDelegate: viewModel),
+                            isSelected: viewModel.isSelected(content: content),
+                            content: content)
+                .id(content.id)
+                .onTapGesture {
+                    print("tapped content view!")
+                    withAnimation {
+                        if !viewModel.isSelected(content: content) {
+                            if viewModel.isAnySelected() {
+                                viewModel.deselectAll()
+                            } else {
+                                viewModel.select(content: content)
+                            }
+                        }
+                    }
+                }
+                
+            }
+            Spacer()
+                .frame(height: 100)
+        }
     }
 }
 
