@@ -14,19 +14,18 @@ struct ContentView: View {
     
     init(viewModel: ContentViewModelProtocol, isSelected: Bool, content: ContentItem) {
         self.viewModel = viewModel
-        self.isSelected = isSelected
         self.content = viewModel.content
+        self.isSelected = isSelected
     }
     
     @ViewBuilder
     var body: some View {
         switch content.type {
             case .photo:
-                if let unwrappedPhotoData = Binding($content.photoData) {
-                    ContentPhotoView(viewModel: viewModel,
-                                     isSelected: isSelected,
-                                     photoDataUpdateDelegate: viewModel)
-                }
+                ContentPhotoView(viewModel: viewModel,
+                                 isSelected: isSelected,
+                                 photoDataUpdateDelegate: viewModel)
+                
             case .text:
                 ContentTextView(viewModel: viewModel, isSelected: isSelected)
                 .onChange(of: isSelected) { oldValue, newValue in
@@ -44,12 +43,12 @@ struct ContentTextView: View {
     var viewModel: ContentViewModelProtocol
     @ObservedObject var content: ContentItem
     var isSelected = true
+    @FocusState private var focused: Bool?
     
     init(viewModel: ContentViewModelProtocol, isSelected: Bool = false) {
         self.viewModel = viewModel
         self.content = viewModel.content
         self.isSelected = isSelected
-        
         print("content view init \(content.id), IsSelected \(isSelected)")
     }
     
@@ -89,6 +88,10 @@ struct ContentTextView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
+                    .focused($focused, equals: isSelected)
+                    .onAppear{
+                        focused = isSelected
+                    }
                 
             }
             .frame(maxWidth: .infinity)

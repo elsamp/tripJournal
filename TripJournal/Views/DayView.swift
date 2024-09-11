@@ -34,11 +34,11 @@ struct DayView: View {
                     
                     ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
                 }
-            }
-            .onTapGesture {
-                print("tapped scrollview")
-                withAnimation {
-                    viewModel.deselectAll()
+                .onTapGesture {
+                    print("tapped scrollview")
+                    withAnimation {
+                        viewModel.deselectAll()
+                    }
                 }
             }
             .onChange(of: isEditing, {
@@ -50,7 +50,7 @@ struct DayView: View {
                 
                 if let id = contentSequence.selectedItem?.id {
                     withAnimation {
-                        reader.scrollTo(id, anchor: .top) // scroll to selected item
+                        reader.scrollTo(id, anchor: .center) // scroll to selected item
                     }
                 }
             })
@@ -191,7 +191,6 @@ struct ContentSequenceView: View {
     var viewModel: DayViewModelProtocol
     @ObservedObject var contentSequence: ContentSequence
     @State private var selectedItem: PhotosPickerItem?
-    @State private var selectedContent: ContentItem? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -213,10 +212,8 @@ struct ContentSequenceView: View {
                         }
                     }
                 }
+                
             }
-            
-            
-            
             Spacer()
                 .frame(height: 100)
         }
