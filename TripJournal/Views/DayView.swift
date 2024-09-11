@@ -15,6 +15,16 @@ struct DayView: View {
     @ObservedObject var day: Day
     @ObservedObject var contentSequence: ContentSequence
     
+    private var tapGesture: some Gesture {
+        TapGesture()
+            .onEnded { _ in
+                print("tapped scrollview")
+                withAnimation {
+                    viewModel.deselectAll()
+                }
+            }
+    }
+    
     init(viewModel: DayViewModelProtocol) {
         self.viewModel = viewModel
         _isEditing = State(initialValue: viewModel.day.hasUnsavedChanges)
@@ -33,13 +43,10 @@ struct DayView: View {
                         .offset(y: -35)
                     
                     ContentSequenceView(viewModel: viewModel, contentSequence: contentSequence)
+                        .allowsHitTesting(!isEditing)
+                        .opacity(isEditing ? 0.5 : 1)
                 }
-                .onTapGesture {
-                    print("tapped scrollview")
-                    withAnimation {
-                        viewModel.deselectAll()
-                    }
-                }
+                .gesture(isEditing ? nil : tapGesture)
             }
             .onChange(of: isEditing, {
                 withAnimation {
@@ -89,6 +96,7 @@ struct DayView: View {
         
         EditItemButton {
             withAnimation {
+                viewModel.deselectAll()
                 isEditing = true
             }
         }
@@ -131,6 +139,7 @@ struct DayView: View {
         BackButton {
             if contentSequence.selectedItem != nil {
                 //TODO: save selected content
+                viewModel.deselectAll()
             }
             router.path.removeLast()
         }
