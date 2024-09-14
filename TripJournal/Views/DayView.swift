@@ -158,7 +158,7 @@ struct DayView: View {
     
     var deleteDayButton: some View {
         
-        DeleteButton {
+        DeleteButton(deleteItemType: "Day") {
             viewModel.delete(day: viewModel.day)
             router.path.removeLast()
         }

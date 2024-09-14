@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DeleteButton: View {
-    
+    var deleteItemType: String
     var action: () -> ()
     
     var body: some View {
@@ -25,7 +25,7 @@ struct DeleteButton: View {
                 HStack {
                     Image(systemName: "trash")
                         .font(.caption)
-                    Text("Delete Trip")
+                    Text("Delete \(deleteItemType)")
                 }
                 .foregroundStyle(.red)
 
@@ -35,7 +35,7 @@ struct DeleteButton: View {
 }
 
 #Preview {
-    DeleteButton {
+    DeleteButton(deleteItemType: "Trip") {
         //do nothing
     }
 }

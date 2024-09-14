@@ -121,7 +121,7 @@ struct TripView: View {
     
     var deleteTripButton: some View {
         
-        DeleteButton {
+        DeleteButton(deleteItemType: "Trip") {
             viewModel.delete(trip: viewModel.trip)
             router.path.removeLast()
         }
