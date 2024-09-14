@@ -10,13 +10,14 @@ import PhotosUI
 
 struct DayView: View {
     
+    let topLocationKey = "Top"
     var viewModel: DayViewModelProtocol
     @State private var isEditing: Bool
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var isShowingDeleteConfirmation = false
     @StateObject var router = Router.shared
     @ObservedObject var day: Day
     @ObservedObject var contentSequence: ContentSequence
-    
-    @State private var selectedItem: PhotosPickerItem?
     
     private var tapGesture: some Gesture {
         TapGesture()
@@ -41,7 +42,7 @@ struct DayView: View {
             ScrollView{
                 LazyVStack(alignment: .leading) {
                     CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURL(for: day), isEditing: $isEditing)
-                        .id("Top")
+                        .id(topLocationKey)
                     DayHeaderView(day: viewModel.day, isEditing: $isEditing)
                         .offset(y: -35)
                     
@@ -53,11 +54,10 @@ struct DayView: View {
             }
             .onChange(of: isEditing, {
                 withAnimation {
-                    reader.scrollTo("Top", anchor: .top) // scroll to Top
+                    reader.scrollTo(topLocationKey, anchor: .top) // scroll to Top
                 }
             })
             .onChange(of: contentSequence.selectedItem, {
-                
                 if let id = contentSequence.selectedItem?.id {
                     withAnimation {
                         reader.scrollTo(id, anchor: .center) // scroll to selected item
@@ -101,8 +101,18 @@ struct DayView: View {
             }
             .toolbarBackground(.hidden, for: .bottomBar)
             .toolbarBackground(.hidden, for: .navigationBar)
+            .alert("Are you sure you want to delete this Day? This action cannot be undone.", isPresented: $isShowingDeleteConfirmation) {
+                
+                Button("Yes, Delete Day", role: .destructive) {
+                    deleteDay()
+                }
+                
+                Button("Cancel", role: .cancel) { }
+            }
         }
     }
+    
+    //MARK: Button View Variables
     
     var editDayButton: some View {
         
@@ -159,8 +169,7 @@ struct DayView: View {
     var deleteDayButton: some View {
         
         DeleteButton(deleteItemType: "Day") {
-            viewModel.delete(day: viewModel.day)
-            router.path.removeLast()
+            isShowingDeleteConfirmation = true
         }
     }
     
@@ -178,111 +187,79 @@ struct DayView: View {
     var addContentButtons: some View {
         
         HStack(alignment: .center) {
-            
-            Button {
-                viewModel.addNewTextContent(for: viewModel.day)
-                print("Adding Text Content")
-            } label: {
-                ZStack(alignment: .center) {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.accentMain)
-                        .frame(height: 40)
-                    
-                    HStack{
-                        Image(systemName: "note.text.badge.plus")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                            .offset(y: 2)
-                        
-                        Text("Add Text")
-                            .foregroundStyle(.white)
-                    }
-                    .padding(.horizontal, 10)
-                }
-                .padding(.horizontal, 5)
-            }
-            
-            PhotosPicker(selection: $selectedItem, matching: .images) {
-                ZStack(alignment: .center) {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.accentMain)
-                        .frame(height: 40)
-                    
-                    HStack {
-                        Image(systemName: "photo.badge.plus.fill")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                            .offset(y: 2)
-                        
-                        Text("Add Photo")
-                            .foregroundStyle(.white)
-                    }
-                    .padding(.horizontal, 10)
-                }
-                .padding(.horizontal, 5)
-            }
-            .onChange(of: selectedItem) { oldValue, newValue in
-                Task {
-                    if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
-                        
-                        if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
-                            viewModel.addNewPhotoContent(with: pngData, for: viewModel.day)
-                        }
-                    }
-                }
-            }
+            addTextContentButton
+            addPhotoContentButton
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 40)
     }
-}
-
-struct DayHeaderView: View {
     
-    @ObservedObject var day: Day
-    @Binding var isEditing: Bool
-    
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMdd")
-        return formatter
+    var addTextContentButton: some View {
+        Button {
+            viewModel.addNewTextContent(for: viewModel.day)
+            print("Adding Text Content")
+        } label: {
+            ZStack(alignment: .center) {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.accentMain)
+                    .frame(height: 40)
+                
+                HStack{
+                    Image(systemName: "note.text.badge.plus")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .offset(y: 2)
+                    
+                    Text("Add Text")
+                        .foregroundStyle(.white)
+                }
+                .padding(.horizontal, 10)
+            }
+            .padding(.horizontal, 5)
+        }
     }
     
-    var body: some View {
-        VStack(alignment: .center) {
-            
-            if isEditing {
-                TextField("Day:", text: $day.title)
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.black)
-                    .padding(8)
-                    .background(.textFieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 10)
+    var addPhotoContentButton: some View {
+        PhotosPicker(selection: $selectedItem, matching: .images) {
+            ZStack(alignment: .center) {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.accentMain)
+                    .frame(height: 40)
                 
-                DatePicker("Date", selection: $day.date, displayedComponents: .date)
-                    .labelsHidden()
-                
-            } else {
-                Text(day.title)
-                    .font(.title3)
-                    .fontWeight(.light)
-                    .foregroundStyle(.textTitle)
-                
-                Text(dateFormatter.string(from: day.date))
-                    .font(.caption)
-                    .fontWeight(.light)
-                    .foregroundStyle(.textSubheader)
+                HStack {
+                    Image(systemName: "photo.badge.plus.fill")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .offset(y: 2)
+                    
+                    Text("Add Photo")
+                        .foregroundStyle(.white)
+                }
+                .padding(.horizontal, 10)
+            }
+            .padding(.horizontal, 5)
+        }
+        .onChange(of: selectedItem) { oldValue, newValue in
+            Task {
+                if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                    
+                    if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                        viewModel.addNewPhotoContent(with: pngData, for: viewModel.day)
+                    }
+                }
             }
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 14)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .padding(.horizontal, 20)
+    }
+    
+    //MARK: Functions
+    
+    func deleteDay() {
+        viewModel.delete(day: viewModel.day)
+        router.path.removeLast()
     }
 }
+
+
 
 
 #Preview {

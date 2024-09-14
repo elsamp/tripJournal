@@ -94,6 +94,20 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 lastSaveDate: Date.now)
     }
     
+    func mockPhotoContent() -> ContentItem {
+        
+        return ContentItem(id: UUID().uuidString,
+                day: mockDay(),
+                sequenceIndex: 1,
+                type: .photo,
+                photoFileName: "",
+                text: "",
+                creationDate: Date.now,
+                displayTimestamp: Date.now,
+                lastUpdateDate: Date.now,
+                lastSaveDate: Date.now)
+    }
+    
     func fetchDaysFor(trip: Trip) -> DaySequence {
         return DaySequence(id: UUID().uuidString, days: [mockDay(), mockDay(), mockDay()])
     }

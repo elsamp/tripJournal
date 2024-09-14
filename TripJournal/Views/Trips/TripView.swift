@@ -13,6 +13,7 @@ struct TripView: View {
     @State private var isEditing: Bool
     @StateObject var router = Router.shared
     @ObservedObject var trip: Trip
+    @State private var isShowingDeleteConfirmation = false
     
     init(viewModel: TripViewModelProtocol) {
         self.viewModel = viewModel
@@ -80,6 +81,14 @@ struct TripView: View {
             }
             .toolbarBackground(.hidden, for: .bottomBar)
             .toolbarBackground(.hidden, for: .navigationBar)
+            .alert("Are you sure you want to delete this Trip? This action cannot be undone.", isPresented: $isShowingDeleteConfirmation) {
+                
+                Button("Yes, Delete Trip", role: .destructive) {
+                    deleteTrip()
+                }
+                
+                Button("Cancel", role: .cancel) { }
+            }
         }
     }
     
@@ -122,8 +131,7 @@ struct TripView: View {
     var deleteTripButton: some View {
         
         DeleteButton(deleteItemType: "Trip") {
-            viewModel.delete(trip: viewModel.trip)
-            router.path.removeLast()
+            isShowingDeleteConfirmation = true
         }
     }
     
@@ -140,24 +148,10 @@ struct TripView: View {
             router.path.removeLast()
         }
     }
-}
-
-
-struct DaySequenceView: View {
     
-    let days: [Day]
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            
-            ForEach(days) { day in
-                NavigationLink(value: day) {
-                    DaySequenceItemView(day: day)
-                        .padding(.vertical, 8)
-                }
-            }
-             
-        }
+    func deleteTrip() {
+        viewModel.delete(trip: viewModel.trip)
+        router.path.removeLast()
     }
 }
 

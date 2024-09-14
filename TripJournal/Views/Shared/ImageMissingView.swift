@@ -11,7 +11,7 @@ struct ImageMissingView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(.accentMain)
+                .fill(.textFieldBackground)
         }
     }
 }
