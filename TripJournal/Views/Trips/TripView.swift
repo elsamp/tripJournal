@@ -137,7 +137,7 @@ struct TripView: View {
     
     var addDayButton: some View {
         
-        AddItemButton {
+        AddItemButton(label: "Add Day") {
             router.path.append(viewModel.newDay())
         }
     }

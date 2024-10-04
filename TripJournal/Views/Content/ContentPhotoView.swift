@@ -28,97 +28,68 @@ struct ContentPhotoView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        ZStack(alignment: .center) {
             
+            //Background tint and border outline
             if isSelected {
-                HStack {
-                    DatePicker("", selection: $content.displayTimestamp, displayedComponents: .hourAndMinute)
-                        .fixedSize()
-                        .labelsHidden()
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 0)
-                    
-                    Spacer()
-                    
-                    Button {
-                        viewModel.delete(content: content)
-                    } label: {
-                        Image(systemName: "trash.circle.fill")
-                            .font(.title)
-                            .foregroundStyle(.red)
-                            .background(.white)
-                            .clipShape(.circle)
-                    }
-                    .padding(.horizontal, 8)
-                }
-            } else {
-                Text(content.displayTimestamp, style: .time)
-                    .font(.caption)
-                    .foregroundStyle(.gray)
-                    .padding(.bottom, 2)
-                    .padding(.horizontal, 28)
-                    .padding(.top, 15)
+                Rectangle()
+                    .fill(.accentMain)
             }
             
-            ZStack(alignment: .center) {
+            Group {
                 
-                if isSelected {
-                    Rectangle()
-                        .fill(.accentMain)
+                if updatedImage != nil {
+                    //picker image that hasn't been saved yet
+                    updatedImage?
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: .infinity)
+                        .opacity(isSelected ? 0.7 : 1)
+                } else {
+                    //imaged loaded from documents having previously been saved
+                    AsyncImage(url: ImageHelperService.shared.imageURL(for: content)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity)
+                                    .opacity(isSelected ? 0.7 : 1)
+                            } else if phase.error != nil {
+                                ImageMissingView()
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 300)
+                            } else {
+                                ImageLoadingView()
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 300)
+                            }
+                    }
                 }
                 
-                Group {
-                    if updatedImage != nil {
-                        updatedImage?
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: .infinity)
-                            .opacity(isSelected ? 0.7 : 1)
-                    } else {
-                        AsyncImage(url: ImageHelperService.shared.imageURL(for: content)) { phase in
-                                if let image = phase.image {
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: .infinity)
-                                        .opacity(isSelected ? 0.7 : 1)
-                                } else if phase.error != nil {
-                                    ImageMissingView() // Indicates an error.
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: 300)
-                                } else {
-                                    ImageLoadingView() // Acts as a placeholder.
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: 300)
-                                }
-                        }
+                //overlay photo picker button
+                if (isSelected) {
+                    PhotosPicker(selection: $selectedItem, matching: .images) {
+                        Image(systemName: "photo.badge.plus.fill")
+                            .font(.system(size: 60))
+                            .padding(5)
+                            .foregroundColor(.white)
+                        
                     }
-                    
-                    if (isSelected) {
-                        PhotosPicker(selection: $selectedItem, matching: .images) {
-                            Image(systemName: "photo.badge.plus.fill")
-                                .font(.system(size: 60))
-                                .padding(5)
-                                .foregroundColor(.white)
-                            
-                        }
-                        .onChange(of: selectedItem) { oldValue, newValue in
-                            Task {
-                                if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
-                                    
-                                    if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
-                                        photoDataUpdateDelegate.imageDataUpdatedTo(pngData)
-                                        updatedImage = Image(uiImage: uiImage)
-                                    }
+                    .onChange(of: selectedItem) { oldValue, newValue in
+                        Task {
+                            if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                                
+                                if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                                    photoDataUpdateDelegate.imageDataUpdatedTo(pngData)
+                                    updatedImage = Image(uiImage: uiImage)
                                 }
                             }
                         }
                     }
                 }
-                .padding(isSelected ? 2 : 0)
             }
+            .padding(isSelected ? 2 : 0)
         }
-        
     }
 }
 

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddItemButton: View {
     
+    var label: String
     var action: () -> ()
     
     var body: some View {
@@ -19,7 +20,7 @@ struct AddItemButton: View {
                 Image(systemName: "plus.circle.fill")
                     .font(.title2)
                     .foregroundStyle(.white)
-                Text("Add Day")
+                Text(label)
             }
         }
         .frame(maxWidth: .infinity)
@@ -31,7 +32,7 @@ struct AddItemButton: View {
 }
 
 #Preview {
-    AddItemButton {
+    AddItemButton(label: "Add Day") {
         //do nothing
     }
 }

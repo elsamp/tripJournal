@@ -21,6 +21,7 @@ struct DeleteContentUseCase: DeleteContentUseCaseProtocol {
     
     func delete(content: ContentItem) {
         dataService.deleteContent(content: content)
+        //TODO: If content type is photo, delete image data
     }
     
     private func deleteImageDataFor(content: ContentItem) {

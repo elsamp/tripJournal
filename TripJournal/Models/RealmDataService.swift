@@ -29,7 +29,7 @@ protocol DataServiceProtocol {
 
 class RealmDataService: DataServiceProtocol {
     
-    //MARK: Trips (CRUD)
+    //MARK: Trips
     
     func fetchTrip(for id: String) -> Trip? {
         let model = tripObjectModelFor(tripId: id)

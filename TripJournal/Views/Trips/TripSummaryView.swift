@@ -25,11 +25,11 @@ struct TripSummaryView: View {
                                     .frame(height: 300)
                                     .clipped()
                             } else if phase.error != nil {
-                                ImageMissingView() // Indicates an error.
+                                ImageMissingView()
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 300)
                             } else {
-                                ImageLoadingView() // Acts as a placeholder.
+                                ImageLoadingView()
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 300)
                             }
@@ -45,7 +45,6 @@ struct TripSummaryView: View {
                         .foregroundStyle(.textTitle)
                         .padding(.top, 4)
                     
-                    
                     Text(dateRange(for: trip))
                         .font(.caption)
                         .fontWeight(.light)
@@ -56,7 +55,6 @@ struct TripSummaryView: View {
 
             }
             .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
 
         }
         .padding(.bottom, 5)

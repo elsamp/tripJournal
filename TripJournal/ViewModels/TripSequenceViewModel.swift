@@ -49,7 +49,7 @@ class TripSequenceViewModel: TripSequenceViewModelProtocol, TripUpdateDelegatePr
     }
     
     //Update
-    //TODO: explore wether we can/should do this with Combine
+    //TODO: explore whether we can/should do this with published events
     func handleChanges(for trip: Trip) {
         tripSequence.updateSequence(for: trip)
     }
