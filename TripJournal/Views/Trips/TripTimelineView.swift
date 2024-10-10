@@ -49,7 +49,7 @@ struct TripTimelineView<ViewModel: TripSequenceViewModelProtocol>: View {
                         //TODO: Search Trips
                     }
                 }
-                 
+                
             }
             .toolbarBackground(.hidden, for: .bottomBar)
             .background(.white)

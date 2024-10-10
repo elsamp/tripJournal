@@ -66,23 +66,14 @@ struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSeq
             .toolbar {
                 
                 if !isEditing {
-                   
-                    //Rethink. This is not working. selectedItem is not considered @Published
-                    if viewModel.contentSequence.selectedItem == nil {
-                        
-                         ToolbarItem(placement: .primaryAction) {
-                             editDayButton
-                         }
-                         ToolbarItem(placement: .topBarLeading) {
-                             backButton
-                         }
-                        ToolbarItem(placement: .bottomBar) {
-                            addContentButtons
-                        }
-                    } else {
-                        ToolbarItem(placement: .bottomBar) {
-                            saveContentChangesButton
-                        }
+                    ToolbarItem(placement: .primaryAction) {
+                        editDayButton
+                    }
+                    ToolbarItem(placement: .topBarLeading) {
+                        backButton
+                    }
+                    ToolbarItem(placement: .bottomBar) {
+                        addContentButtons
                     }
                 } else {
                     ToolbarItem(placement: .primaryAction) {
@@ -133,6 +124,8 @@ struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSeq
             }
         }
     }
+    
+    //TODO: Rethink Implementation and move to ContentSequenceView
     var saveContentChangesButton: some View {
         
         Button {
