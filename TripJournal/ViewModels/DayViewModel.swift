@@ -8,74 +8,113 @@
 import Foundation
 
 
-protocol DayViewModelProtocol: PhotoDataUpdateDelegatProtocol, ContentChangeDelegateProtocol {
-    var day: Day { get }
-    var contentSequence: ContentSequence { get }
-    var contentArray: [ContentItem] { get }
+protocol DayViewModelProtocol: ObservableObject, Identifiable, Hashable, Comparable, PhotoDataUpdateDelegatProtocol {
     
-    func save(day: Day)
-    func delete(day: Day)
-    func addNewTextContent(for day: Day)
-    func addNewPhotoContent(with data: Data, for day: Day)
-    func select(content: ContentItem)
-    func deselectAll()
-    func isSelected(content: ContentItem) -> Bool
-    func isAnySelected() -> Bool
+    associatedtype TripModel: TripViewModelProtocol
+    associatedtype ContentSequenceModel: ContentSequenceViewModelProtocol
+    
+    var id: String { get }
+    var trip: TripModel { get }
+    var date: Date { get set }
+    var title: String { get set }
+    var coverPhotoPath: String? { get set }
+    var coverImageData: Data? { get set }
+    var creationDate: Date { get }
+    var lastUpdateDate: Date { get set }
+    var lastSaveDate: Date? { get set }
+    var hasUnsavedChanges: Bool { get }
+    var tripDayIndex: Int { get }
+    
+    var contentSequence: ContentSequenceModel { get }
+    
+    func saveDay()
+    func deleteDay()
     
 }
 
-class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, ContentChangeDelegateProtocol {
-
-    private let contentSequenceProvider: ViewContentSequenceUseCaseProtocol
-    private var saveDayUseCase: SaveDayUseCaseProtocol
-    private var saveContentUseCase: SaveContentUseCaseProtocol
-    private var deleteDayUseCase: DeleteDayUseCaseProtocol
-    private var deleteContentUseCase: DeleteContentUseCaseProtocol
+class DayViewModel: DayViewModelProtocol {
     
-    public private(set) var day: Day
-    public private(set) var contentSequence: ContentSequence
-    var contentArray: [ContentItem] {
-        contentSequence.contentItems.sorted()
+    typealias TripModel = TripViewModel
+    typealias ContentSequenceModel = ContentSequenceViewModel
+    
+    let id: String
+    let trip: TripViewModel
+    @Published var date: Date
+    @Published var title: String
+    @Published var coverPhotoPath: String?
+    @Published var coverImageData: Data?
+    let creationDate: Date
+    var lastUpdateDate: Date
+    var lastSaveDate: Date?
+    var hasUnsavedChanges: Bool {
+        
+        if let saveDate = lastSaveDate {
+            return lastUpdateDate > saveDate
+        } else {
+            //Day has never been saved.
+            return true
+        }
     }
+    
+    var tripDayIndex: Int {
+        return Calendar.current.daysBetween(trip.startDate, and: date) + 1
+    }
+    
+    public private(set) lazy var contentSequence: ContentSequenceViewModel = {
+        contentSequenceProvider.fetchContentSquence(for: self)
+    }()
     
     private var didUpdateCoverPhoto = false
     
-    init(contentSequenceProvider: ViewContentSequenceUseCaseProtocol = ViewContentSequenceUseCase(), 
-         day: Day,
+    private let contentSequenceProvider: ViewContentSequenceUseCaseProtocol
+    private var saveDayUseCase: SaveDayUseCaseProtocol
+    private var deleteDayUseCase: DeleteDayUseCaseProtocol
+    private weak var dayUpdateDelegate: DayUpdateDelegateProtocol?
+    
+    
+    init(id: String,
+         trip: TripViewModel,
+         date: Date,
+         title: String,
+         coverPhotoPath: String?,
+         coverImageData: Data?,
+         creationDate: Date,
+         lastUpdateDate: Date,
+         lastSaveDate: Date?,
+         contentSequenceProvider: ViewContentSequenceUseCaseProtocol = ViewContentSequenceUseCase(),
          saveDayUseCase: SaveDayUseCaseProtocol = SaveDayUseCase(),
-         saveContentUseCase: SaveContentUseCaseProtocol = SaveContentUseCase(),
          deleteDayUseCase: DeleteDayUseCaseProtocol = DeleteDayUseCase(),
-         deleteContentUseCase: DeleteContentUseCaseProtocol = DeleteContentUseCase()) {
+         dayUpdateDelegate: DayUpdateDelegateProtocol? = nil) {
+        
+        self.id = id
+        self.trip = trip
+        self.date = date
+        self.title = title
+        self.coverPhotoPath = coverPhotoPath
+        self.coverImageData = coverImageData
+        self.creationDate = creationDate
+        self.lastUpdateDate = lastUpdateDate
+        self.lastSaveDate = lastSaveDate
         self.contentSequenceProvider = contentSequenceProvider
-        self.day = day
-        self.contentSequence = contentSequenceProvider.fetchContentSquence(for: day)
         self.saveDayUseCase = saveDayUseCase
-        self.saveContentUseCase = saveContentUseCase
         self.deleteDayUseCase = deleteDayUseCase
-        self.deleteContentUseCase = deleteContentUseCase
+        self.dayUpdateDelegate = dayUpdateDelegate
     }
     
-    func save(day: Day) {
+    func saveDay() {
         
         if didUpdateCoverPhoto {
-            if let data = day.coverImageData {
-                saveDayUseCase.saveCoverImage(data: data, for: day)
+            if let data = self.coverImageData {
+                saveDayUseCase.saveCoverImage(data: data, for: self)
                 didUpdateCoverPhoto = false
             }
         }
         
-        //Rethink this to improve IOC
-        for contentItem in contentSequence.contentItems {
-            if contentItem.hasUnsavedChanges {
-                saveContentUseCase.save(content: contentItem, for: day)
-            }
-        }
-        
-        saveDayUseCase.save(day: day, for: day.trip)
+        saveDayUseCase.save(day: self, for: self.trip)
     }
     
     func updateCoverImage(data: Data) {
-        day.coverImageData = data
+        coverImageData = data
         didUpdateCoverPhoto = true
     }
     
@@ -83,95 +122,21 @@ class DayViewModel: DayViewModelProtocol, PhotoDataUpdateDelegatProtocol, Conten
         updateCoverImage(data: data)
     }
     
-    func delete(day: Day) {
-        deleteDayUseCase.delete(day: day)
+    func deleteDay() {
+        deleteDayUseCase.delete(day: self)
 
     }
     
-    func addNewPhotoContent(with data: Data, for day: Day) {
-        
-        print("saving new photo content. SequenceCount \(contentSequence.contentItems.count)")
-        let newContent = ContentItem(id: UUID().uuidString,
-                                 day:  day,
-                                 sequenceIndex: contentSequence.contentItems.count, //Place at the end
-                                 type: .photo,
-                                 photoFileName: nil,
-                                 text: "",
-                                 creationDate: Date.now,
-                                 displayTimestamp: Date.now,
-                                 lastUpdateDate: Date.now,
-                                 lastSaveDate: nil)
-        
-        newContent.photoData = data
-        saveContentUseCase.saveImageDataFor(content: newContent, data: data)
-        
-        contentSequence.add(content: newContent)
-        contentSequence.select(content: newContent)
-        saveContentUseCase.save(content: newContent, for:  day)
-        
-        print("saved new photo content. SequenceCount \(contentSequence.contentItems.count)")
+    static func == (lhs: DayViewModel, rhs: DayViewModel) -> Bool {
+        lhs.id == rhs.id
     }
     
-    func addNewTextContent(for day: Day) {
-        print("saving new text content. SequenceCount \(contentSequence.contentItems.count)")
-        
-        let newContent = ContentItem(id: UUID().uuidString,
-                                 day: day,
-                                 sequenceIndex: contentSequence.contentItems.count, //Place at the end
-                                 type: .text,
-                                 photoFileName: nil,
-                                 text: "",
-                                 creationDate: Date.now,
-                                 displayTimestamp: Date.now,
-                                 lastUpdateDate: Date.now,
-                                 lastSaveDate: nil)
-        
-        contentSequence.add(content: newContent)
-        contentSequence.select(content: newContent)
-        saveContentUseCase.save(content: newContent, for:  day)
-        
-        print("saved new text content. SequenceCount \(contentSequence.contentItems.count)")
+    static func < (lhs: DayViewModel, rhs: DayViewModel) -> Bool {
+        lhs.date < rhs.date
     }
     
-    func select(content: ContentItem) {
-        contentSequence.select(content: content)
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
-    
-    func deselectAll() {
-        contentSequence.deselectAll()
-    }
-    
-    func isSelected(content: ContentItem) -> Bool {
-        if let selectedContent = contentSequence.selectedItem {
-            
-            
-            if content.id == selectedContent.id {
-                print("returning TRUE: \(content.id) == \(selectedContent.id)")
-                return true
-            } else {
-                print("returning FALSE: \(content.id) == \(selectedContent.id)")
-                return false
-            }
-        }
-        
-        print("no item selected to compare against")
-        return false
-    }
-    
-    func isAnySelected() -> Bool {
-        contentSequence.selectedItem != nil
-    }
-    
-    func delete(content: ContentItem) {
-        deselectAll()
-        contentSequence.remove(content: content)
-        deleteContentUseCase.delete(content: content)
-        
-        //saving all other content sequence items as indeces are updated
-        for item in contentSequence.contentItems {
-            saveContentUseCase.save(content:item, for: item.day)
-        }
-    }
-    
     
 }

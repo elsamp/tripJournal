@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct DayHeaderView: View {
+struct DayHeaderView<ViewModel>: View where ViewModel: DayViewModelProtocol{
     
-    @ObservedObject var day: Day
+    @ObservedObject var day: ViewModel
     @Binding var isEditing: Bool
     
     var dateFormatter: DateFormatter {
@@ -62,7 +62,9 @@ struct DayHeaderView: View {
         @State private var isEditing = false
        
         var body: some View {
-            DayHeaderView(day: day, isEditing: $isEditing)
+            Text("Broken Preview: Need to Fix")
+                .foregroundStyle(.red)
+            //DayHeaderView(day: day, isEditing: $isEditing)
         }
         
     }

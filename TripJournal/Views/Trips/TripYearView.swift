@@ -7,18 +7,17 @@
 
 import SwiftUI
 
-struct TripYearView: View {
+struct TripYearView<ViewModel: TripViewModelProtocol>: View {
     
-    let trips: [Trip]
+    let trips: [ViewModel]
     
     var body: some View {
         VStack(alignment: .leading) {
+            
             ForEach(trips) { trip in
-                
                 NavigationLink(value: trip) {
                     TripSummaryView(trip: trip)
                 }
-                
             }
         }
     }

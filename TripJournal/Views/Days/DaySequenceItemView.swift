@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct DaySequenceItemView: View {
+struct DaySequenceItemView<ViewModel>: View where ViewModel: DayViewModelProtocol {
     
-    @ObservedObject var day: Day
+    @ObservedObject var day: ViewModel
     
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -21,7 +21,7 @@ struct DaySequenceItemView: View {
         HStack(alignment: .center) {
             
             //TODO: make this async
-            if let data = day.coverImageData, let uiImage = UIImage(data: data) {
+            if let data = ImageHelperService.shared.fetchImageDataFor(tripId: day.trip.id, dayId: day.id, contentId: nil), let uiImage = UIImage(data: data) {
                 Circle()
                     .overlay (
                         Image(uiImage: uiImage)
@@ -72,5 +72,7 @@ struct DaySequenceItemView: View {
 
 
 #Preview {
-    DaySequenceItemView(day: PreviewHelper.shared.mockDay())
+    Text("Broken Preview: Need To Fix")
+        .foregroundStyle(.red)
+    //DaySequenceItemView(day: PreviewHelper.shared.mockDay())
 }

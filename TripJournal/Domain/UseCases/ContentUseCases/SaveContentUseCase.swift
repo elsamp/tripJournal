@@ -8,8 +8,9 @@
 import Foundation
 
 protocol SaveContentUseCaseProtocol {
-    func save(content: ContentItem, for day: Day)
-    func saveImageDataFor(content: ContentItem, data: Data)
+    func save(content: ContentViewModel)
+    //func saveImageDataFor(content: ContentItem, data: Data)
+    func saveImageData(_ data: Data, tripId: String, dayId: String, contentId: String)
 }
 
 struct SaveContentUseCase: SaveContentUseCaseProtocol {
@@ -20,19 +21,41 @@ struct SaveContentUseCase: SaveContentUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func save(content: ContentItem, for day: Day) {
-        content.lastSaveDate = Date.now
-        dataService.save(content: content, for: day)
+    func save(content: ContentViewModel) {
+        
+        if content.lastSaveDate != nil {
+            dataService.updateContent(id: content.id,
+                                      sequenceIndex: content.sequenceIndex,
+                                      type: content.type,
+                                      text: content.text,
+                                      photoFileName: content.photoFileName,
+                                      photoData: content.photoData,
+                                      creationDate: content.creationDate,
+                                      displayTimestamp: content.displayTimestamp,
+                                      lastUpdateDate: content.lastUpdateDate,
+                                      lastSaveDate: Date.now)
+        } else {
+            dataService.createContent(id: content.id,
+                                      dayId: content.day.id,
+                                      sequenceIndex: content.sequenceIndex,
+                                      type: content.type,
+                                      text: content.text,
+                                      photoFileName: content.photoFileName,
+                                      photoData: content.photoData,
+                                      creationDate: content.creationDate,
+                                      displayTimestamp: content.displayTimestamp,
+                                      lastUpdateDate: content.lastUpdateDate,
+                                      lastSaveDate: Date.now)
+        }
+        
+        if content.type == .photo {
+            if let photoData = content.photoData {
+                saveImageData(photoData, tripId: content.day.trip.id, dayId: content.day.id, contentId: content.id)
+            }
+        }
     }
     
-    func saveImageDataFor(content: ContentItem, data: Data) {
-        
-        print("UseCase saving photo")
-        let imageHelper = ImageHelperService.shared
-
-        print(imageHelper.imageURL(for: content))
-        content.photoFileName = imageHelper.fileName(for: content)
-        imageHelper.saveImage(data: data, for: content)
-        
+    func saveImageData(_ data: Data, tripId: String, dayId: String, contentId: String) {
+        ImageHelperService.shared.saveImageData(data, tripId: tripId, dayId: dayId, contentId: contentId)
     }
 }

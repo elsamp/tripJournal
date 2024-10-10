@@ -7,23 +7,21 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var viewModel: ContentViewModelProtocol
+struct ContentView<ViewModel>: View where ViewModel: ContentViewModelProtocol {
+    @ObservedObject var viewModel: ViewModel
     var isSelected: Bool
     @State private var isShowingDeleteConfirmation = false
-    @ObservedObject var content: ContentItem
     
     var deleteContentAlertMessage: String {
-        return "Are you sure you want to delete this \(content.type.rawValue)? This action cannot be undone."
+        return "Are you sure you want to delete this \(viewModel.type.rawValue)? This action cannot be undone."
     }
     
     var deleteContentConfirmation: String {
-        return "Yes, delete this \(content.type.rawValue)."
+        return "Yes, delete this \(viewModel.type.rawValue)."
     }
     
-    init(viewModel: ContentViewModelProtocol, isSelected: Bool, content: ContentItem) {
+    init(viewModel: ViewModel, isSelected: Bool) {
         self.viewModel = viewModel
-        self.content = viewModel.content
         self.isSelected = isSelected
     }
     
@@ -45,7 +43,7 @@ struct ContentView: View {
     @ViewBuilder var contentHeader: some View {
         if isSelected {
             HStack {
-                DatePicker("", selection: $content.displayTimestamp, displayedComponents: .hourAndMinute)
+                DatePicker("", selection: $viewModel.displayTimestamp, displayedComponents: .hourAndMinute)
                     .fixedSize()
                     .labelsHidden()
                     .padding(.horizontal, 18)
@@ -65,7 +63,7 @@ struct ContentView: View {
                 .padding(.horizontal, 8)
             }
         } else {
-            Text(content.displayTimestamp, style: .time)
+            Text(viewModel.displayTimestamp, style: .time)
                 .font(.caption)
                 .foregroundStyle(.gray)
                 .padding(.bottom, 2)
@@ -76,7 +74,7 @@ struct ContentView: View {
     
     @ViewBuilder var contentBody: some View {
         Group {
-            switch content.type {
+            switch viewModel.type {
             case .photo:
                 ContentPhotoView(viewModel: viewModel,
                                  isSelected: isSelected,
@@ -86,16 +84,15 @@ struct ContentView: View {
                 ContentTextView(viewModel: viewModel, isSelected: isSelected)
                     .onChange(of: isSelected) { oldValue, newValue in
                         if newValue == false {
-                            viewModel.save(content: content)
+                            viewModel.save()
                         }
                     }
-                
             }
         }
     }
     
     func deleteContent() {
-        viewModel.delete(content: content)
+        viewModel.delete()
     }
     
 }
@@ -103,10 +100,10 @@ struct ContentView: View {
 
 
 
-
+//TODO: Fix Preview
 #Preview {
     VStack {
-        
+        /*
         ContentView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
                                                 contentChangeDelegate: PreviewHelper.shared),
                     isSelected: false, content: PreviewHelper.shared.mockTextContent())
@@ -115,7 +112,7 @@ struct ContentView: View {
                                                 contentChangeDelegate: PreviewHelper.shared),
                     isSelected: true, content: PreviewHelper.shared.mockTextContent())
         
-        /*
+        
         ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
                                                     contentChangeDelegate: PreviewHelper.shared),
                         isSelected: true)

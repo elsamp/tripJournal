@@ -9,22 +9,21 @@ import SwiftUI
 
 import PhotosUI
 
-struct ContentPhotoView: View {
+struct ContentPhotoView<ViewModel>: View where ViewModel: ContentViewModelProtocol {
     
     var photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol
-    var viewModel: ContentViewModelProtocol
+    @ObservedObject var viewModel: ViewModel
     var isSelected: Bool
-    @ObservedObject var content: ContentItem
     @State private var updatedImage: Image?
     @State private var selectedItem: PhotosPickerItem?
     
-    init(viewModel: ContentViewModelProtocol, isSelected: Bool = false, photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol) {
+    init(viewModel: ViewModel,
+         isSelected: Bool = false,
+         photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol) {
+        
         self.viewModel = viewModel
-        self.content = viewModel.content
         self.isSelected = isSelected
         self.photoDataUpdateDelegate = photoDataUpdateDelegate
-        
-        print("content view init \(content.id), IsSelected \(isSelected)")
     }
     
     var body: some View {
@@ -47,7 +46,7 @@ struct ContentPhotoView: View {
                         .opacity(isSelected ? 0.7 : 1)
                 } else {
                     //imaged loaded from documents having previously been saved
-                    AsyncImage(url: ImageHelperService.shared.imageURL(for: content)) { phase in
+                    AsyncImage(url: ImageHelperService.shared.imageURLFor(tripId: viewModel.day.trip.id, dayId: viewModel.day.id, contentId: viewModel.id)) { phase in
                             if let image = phase.image {
                                 image
                                     .resizable()
@@ -94,5 +93,8 @@ struct ContentPhotoView: View {
 }
 
 #Preview {
-    ContentPhotoView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockPhotoContent(), contentChangeDelegate: PreviewHelper.shared), photoDataUpdateDelegate: PreviewHelper.shared)
+    Text("Broken Preview: Need to Fix")
+        .foregroundStyle(.red)
+        /*
+    ContentPhotoView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockPhotoContent(), contentChangeDelegate: PreviewHelper.shared), photoDataUpdateDelegate: PreviewHelper.shared)*/
 }

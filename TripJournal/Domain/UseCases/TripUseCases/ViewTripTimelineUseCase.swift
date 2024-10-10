@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ViewTripTimelineUseCaseProtocol {
-    func fetchTripSequence() -> TripSequence
+    func fetchTrips() -> Set<TripViewModel>
 }
 
 struct ViewTripTimelineUseCase: ViewTripTimelineUseCaseProtocol {
@@ -19,8 +19,15 @@ struct ViewTripTimelineUseCase: ViewTripTimelineUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func fetchTripSequence() -> TripSequence {
-        TripSequence(id: UUID().uuidString, trips: dataService.fetchTrips())
+    func fetchTrips() -> Set<TripViewModel> {
+        let trips = dataService.fetchTrips()
+        var viewModels = Set<TripViewModel>()
+        
+        for item in trips {
+            viewModels.insert(item.toViewModel())
+        }
+        
+        return viewModels
     }
 
 }

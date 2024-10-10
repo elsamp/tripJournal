@@ -101,7 +101,11 @@ struct CoverPhotoPickerView: View {
         @State private var imageData: Data? = nil
         
         var body: some View {
+            Text("Broken Preview: Need to fix")
+                .foregroundStyle(.red)
+            /*
             CoverPhotoPickerView(photoDataUpdateDelegate: PreviewHelper.shared, imageURL: ImageHelperService.shared.imageURL(for: PreviewHelper.shared.mockDay()), isEditing: $isEditing)
+             */
         }
     }
     

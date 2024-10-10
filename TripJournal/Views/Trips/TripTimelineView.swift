@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct TripTimelineView: View {
+struct TripTimelineView<ViewModel: TripSequenceViewModelProtocol>: View {
     
-    let viewModel: TripSequenceViewModelProtocol
+    let viewModel: ViewModel
     @StateObject var router = Router.shared
     
-    init(viewModel: TripSequenceViewModelProtocol = TripSequenceViewModel()){
+    init(viewModel: ViewModel = TripSequenceViewModel()){
         self.viewModel = viewModel
     }
     
@@ -27,8 +27,8 @@ struct TripTimelineView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .navigationDestination(for: Trip.self) { trip in
-                TripView(viewModel: TripViewModel(trip: trip, tripUpdateDelegate: viewModel))
+            .navigationDestination(for: TripViewModel.self) { trip in
+                TripView(viewModel: trip)
             }
             .toolbar {
                 

@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct DaySequenceView: View {
+struct DaySequenceView<ViewModel>: View where ViewModel: DaySequenceViewModelProtocol {
     
-    let days: [Day]
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
             
-            ForEach(days) { day in
+            ForEach(viewModel.sortedDays) { day in
                 NavigationLink(value: day) {
                     DaySequenceItemView(day: day)
                         .padding(.vertical, 8)
@@ -26,7 +26,11 @@ struct DaySequenceView: View {
 }
 
 #Preview {
+    Text("Broken Preview: Fix")
+        .foregroundStyle(.red)
+    /*
     DaySequenceView(days:[PreviewHelper.shared.mockDay(),
                           PreviewHelper.shared.mockDay(),
                           PreviewHelper.shared.mockDay()])
+     */
 }

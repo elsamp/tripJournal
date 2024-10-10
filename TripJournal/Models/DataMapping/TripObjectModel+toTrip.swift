@@ -9,7 +9,7 @@ import Foundation
 
 extension TripObjectModel {
     
-    func trip() -> Trip {
+    func toTrip() -> Trip {
         return Trip(id: self.id,
                     title: self.title,
                     description: self.summaryText,

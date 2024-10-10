@@ -9,7 +9,7 @@ import Foundation
 
 extension DayObjectModel {
     
-    func day(for trip: Trip) -> Day {
+    func toDay(for trip: Trip) -> Day {
         Day(id: self.id,
             trip: trip,
             date: self.date,

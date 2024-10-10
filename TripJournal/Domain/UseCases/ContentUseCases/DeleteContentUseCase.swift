@@ -8,10 +8,13 @@
 import Foundation
 
 protocol DeleteContentUseCaseProtocol {
-    func delete(content: ContentItem)
+    
+    func delete(content: ContentViewModel)
 }
 
 struct DeleteContentUseCase: DeleteContentUseCaseProtocol {
+        
+    typealias ContentModel = ContentViewModel
     
     let dataService: DataServiceProtocol
     
@@ -19,8 +22,8 @@ struct DeleteContentUseCase: DeleteContentUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func delete(content: ContentItem) {
-        dataService.deleteContent(content: content)
+    func delete(content: ContentViewModel) {
+        dataService.deleteContent(withId: content.id)
         //TODO: If content type is photo, delete image data
     }
     

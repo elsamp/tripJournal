@@ -9,7 +9,7 @@ import Foundation
 
 
 protocol DeleteTripUseCaseProtocol {
-    func delete(trip: Trip)
+    func delete(trip: TripViewModel)
 }
 
 struct DeleteTripUseCase: DeleteTripUseCaseProtocol {
@@ -19,7 +19,7 @@ struct DeleteTripUseCase: DeleteTripUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func delete(trip: Trip) {
-        dataService.delete(trip: trip)
+    func delete(trip: TripViewModel) {
+        dataService.delete(trip: Trip.fromViewModel(trip))
     }
 }

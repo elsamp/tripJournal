@@ -9,7 +9,7 @@ import Foundation
 
 protocol ViewContentSequenceUseCaseProtocol {
     
-    func fetchContentSquence(for day: Day) -> ContentSequence
+    func fetchContentSquence(for day: DayViewModel) -> ContentSequenceViewModel
     
 }
 
@@ -21,8 +21,16 @@ struct ViewContentSequenceUseCase: ViewContentSequenceUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func fetchContentSquence(for day: Day) -> ContentSequence {
-        return ContentSequence(id: UUID().uuidString, contentItems: Array(dataService.fetchContentFor(day: day)))
+    func fetchContentSquence(for day: DayViewModel) -> ContentSequenceViewModel {
+        
+        let contentItems = dataService.fetchContentFor(day: Day.fromViewModel(day))
+        var viewModels: [ContentViewModel] = []
+        
+        for item in contentItems {
+            viewModels.append(item.toViewModel())
+        }
+                                 
+        return ContentSequenceViewModel(day: day, contentItems: viewModels)
     }
 }
  

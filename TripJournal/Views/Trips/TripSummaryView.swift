@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct TripSummaryView: View {
+struct TripSummaryView<ViewModel>: View where ViewModel: TripViewModelProtocol {
     
-    @ObservedObject var trip: Trip
+    @ObservedObject var trip: ViewModel
     
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Color.clear
                     .overlay (
-                        AsyncImage(url: ImageHelperService.shared.imageURL(for: trip)) { phase in
+                        AsyncImage(url: ImageHelperService.shared.imageURLFor(tripId: trip.id)) { phase in
                             if let image = phase.image {
                                 image
                                     .resizable()
@@ -38,7 +38,7 @@ struct TripSummaryView: View {
                     .frame(height: 300)
                     .clipped()
                 
-                Group {
+                VStack {
                     Text(trip.title)
                         .font(.headline)
                         .fontWeight(.light)
@@ -69,7 +69,7 @@ struct TripSummaryView: View {
         return nil
     }
     
-    func dateRange(for trip: Trip) -> String {
+    func dateRange(for trip: ViewModel) -> String {
         
         let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("MMMdd")

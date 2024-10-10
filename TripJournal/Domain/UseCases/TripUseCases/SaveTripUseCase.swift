@@ -8,8 +8,8 @@
 import Foundation
 
 protocol SaveTripUseCaseProtocol {
-    func save(trip: Trip)
-    func saveCoverImage(data: Data, for trip: Trip)
+    func save(trip: TripViewModel)
+    func saveCoverImage(data: Data, for trip: TripViewModel)
 }
 
 struct SaveTripUseCase: SaveTripUseCaseProtocol {
@@ -20,19 +20,12 @@ struct SaveTripUseCase: SaveTripUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func save(trip: Trip) {
+    func save(trip: TripViewModel) {
         trip.lastSaveDate = Date.now
-        dataService.save(trip: trip)
+        dataService.save(trip: Trip.fromViewModel(trip))
     }
     
-    func saveCoverImage(data: Data, for trip: Trip) {
-        
-        print("UseCase saving photo")
-        let imageHelper = ImageHelperService.shared
-
-        print(imageHelper.imageURL(for: trip))
-        trip.coverPhotoPath = imageHelper.imageURL(for: trip).relativePath
-        imageHelper.saveImage(data: data, for: trip)
-        
+    func saveCoverImage(data: Data, for trip: TripViewModel) {
+        ImageHelperService.shared.saveImageData(data, tripId: trip.id)
     }
 }

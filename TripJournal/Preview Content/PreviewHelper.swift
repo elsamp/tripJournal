@@ -18,7 +18,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
         //do nothing
     }
     
-    func mockTrip() -> Trip {
+    func mockTrip() -> TripViewModel {
         
         var dateComponents = DateComponents()
         dateComponents.year = 2019
@@ -28,18 +28,19 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
         let userCalendar = Calendar(identifier: .gregorian)
         let startDate1 = userCalendar.date(from: dateComponents)
         
-        return Trip(id: UUID().uuidString,
-                    title: "Cape Bretton",
-                    description: "One last trip to visit my grandparents before they passed",
-                    startDate: startDate1 ?? Date.now,
-                    endDate: startDate1 != nil ? Date.dateFor(days: 10, since: startDate1!) : Date.now,
-                    coverPhotoPath: nil,
-                    creationDate: startDate1 ?? Date.now,
-                    lastUpdateDate: Date.now,
-                    lastSaveDate: Date.now)
+        return TripViewModel(id: UUID().uuidString,
+                             title: "Cape Bretton",
+                             description: "One last trip to visit my grandparents before they passed",
+                             startDate: startDate1 ?? Date.now,
+                             endDate: startDate1 != nil ? Date.dateFor(days: 10, since: startDate1!) : Date.now,
+                             coverPhotoPath: nil,
+                             coverImageData: nil,
+                             creationDate: startDate1 ?? Date.now,
+                             lastUpdateDate: Date.now,
+                             lastSaveDate: Date.now)
     }
     
-    func mockDay() -> Day {
+    func mockDay() -> DayViewModel {
         
         var dateComponents = DateComponents()
         dateComponents.year = 2019
@@ -49,16 +50,18 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
         let userCalendar = Calendar(identifier: .gregorian)
         let date = userCalendar.date(from: dateComponents)
         
-        return Day(id: UUID().uuidString,
-                   trip: mockTrip(),
-                   date: date ?? Date.now,
-                   title: "Day at the Beach!",
-                   coverPhotoPath: nil,
-                   creationDate: Date.now,
-                   lastUpdateDate: Date.now)
+        return DayViewModel(id: UUID().uuidString,
+                            trip: mockTrip(),
+                            date: date ?? Date.now,
+                            title: "Day at the Beach!",
+                            coverPhotoPath: nil,
+                            coverImageData: nil,
+                            creationDate: Date.now,
+                            lastUpdateDate: Date.now,
+                            lastSaveDate: Date.now)
     }
     
-    func mockTextContent() -> ContentItem {
+    func mockTextContent() -> ContentViewModel {
         
         let text =
             """
@@ -68,7 +71,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
             I havn't figured out how to do that yet. Perhaps soon...
             """
         
-        return ContentItem(id: UUID().uuidString,
+        return ContentViewModel(id: UUID().uuidString,
                 day: mockDay(),
                 sequenceIndex: 1,
                 type: .text,
@@ -80,9 +83,9 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 lastSaveDate: Date.now)
     }
     
-    func mockTextContentWith(text: String) -> ContentItem {
+    func mockTextContentWith(text: String) -> ContentViewModel {
         
-        return ContentItem(id: UUID().uuidString,
+        return ContentViewModel(id: UUID().uuidString,
                 day: mockDay(),
                 sequenceIndex: 1,
                 type: .text,
@@ -94,9 +97,9 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 lastSaveDate: Date.now)
     }
     
-    func mockPhotoContent() -> ContentItem {
+    func mockPhotoContent() -> ContentViewModel {
         
-        return ContentItem(id: UUID().uuidString,
+        return ContentViewModel(id: UUID().uuidString,
                 day: mockDay(),
                 sequenceIndex: 1,
                 type: .photo,
@@ -108,11 +111,11 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 lastSaveDate: Date.now)
     }
     
-    func fetchDaysFor(trip: Trip) -> DaySequence {
-        return DaySequence(id: UUID().uuidString, days: [mockDay(), mockDay(), mockDay()])
+    func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel {
+        return DaySequenceViewModel(trip: trip, days: [mockDay(), mockDay(), mockDay()])
     }
     
-    func delete(content: ContentItem) {
+    func delete(content: ContentViewModel) {
         //do nothing
     }
 }

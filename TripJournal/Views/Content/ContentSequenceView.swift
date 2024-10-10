@@ -7,23 +7,15 @@
 
 import SwiftUI
 
-struct ContentSequenceView: View {
+struct ContentSequenceView<ViewModel>: View where ViewModel: ContentSequenceViewModelProtocol {
     
-    var viewModel: DayViewModelProtocol
-    @ObservedObject var contentSequence: ContentSequence
-    
-    init(viewModel: DayViewModelProtocol) {
-        self.viewModel = viewModel
-        self.contentSequence = viewModel.contentSequence
-    }
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
-            ForEach(contentSequence.sortedContentItems()) { content in
-                ContentView(viewModel: ContentViewModel(content: content,
-                                                        contentChangeDelegate: viewModel),
-                            isSelected: viewModel.isSelected(content: content),
-                            content: content)
+            ForEach(viewModel.sortedContentItems) { content in
+                ContentView(viewModel: content,
+                            isSelected: viewModel.isSelected(content: content))
                 .id(content.id)
                 .onTapGesture {
                     print("tapped content view!")
@@ -45,6 +37,9 @@ struct ContentSequenceView: View {
     }
 }
 
+//TODO: Fix Preview
 #Preview {
-    ContentSequenceView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
+    Text("Broken Preview: Need to Fix")
+        .foregroundStyle(.red)
+    //ContentSequenceView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
 }

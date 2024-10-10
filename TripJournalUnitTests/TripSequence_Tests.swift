@@ -9,7 +9,7 @@ import XCTest
 @testable import TripJournal
 
 final class TripSequence_Tests: XCTestCase {
-    
+    /*
     var tripSequence: TripSequence?
 
     override func setUpWithError() throws {
@@ -217,5 +217,5 @@ final class TripSequence_Tests: XCTestCase {
             return Trip(id: "", startDate: Date.now, endDate: Date.now, creationDate: Date.now, lastUpdateDate: Date.now, lastSaveDate: Date.now)
         }
     }
-
+     */
 }

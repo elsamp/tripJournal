@@ -7,31 +7,29 @@
 
 import SwiftUI
 
-struct TripView: View {
+struct TripView<ViewModel>: View where ViewModel: TripViewModelProtocol {
     
-    let viewModel: TripViewModelProtocol
+    @ObservedObject var viewModel: ViewModel
     @State private var isEditing: Bool
     @StateObject var router = Router.shared
-    @ObservedObject var trip: Trip
     @State private var isShowingDeleteConfirmation = false
     
-    init(viewModel: TripViewModelProtocol) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
-        _isEditing = State(initialValue: viewModel.trip.hasUnsavedChanges)
-        self.trip = viewModel.trip
+        _isEditing = State(initialValue: viewModel.hasUnsavedChanges)
     }
     
     var body: some View {
         ScrollViewReader { reader in
             ScrollView{
                 LazyVStack(alignment: .leading) {
-                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURL(for: trip), isEditing: $isEditing)
+                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURLFor(tripId: viewModel.id), isEditing: $isEditing)
                         .id("Top")
                     
-                    TripHeaderView(trip: viewModel.trip, isEditing: $isEditing)
+                    TripHeaderView(trip: viewModel, isEditing: $isEditing)
                         .offset(y: -35)
                     ZStack {
-                        DaySequenceView(days: viewModel.days)
+                        DaySequenceView(viewModel: viewModel.daySequence)
                             .allowsHitTesting(!isEditing)
                             .padding(.horizontal, 40)
                         
@@ -47,8 +45,9 @@ struct TripView: View {
             })
             .scrollDisabled(isEditing)
             .ignoresSafeArea(edges: .top)
-            .navigationDestination(for: Day.self) { day in
-                DayView(viewModel: DayViewModel(day: day))
+            .navigationDestination(for: DayViewModel.self) { day in
+                //TODO: Exploe ways to decouple actual viewModel implementation
+                DayView<DayViewModel, ContentSequenceViewModel>(viewModel: day)
             }
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -72,12 +71,13 @@ struct TripView: View {
                         cancelEditButton
                     }
                     
-                    if viewModel.trip.lastSaveDate != nil {
+                    if viewModel.lastSaveDate != nil {
                         ToolbarItem(placement: .bottomBar) {
                             deleteTripButton
                         }
                     }
                 }
+                
             }
             .toolbarBackground(.hidden, for: .bottomBar)
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -104,7 +104,7 @@ struct TripView: View {
     var saveChangesButton: some View {
         
         SaveButton {
-            viewModel.save(trip: viewModel.trip)
+            viewModel.saveTrip()
             withAnimation{
                 isEditing = false
             }
@@ -115,7 +115,7 @@ struct TripView: View {
         
         CancelButton {
             //If trip was never saved, cancel returns user to timeline view
-            if viewModel.trip.lastSaveDate == nil {
+            if viewModel.lastSaveDate == nil {
                 router.path.removeLast()
             } else {
                 
@@ -138,7 +138,7 @@ struct TripView: View {
     var addDayButton: some View {
         
         AddItemButton(label: "Add Day") {
-            router.path.append(viewModel.newDay())
+            router.path.append(viewModel.daySequence.newDay())
         }
     }
     
@@ -150,7 +150,7 @@ struct TripView: View {
     }
     
     func deleteTrip() {
-        viewModel.delete(trip: viewModel.trip)
+        viewModel.deleteTrip()
         router.path.removeLast()
     }
 }
@@ -159,7 +159,11 @@ struct TripView: View {
 #Preview {
     NavigationStack {
         ZStack{
+            Text("Broken Preview: Need to Fix")
+                .foregroundStyle(.red)
+            /*
             TripView(viewModel: TripViewModel(daySequenceProvider: PreviewHelper.shared, trip: PreviewHelper.shared.mockTrip(), tripUpdateDelegate: nil))
+             */
         }
     }
 }

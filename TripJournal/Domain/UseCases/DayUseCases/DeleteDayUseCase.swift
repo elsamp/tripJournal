@@ -9,7 +9,7 @@ import Foundation
 
 
 protocol DeleteDayUseCaseProtocol {
-    func delete(day: Day)
+    func delete(day: DayViewModel)
 }
 
 struct DeleteDayUseCase: DeleteDayUseCaseProtocol {
@@ -20,7 +20,7 @@ struct DeleteDayUseCase: DeleteDayUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func delete(day: Day) {
-        dataService.delete(day: day)
+    func delete(day: DayViewModel) {
+        dataService.delete(day: Day.fromViewModel(day))
     }
 }

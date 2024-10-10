@@ -7,23 +7,20 @@
 
 import SwiftUI
 
-struct ContentTextView: View {
+struct ContentTextView<ViewModel>: View where ViewModel: ContentViewModelProtocol {
     
     var isSelected: Bool
-    var viewModel: ContentViewModelProtocol
-    @ObservedObject var content: ContentItem
+    @ObservedObject var viewModel: ViewModel
     @FocusState private var focused: Bool?
     
-    init(viewModel: ContentViewModelProtocol, isSelected: Bool = false) {
+    init(viewModel: ViewModel, isSelected: Bool = false) {
         self.viewModel = viewModel
-        self.content = viewModel.content
         self.isSelected = isSelected
-        print("content view init \(content.id), IsSelected \(isSelected)")
     }
     
     @ViewBuilder var body: some View {
         if isSelected {
-            TextField("Today I ...", text: $content.text, axis: .vertical)
+            TextField("Today I ...", text: $viewModel.text, axis: .vertical)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(.textFieldBackground)
@@ -40,7 +37,7 @@ struct ContentTextView: View {
                 .padding(.bottom, 10)
                 .padding(.horizontal, 10)
         } else {
-            Text(content.text)
+            Text(viewModel.text)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
@@ -53,7 +50,11 @@ struct ContentTextView: View {
 }
 
 #Preview {
+    Text("Broken Preview: Need to Fix")
+        .foregroundStyle(.red)
+    /*
     ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
                                                 contentChangeDelegate: PreviewHelper.shared),
                     isSelected: false)
+     */
 }

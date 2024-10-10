@@ -17,23 +17,46 @@ protocol DataServiceProtocol {
     
     //Days
     func fetchDaysFor(trip: Trip) -> Set<Day>
-    func save(day: Day, for trip: Trip)
+    func createDay(_ day: Day, for trip: Trip)
+    func updateDay(_ day: Day)
     func delete(day: Day)
     
     //Content
     func fetchContentFor(day: Day) -> Set<ContentItem>
-    func save(content: ContentItem, for day: Day)
-    func deleteContent(content: ContentItem)
+    func createContent(id: String,
+                       dayId: String,
+                       sequenceIndex: Int,
+                       type: ContentType,
+                       text: String,
+                       photoFileName: String?,
+                       photoData: Data?,
+                       creationDate: Date,
+                       displayTimestamp: Date,
+                       lastUpdateDate: Date,
+                       lastSaveDate: Date?
+    )
+    func updateContent(id: String,
+                       sequenceIndex: Int,
+                       type: ContentType,
+                       text: String,
+                       photoFileName: String?,
+                       photoData: Data?,
+                       creationDate: Date,
+                       displayTimestamp: Date,
+                       lastUpdateDate: Date,
+                       lastSaveDate: Date?)
+    func deleteContent(withId id: String)
     
 }
 
 class RealmDataService: DataServiceProtocol {
     
+    
     //MARK: Trips
     
     func fetchTrip(for id: String) -> Trip? {
         let model = tripObjectModelFor(tripId: id)
-        return model?.trip()
+        return model?.toTrip()
     }
     
     func fetchTrips() -> Set<Trip> {
@@ -43,7 +66,7 @@ class RealmDataService: DataServiceProtocol {
         var tripArray = Set<Trip>()
         
         for tripObject in Set(results) {
-            tripArray.insert(tripObject.trip())
+            tripArray.insert(tripObject.toTrip())
         }
 
         print("Returning Trips: \(results.count)")
@@ -135,7 +158,7 @@ class RealmDataService: DataServiceProtocol {
             var days = Set<Day>()
             
             for dayObject in tripObject.days {
-                days.insert(dayObject.day(for: trip))
+                days.insert(dayObject.toDay(for: trip))
             }
             print("returning days \(days.count)")
             return days
@@ -143,18 +166,8 @@ class RealmDataService: DataServiceProtocol {
         
         return []
     }
-    
-    func save(day: Day, for trip: Trip) {
-        if let dayObject = dayObjectModelFor(dayId: day.id) {
-            update(objectModel: dayObject, for: day)
-            print("updated Day")
-        } else {
-            createObjectModelDay(day, for: trip)
-            print("created new Day")
-        }
-    }
-    
-    private func createObjectModelDay(_ day: Day, for trip: Trip) {
+        
+    func createDay(_ day: Day, for trip: Trip) {
         
         let dayModel = DayObjectModel()
         if let tripModel = tripObjectModelFor(tripId: trip.id) {
@@ -181,16 +194,17 @@ class RealmDataService: DataServiceProtocol {
         }
     }
     
-    private func update(objectModel: DayObjectModel, for day: Day) {
-        let realm = try! Realm()
-        try! realm.write {
-            objectModel.date = day.date
-            objectModel.title = day.title
-            objectModel.coverPhotoPath = day.coverPhotoPath
-            //TODO: update content sequence
-            objectModel.creationDate = day.creationDate
-            objectModel.lastUpdateDate = day.lastUpdateDate
-            objectModel.lastSaveDate = day.lastUpdateDate
+    func updateDay(_ day: Day) {
+        if let dayObject = dayObjectModelFor(dayId: day.id) {
+            let realm = try! Realm()
+            try! realm.write {
+                dayObject.date = day.date
+                dayObject.title = day.title
+                dayObject.coverPhotoPath = day.coverPhotoPath
+                dayObject.creationDate = day.creationDate
+                dayObject.lastUpdateDate = day.lastUpdateDate
+                dayObject.lastSaveDate = day.lastUpdateDate
+            }
         }
     }
     
@@ -217,6 +231,7 @@ class RealmDataService: DataServiceProtocol {
     
     //MARK: Content
     
+    //TODO: Refactor
     func fetchContentFor(day: Day) -> Set<ContentItem> {
         
         if let dayObject = dayObjectModelFor(dayId: day.id) {
@@ -225,7 +240,7 @@ class RealmDataService: DataServiceProtocol {
             var contentSet = Set<ContentItem>()
             
             for contentObject in dayObject.contentSequence {
-                contentSet.insert(contentObject.content(for: day))
+                contentSet.insert(contentObject.toContentItem(for: day))
             }
             print("returning content \(contentSet.count)")
             return contentSet
@@ -236,35 +251,31 @@ class RealmDataService: DataServiceProtocol {
     }
     
     
-    func save(content: ContentItem, for day: Day) {
-        if let contentObject = contentObjectModelFor(contentId: content.id) {
-            print("attempting to UPDATE content of type: \(content.type) id: \(content.id)")
-            update(objectModel: contentObject, for: content)
-            print("Successfully UPDATED content type: \(content.type) id: \(content.id)")
-        } else {
-            print("attempting to CREATE NEW content of type: \(content.type) id: \(content.id)")
-            createContentObjectModel(for: content, day: day)
-            print("Successfully CREATED content type: \(content.type) id: \(content.id)")
-        }
-    
-    }
-    
-    private func createContentObjectModel(for content: ContentItem, day: Day) {
+    func createContent(id: String,
+                       dayId: String,
+                       sequenceIndex: Int,
+                       type: ContentType,
+                       text: String,
+                       photoFileName: String?,
+                       photoData: Data?,
+                       creationDate: Date,
+                       displayTimestamp: Date,
+                       lastUpdateDate: Date,
+                       lastSaveDate: Date?
+    ) {
         
-        print("creating new text content")
-        
-        if let dayObjectModel = dayObjectModelFor(dayId: content.day.id) {
+        if let dayObjectModel = dayObjectModelFor(dayId: dayId) {
             
             let objectModel = ContentObjectModel()
-            objectModel.id = content.id
-            objectModel.sequenceIndex = content.sequenceIndex
-            objectModel.type = content.type.rawValue
-            objectModel.fileName = content.photoFileName
-            objectModel.text = content.text
-            objectModel.creationDate = content.creationDate
-            objectModel.displayTimestamp = content.displayTimestamp
-            objectModel.lastUpdateDate = content.lastUpdateDate
-            objectModel.lastSaveDate = content.lastSaveDate ?? Date.now
+            objectModel.id = id
+            objectModel.sequenceIndex = sequenceIndex
+            objectModel.type = type.rawValue
+            objectModel.fileName = photoFileName
+            objectModel.text = text
+            objectModel.creationDate = creationDate
+            objectModel.displayTimestamp = displayTimestamp
+            objectModel.lastUpdateDate = lastUpdateDate
+            objectModel.lastSaveDate = lastSaveDate ?? Date.now
             
             let realm = try! Realm()
             
@@ -278,28 +289,38 @@ class RealmDataService: DataServiceProtocol {
                 print(error.localizedDescription)
             }
         }
-        
     }
+
     
-    private func update(objectModel: ContentObjectModel, for content: ContentItem) {
-        
-        let realm = try! Realm()
+    func updateContent(id: String,
+                       sequenceIndex: Int,
+                       type: ContentType,
+                       text: String,
+                       photoFileName: String?,
+                       photoData: Data?,
+                       creationDate: Date,
+                       displayTimestamp: Date,
+                       lastUpdateDate: Date,
+                       lastSaveDate: Date?) {
+        if let contentObject = contentObjectModelFor(contentId: id) {
+            let realm = try! Realm()
             
-        try! realm.write {
-            objectModel.sequenceIndex = content.sequenceIndex
-            objectModel.type = content.type.rawValue
-            objectModel.fileName = content.photoFileName
-            objectModel.text = content.text
-            objectModel.displayTimestamp = content.displayTimestamp
-            objectModel.lastUpdateDate = content.lastUpdateDate
-            objectModel.lastSaveDate = content.lastSaveDate ?? Date.now
+            try! realm.write {
+                contentObject.sequenceIndex = sequenceIndex
+                contentObject.type = type.rawValue
+                contentObject.fileName = photoFileName
+                contentObject.text = text
+                contentObject.displayTimestamp = displayTimestamp
+                contentObject.lastUpdateDate = lastUpdateDate
+                contentObject.lastSaveDate = lastSaveDate ?? Date.now
+            }
         }
         
     }
     
-    func deleteContent(content: ContentItem) {
+    func deleteContent(withId id: String) {
         
-        if let objectModel = contentObjectModelFor(contentId: content.id) {
+        if let objectModel = contentObjectModelFor(contentId: id) {
             
             let realm = try! Realm()
             

@@ -7,15 +7,27 @@
 
 import Foundation
 
-protocol TripViewModelProtocol: PhotoDataUpdateDelegatProtocol {
-    var trip: Trip { get }
-    var days: [Day] { get }
-    var coverImageData: Data? { get }
+protocol TripViewModelProtocol: ObservableObject, Hashable, Identifiable, PhotoDataUpdateDelegatProtocol, DayUpdateDelegateProtocol, PhotoDataUpdateDelegatProtocol {
     
-    func save(trip: Trip)
-    func cancelEdit() 
-    func delete(trip: Trip)
-    func newDay() -> Day
+    associatedtype DaySequenceModel: DaySequenceViewModelProtocol
+    
+    var id: String { get }
+    var title: String { get set }
+    var description: String { get set }
+    var startDate: Date { get set }
+    var endDate: Date { get set }
+    var coverPhotoPath: String? { get }
+    var coverImageData: Data? { get set }
+    var creationDate: Date { get }
+    var lastUpdateDate: Date { get set }
+    var lastSaveDate: Date? { get }
+    var hasUnsavedChanges: Bool { get }
+    var daySequence: DaySequenceModel { get }
+    var tripYear: Int { get }
+    
+    func saveTrip()
+    func cancelEdit()
+    func deleteTrip()
     func updateCoverImage(data: Data)
     func imageDataUpdatedTo(_ data: Data)
 }
@@ -25,56 +37,96 @@ protocol DayUpdateDelegateProtocol: AnyObject {
     func handleDeletion(of day: Day)
 }
 
-class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol, PhotoDataUpdateDelegatProtocol {
-
+class TripViewModel: TripViewModelProtocol {
+    
+    typealias DaySequenceModel = DaySequenceViewModel
+    
+    let id: String
+    @Published var title: String
+    @Published var description: String
+    @Published var startDate: Date
+    @Published var endDate: Date
+    @Published var coverPhotoPath: String?
+    @Published var coverImageData: Data?
+    let creationDate: Date
+    var lastUpdateDate: Date
+    var lastSaveDate: Date?
+    var hasUnsavedChanges: Bool {
+        
+        if let saveDate = lastSaveDate {
+            return lastUpdateDate > saveDate
+        } else {
+            //Trip has never been saved.
+            return true
+        }
+    }
+    
+    var tripYear: Int {
+        let calendar = Calendar.current
+        return calendar.component(.year, from: self.startDate)
+    }
+    
+    lazy var daySequence: DaySequenceViewModel = {
+        daySequenceProvider.fetchDaysFor(trip: self)
+    }()
+    
     private var daySequenceProvider: ViewDaySequenceUseCaseProtocol
-    private var daySequence: DaySequence
     private var saveTripUseCase: SaveTripUseCaseProtocol
     private var fetchTripUseCase: FetchTripUseCaseProtocol
     private var deleteTripUseCase: DeleteTripUseCaseProtocol
     
     weak var tripUpdateDelegate: TripUpdateDelegateProtocol?
-    
     var didUpdateCoverPhoto = false
-    var coverImageData: Data? {
-        trip.coverImageData
-    }
     
-    var trip: Trip
-    var days: [Day] {
-        Array(daySequence.days).sorted()
-    }
-    
-    init(daySequenceProvider: ViewDaySequenceUseCaseProtocol = ViewDaySequenceUseCase(), 
-         trip:Trip,
+    init(id: String,
+         title: String,
+         description: String,
+         startDate: Date,
+         endDate: Date,
+         coverPhotoPath: String?,
+         coverImageData: Data?,
+         creationDate: Date,
+         lastUpdateDate: Date,
+         lastSaveDate: Date?,
+         daySequenceProvider: any ViewDaySequenceUseCaseProtocol = ViewDaySequenceUseCase(),
          saveTripUseCase: SaveTripUseCaseProtocol = SaveTripUseCase(),
          deleteTripUseCase: DeleteTripUseCaseProtocol = DeleteTripUseCase(),
          fetchTripUseCase: FetchTripUseCaseProtocol = FetchTripUseCase(),
-         tripUpdateDelegate: TripUpdateDelegateProtocol?) {
+         tripUpdateDelegate: TripUpdateDelegateProtocol? = nil) {
+        
+        self.id = id
+        self.title = title
+        self.description = description
+        self.startDate = startDate
+        self.endDate = endDate
+        self.coverPhotoPath = coverPhotoPath
+        self.coverImageData = coverImageData
+        self.creationDate = creationDate
+        self.lastUpdateDate = lastUpdateDate
+        self.lastSaveDate = lastSaveDate
         
         self.daySequenceProvider = daySequenceProvider
-        self.trip = trip
-        self.daySequence = daySequenceProvider.fetchDaysFor(trip: trip)
         self.saveTripUseCase = saveTripUseCase
         self.deleteTripUseCase = deleteTripUseCase
         self.fetchTripUseCase = fetchTripUseCase
         self.tripUpdateDelegate = tripUpdateDelegate
+        
     }
     
-    func save(trip: Trip) {
+    func saveTrip() {
         if didUpdateCoverPhoto {
-            if let data = trip.coverImageData {
-                saveTripUseCase.saveCoverImage(data: data, for: trip)
+            if let data = coverImageData {
+                saveTripUseCase.saveCoverImage(data: data, for: self)
                 didUpdateCoverPhoto = false
             }
         }
 
-        saveTripUseCase.save(trip: trip)
-        tripUpdateDelegate?.handleChanges(for: trip)
+        saveTripUseCase.save(trip: self)
+        tripUpdateDelegate?.handleChanges(for: self)
     }
     
     func updateCoverImage(data: Data) {
-        trip.coverImageData = data
+        coverImageData = data
         didUpdateCoverPhoto = true
     }
     
@@ -83,27 +135,33 @@ class TripViewModel: TripViewModelProtocol, DayUpdateDelegateProtocol, PhotoData
     }
     
     func cancelEdit() {
-        if let lastSavedTripState = fetchTripUseCase.fetchTrip(for: trip.id) {
-            trip = lastSavedTripState
-            didUpdateCoverPhoto = false
-        }
+        //TODO: Make this work again
     }
     
-    func delete(trip: Trip) {
-        deleteTripUseCase.delete(trip: trip)
-        tripUpdateDelegate?.handleDeletion(of: trip)
+    func deleteTrip() {
+        deleteTripUseCase.delete(trip: self)
+        tripUpdateDelegate?.handleDeletion(of: self)
     }
     
-    func newDay() -> Day {
-        Day(id: UUID().uuidString, trip: trip, date: Date.now, title: "", coverPhotoPath: nil, creationDate: Date.now, lastUpdateDate: Date.now)
-    }
-    
+    //TODO: Move to DaySequence
     func handleChanges(for day: Day) {
         
     }
-    
+    //TODO: Move to DaySequence
     func handleDeletion(of day: Day) {
         
+    }
+    
+    static func == (lhs: TripViewModel, rhs: TripViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    static func < (lhs: TripViewModel, rhs: TripViewModel) -> Bool {
+        lhs.startDate < rhs.startDate
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
 }

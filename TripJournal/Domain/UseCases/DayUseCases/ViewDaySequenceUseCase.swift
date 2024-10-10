@@ -8,18 +8,30 @@
 import Foundation
 
 protocol ViewDaySequenceUseCaseProtocol {
-    func fetchDaysFor(trip: Trip) -> DaySequence
+    
+    func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel
 }
 
 struct ViewDaySequenceUseCase: ViewDaySequenceUseCaseProtocol {
     
+    typealias TripModel = TripViewModel
+    typealias DaySequenceModel = DaySequenceViewModel
+        
     let dataService: DataServiceProtocol
     
     init(dataService: DataServiceProtocol = RealmDataService()) {
         self.dataService = dataService
     }
     
-    func fetchDaysFor(trip: Trip) -> DaySequence {
-        DaySequence(id: UUID().uuidString, days: dataService.fetchDaysFor(trip: trip))
+    func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel {
+        
+        let days = dataService.fetchDaysFor(trip: Trip.fromViewModel(trip))
+        var viewModels = Set<DayViewModel>()
+        
+        for item in days {
+            viewModels.insert(item.toViewModel())
+        }
+        
+        return DaySequenceViewModel(trip: trip, days: viewModels)
     }
 }

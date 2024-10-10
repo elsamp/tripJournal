@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct TripHeaderView: View {
+struct TripHeaderView<ViewModel>: View where ViewModel: TripViewModelProtocol {
 
-    @ObservedObject var trip: Trip
+    @ObservedObject var trip: ViewModel
     @Binding var isEditing: Bool
     
     var body: some View {
@@ -53,7 +53,7 @@ struct TripHeaderView: View {
         .padding(.horizontal, 20)
     }
     
-    func dateRange(for trip: Trip) -> String {
+    func dateRange(for trip: ViewModel) -> String {
         
         let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("MMMdd")
@@ -97,7 +97,9 @@ struct TripHeaderView: View {
         var body: some View {
             ZStack {
                 Color.gray
-                TripHeaderView(trip: PreviewHelper.shared.mockTrip(), isEditing: $isEditing)
+                Text("Broken Preview: Need to Fix")
+                    .foregroundStyle(.red)
+                //TripHeaderView(trip: PreviewHelper.shared.mockTrip(), isEditing: $isEditing)
             }
         }
     }

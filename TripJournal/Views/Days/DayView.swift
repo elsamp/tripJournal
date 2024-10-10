@@ -8,32 +8,28 @@
 import SwiftUI
 import PhotosUI
 
-struct DayView: View {
-    
+struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSequenceViewModelProtocol>: View {
+        
     let topLocationKey = "Top"
-    var viewModel: DayViewModelProtocol
+    @ObservedObject var viewModel: ViewModel
     @State private var isEditing: Bool
-    @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isShowingDeleteConfirmation = false
     @StateObject var router = Router.shared
-    @ObservedObject var day: Day
-    @ObservedObject var contentSequence: ContentSequence
     
     private var tapGesture: some Gesture {
         TapGesture()
             .onEnded { _ in
                 print("tapped scrollview")
                 withAnimation {
-                    viewModel.deselectAll()
+                    viewModel.contentSequence.deselectAll()
                 }
             }
     }
     
-    init(viewModel: DayViewModelProtocol) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
-        _isEditing = State(initialValue: viewModel.day.hasUnsavedChanges)
-        self.day = viewModel.day
-        self.contentSequence = viewModel.contentSequence
+        _isEditing = State(initialValue: viewModel.hasUnsavedChanges)
     }
     
     var body: some View {
@@ -41,12 +37,12 @@ struct DayView: View {
         ScrollViewReader { reader in
             ScrollView{
                 LazyVStack(alignment: .leading) {
-                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURL(for: day), isEditing: $isEditing)
+                    CoverPhotoPickerView(photoDataUpdateDelegate: viewModel, imageURL: ImageHelperService.shared.imageURLFor(tripId: viewModel.trip.id, dayId: viewModel.id), isEditing: $isEditing)
                         .id(topLocationKey)
-                    DayHeaderView(day: viewModel.day, isEditing: $isEditing)
+                    DayHeaderView(day: viewModel, isEditing: $isEditing)
                         .offset(y: -35)
                     
-                    ContentSequenceView(viewModel: viewModel)
+                    ContentSequenceView(viewModel: viewModel.contentSequence)
                         .allowsHitTesting(!isEditing)
                         .opacity(isEditing ? 0.5 : 1)
                 }
@@ -57,8 +53,8 @@ struct DayView: View {
                     reader.scrollTo(topLocationKey, anchor: .top) // scroll to Top
                 }
             })
-            .onChange(of: contentSequence.selectedItem, {
-                if let id = contentSequence.selectedItem?.id {
+            .onChange(of: viewModel.contentSequence.selectedItem, {
+                if let id = viewModel.contentSequence.selectedItem?.id {
                     withAnimation {
                         reader.scrollTo(id, anchor: .center) // scroll to selected item
                     }
@@ -70,13 +66,16 @@ struct DayView: View {
             .toolbar {
                 
                 if !isEditing {
-                    ToolbarItem(placement: .primaryAction) {
-                        editDayButton
-                    }
-                    ToolbarItem(placement: .topBarLeading) {
-                        backButton
-                    }
-                    if !viewModel.isAnySelected() {
+                   
+                    //Rethink. This is not working. selectedItem is not considered @Published
+                    if viewModel.contentSequence.selectedItem == nil {
+                        
+                         ToolbarItem(placement: .primaryAction) {
+                             editDayButton
+                         }
+                         ToolbarItem(placement: .topBarLeading) {
+                             backButton
+                         }
                         ToolbarItem(placement: .bottomBar) {
                             addContentButtons
                         }
@@ -92,7 +91,8 @@ struct DayView: View {
                     ToolbarItem(placement: .cancellationAction) {
                         cancelEditButton
                     }
-                    if viewModel.day.lastSaveDate != nil {
+                     
+                    if viewModel.lastSaveDate != nil {
                         ToolbarItem(placement: .bottomBar) {
                             deleteDayButton
                         }
@@ -118,7 +118,7 @@ struct DayView: View {
         
         EditItemButton {
             withAnimation {
-                viewModel.deselectAll()
+                viewModel.contentSequence.deselectAll()
                 isEditing = true
             }
         }
@@ -127,7 +127,7 @@ struct DayView: View {
     var saveChangesButton: some View {
         
         SaveButton {
-            viewModel.save(day: viewModel.day)
+            viewModel.saveDay()
             withAnimation{
                 isEditing = false
             }
@@ -136,7 +136,7 @@ struct DayView: View {
     var saveContentChangesButton: some View {
         
         Button {
-            viewModel.deselectAll()
+            viewModel.contentSequence.deselectAll()
         } label: {
             HStack {
                 Image(systemName: "checkmark")
@@ -156,9 +156,11 @@ struct DayView: View {
         
         CancelButton {
             //If day was never saved, cancel returns user to timeline view
-            if viewModel.day.lastSaveDate == nil {
+            if viewModel.lastSaveDate == nil {
                 router.path.removeLast()
             }
+            
+            //viewModel.cancelEdit()
             
             withAnimation{
                 isEditing = false
@@ -176,9 +178,9 @@ struct DayView: View {
     var backButton: some View {
         
         BackButton {
-            if contentSequence.selectedItem != nil {
+            if viewModel.contentSequence.selectedItem != nil {
                 //TODO: save selected content
-                viewModel.deselectAll()
+                viewModel.contentSequence.deselectAll()
             }
             router.path.removeLast()
         }
@@ -196,7 +198,7 @@ struct DayView: View {
     
     var addTextContentButton: some View {
         Button {
-            viewModel.addNewTextContent(for: viewModel.day)
+            viewModel.contentSequence.addNewTextContent()
             print("Adding Text Content")
         } label: {
             ZStack(alignment: .center) {
@@ -220,7 +222,7 @@ struct DayView: View {
     }
     
     var addPhotoContentButton: some View {
-        PhotosPicker(selection: $selectedItem, matching: .images) {
+        PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(.accentMain)
@@ -239,12 +241,12 @@ struct DayView: View {
             }
             .padding(.horizontal, 5)
         }
-        .onChange(of: selectedItem) { oldValue, newValue in
+        .onChange(of: selectedPhotoItem) { oldValue, newValue in
             Task {
-                if let imageData = try await selectedItem?.loadTransferable(type: Data.self) {
+                if let imageData = try await selectedPhotoItem?.loadTransferable(type: Data.self) {
                     
                     if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
-                        viewModel.addNewPhotoContent(with: pngData, for: viewModel.day)
+                        viewModel.contentSequence.addNewPhotoContent(with: pngData)
                     }
                 }
             }
@@ -254,7 +256,7 @@ struct DayView: View {
     //MARK: Functions
     
     func deleteDay() {
-        viewModel.delete(day: viewModel.day)
+        viewModel.deleteDay()
         router.path.removeLast()
     }
 }
@@ -263,5 +265,7 @@ struct DayView: View {
 
 
 #Preview {
-    DayView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
+    Text("Broken Preview: Need to Fix")
+        .foregroundStyle(.red)
+    //DayView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
 }

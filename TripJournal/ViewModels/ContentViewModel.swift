@@ -8,41 +8,119 @@
 import Foundation
 
 protocol ContentChangeDelegateProtocol {
-    func delete(content: ContentItem)
+    func delete(content: ContentViewModel)
 }
 
-protocol ContentViewModelProtocol: PhotoDataUpdateDelegatProtocol  {
-    var content: ContentItem { get }
+protocol ContentViewModelProtocol: ObservableObject, Identifiable, Hashable, Comparable, Equatable, PhotoDataUpdateDelegatProtocol  {
     
-    func save(content: ContentItem)
-    func delete(content: ContentItem)
+    associatedtype DayModel: DayViewModelProtocol
+    
+    func save()
+    func delete()
+    
+    var id: String { get }
+    var day: DayModel { get }
+    var sequenceIndex: Int { get }
+    var type: ContentType { get }
+    var text: String { get set }
+    var photoFileName: String? { get }
+    var photoData: Data? { get }
+    var creationDate: Date { get }
+    var displayTimestamp: Date { get set }
+    var lastUpdateDate: Date { get }
+    var lastSaveDate: Date? { get }
+    var hasUnsavedChanges: Bool { get }
 }
 
 
 class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol {
-
-    var content: ContentItem
-    var contentChangeDelegate: ContentChangeDelegateProtocol
-    var saveContentUseCase: SaveContentUseCaseProtocol
     
-    init(content: ContentItem, contentChangeDelegate: ContentChangeDelegateProtocol, saveContentUseCase: SaveContentUseCaseProtocol = SaveContentUseCase()) {
-        self.content = content
+    typealias DayModel = DayViewModel
+
+    let id: String
+    let day: DayViewModel
+    @Published var sequenceIndex: Int
+    @Published var type: ContentType
+    @Published var text: String
+    @Published var photoFileName: String?
+    @Published var photoData: Data?
+    let creationDate: Date
+    var displayTimestamp: Date
+    var lastUpdateDate: Date
+    var lastSaveDate: Date?
+    var hasUnsavedChanges: Bool {
+        
+        if let saveDate = lastSaveDate {
+            return lastUpdateDate > saveDate
+        } else {
+            //Content has never been saved.
+            return true
+        }
+    }
+    
+    private var contentChangeDelegate: ContentChangeDelegateProtocol?
+    private var saveContentUseCase: SaveContentUseCaseProtocol
+    
+    init(id: String,
+         day: DayViewModel,
+         sequenceIndex: Int,
+         type: ContentType,
+         photoFileName: String?,
+         text: String,
+         creationDate: Date,
+         displayTimestamp: Date,
+         lastUpdateDate: Date,
+         lastSaveDate: Date?,
+         contentChangeDelegate: ContentChangeDelegateProtocol? = nil,
+         saveContentUseCase: SaveContentUseCaseProtocol = SaveContentUseCase()) {
+        
+        self.id = id
+        self.day = day
+        self.sequenceIndex = sequenceIndex
+        self.type = type
+        self.photoFileName = photoFileName
+        self.text = text
+        self.creationDate = creationDate
+        self.displayTimestamp = displayTimestamp
+        self.lastUpdateDate = lastUpdateDate
+        self.lastSaveDate = lastSaveDate
+        
+        self.photoData = ImageHelperService.shared.fetchImageDataFor(tripId: day.trip.id, dayId: day.id, contentId: self.id)
         self.contentChangeDelegate = contentChangeDelegate
         self.saveContentUseCase = saveContentUseCase
     }
+    
+    func registerChangeDelegate(_ delegate: ContentChangeDelegateProtocol) {
+        contentChangeDelegate = delegate
+    }
 
-    func save(content: ContentItem) {
-        saveContentUseCase.save(content: content, for: content.day)
+    func save() {
+        saveContentUseCase.save(content: self)
     }
     
-    func delete(content: ContentItem) {
-        contentChangeDelegate.delete(content: content)
+    func delete() {
+        if let contentChangeDelegate = contentChangeDelegate {
+            contentChangeDelegate.delete(content: self)
+        }
     }
     
     func imageDataUpdatedTo(_ data: Data) {
-        content.photoData = data
-        saveContentUseCase.saveImageDataFor(content: content, data: data)
-        save(content: content)
+        photoData = data
+        saveContentUseCase.saveImageData(data, tripId: day.trip.id, dayId: day.id, contentId: id)
+        save()
+    }
+    
+    
+    static func == (lhs: ContentViewModel, rhs: ContentViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    static func <(lhs: ContentViewModel, rhs: ContentViewModel) -> Bool {
+        lhs.sequenceIndex < rhs.sequenceIndex
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
 }

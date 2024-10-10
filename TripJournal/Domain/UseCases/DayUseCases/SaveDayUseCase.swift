@@ -8,8 +8,8 @@
 import Foundation
 
 protocol SaveDayUseCaseProtocol {
-    func save(day: Day, for trip: Trip)
-    func saveCoverImage(data: Data, for day: Day)
+    func save(day: DayViewModel, for trip: TripViewModel)
+    func saveCoverImage(data: Data, for day: DayViewModel)
 }
 
 struct SaveDayUseCase: SaveDayUseCaseProtocol {
@@ -20,19 +20,21 @@ struct SaveDayUseCase: SaveDayUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func save(day: Day, for trip: Trip) {
-        day.lastSaveDate = Date.now
-        dataService.save(day: day, for: trip)
+    func save(day: DayViewModel, for trip: TripViewModel) {
+        
+        if day.lastSaveDate != nil {
+            day.lastSaveDate = Date.now
+            dataService.updateDay(Day.fromViewModel(day))
+        } else {
+            day.lastSaveDate = Date.now
+            dataService.createDay(Day.fromViewModel(day), for: Trip.fromViewModel(trip))
+        }
     }
     
-    func saveCoverImage(data: Data, for day: Day) {
+    func saveCoverImage(data: Data, for day: DayViewModel) {
         
-        print("UseCase saving photo")
         let imageHelper = ImageHelperService.shared
+        imageHelper.saveImageData(data, tripId: day.trip.id, dayId: day.id)
 
-        print(imageHelper.imageURL(for: day))
-        day.coverPhotoPath = imageHelper.imageURL(for: day).relativePath
-        imageHelper.saveImage(data: data, for: day)
-        
     }
 }
