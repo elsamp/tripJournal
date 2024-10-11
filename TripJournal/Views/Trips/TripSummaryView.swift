@@ -38,7 +38,7 @@ struct TripSummaryView<ViewModel>: View where ViewModel: TripViewModelProtocol {
                     .frame(height: 300)
                     .clipped()
                 
-                VStack {
+                VStack(alignment: .leading) {
                     Text(trip.title)
                         .font(.headline)
                         .fontWeight(.light)
