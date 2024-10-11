@@ -24,3 +24,5 @@ I've got a very long list of things I want to add and improve; some of them func
 - Save thumbnail size photos for day list for faster loading
 - Replace Trip cover photo with carousel view in main home screen
 - Revisit persistence layer and remove instances of try!
+- Explore and leverage Swiftlint
+- Explore and play around with Swinject
