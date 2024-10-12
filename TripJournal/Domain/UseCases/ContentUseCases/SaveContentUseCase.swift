@@ -24,6 +24,7 @@ struct SaveContentUseCase: SaveContentUseCaseProtocol {
     func save(content: ContentViewModel) {
         
         if content.lastSaveDate != nil {
+            content.lastSaveDate = Date.now
             dataService.updateContent(id: content.id,
                                       sequenceIndex: content.sequenceIndex,
                                       type: content.type,
@@ -33,8 +34,9 @@ struct SaveContentUseCase: SaveContentUseCaseProtocol {
                                       creationDate: content.creationDate,
                                       displayTimestamp: content.displayTimestamp,
                                       lastUpdateDate: content.lastUpdateDate,
-                                      lastSaveDate: Date.now)
+                                      lastSaveDate: content.lastSaveDate)
         } else {
+            content.lastSaveDate = Date.now
             dataService.createContent(id: content.id,
                                       dayId: content.day.id,
                                       sequenceIndex: content.sequenceIndex,
@@ -45,7 +47,7 @@ struct SaveContentUseCase: SaveContentUseCaseProtocol {
                                       creationDate: content.creationDate,
                                       displayTimestamp: content.displayTimestamp,
                                       lastUpdateDate: content.lastUpdateDate,
-                                      lastSaveDate: Date.now)
+                                      lastSaveDate: content.lastSaveDate)
         }
         
         if content.type == .photo {

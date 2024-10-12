@@ -52,6 +52,8 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
         self.sortedContentItems = self.contentItems
         self.saveContentUseCase = saveContentUseCase
         self.deleteContentUseCase = deleteContentUseCase
+        
+        registerContentChangeDelegate(self)
     }
     
     func registerContentChangeDelegate(_ delegate: ContentChangeDelegateProtocol) {
@@ -96,15 +98,16 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
     
     func addNewTextContent() {
         let newContent = ContentViewModel(id: UUID().uuidString,
-                                         day: day,
-                                         sequenceIndex: contentItems.count, //Place at the end
-                                         type: .text,
-                                         photoFileName: nil,
-                                         text: "",
-                                         creationDate: Date.now,
-                                         displayTimestamp: Date.now,
-                                         lastUpdateDate: Date.now,
-                                         lastSaveDate: nil)
+                                          day: day,
+                                          sequenceIndex: contentItems.count, //Place at the end
+                                          type: .text,
+                                          photoFileName: nil,
+                                          text: "",
+                                          creationDate: Date.now,
+                                          displayTimestamp: Date.now,
+                                          lastUpdateDate: Date.now,
+                                          lastSaveDate: nil,
+                                          contentChangeDelegate: self)
                 
         add(content: newContent)
         select(content: newContent)
@@ -113,15 +116,16 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
     
     func addNewPhotoContent(with data: Data) {
         let newContent = ContentViewModel(id: UUID().uuidString,
-                                         day:  day,
-                                         sequenceIndex: contentItems.count, //Place at the end
-                                         type: .photo,
-                                         photoFileName: nil,
-                                         text: "",
-                                         creationDate: Date.now,
-                                         displayTimestamp: Date.now,
-                                         lastUpdateDate: Date.now,
-                                         lastSaveDate: nil)
+                                          day:  day,
+                                          sequenceIndex: contentItems.count, //Place at the end
+                                          type: .photo,
+                                          photoFileName: nil,
+                                          text: "",
+                                          creationDate: Date.now,
+                                          displayTimestamp: Date.now,
+                                          lastUpdateDate: Date.now,
+                                          lastSaveDate: nil,
+                                          contentChangeDelegate: self)
                 
         newContent.photoData = data
         saveContentUseCase.saveImageData(data, tripId: day.trip.id, dayId: day.id, contentId: newContent.id)
