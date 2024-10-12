@@ -1,5 +1,5 @@
 //
-//  Trip+coverImage.swift
+//  ImageHelperService.swift
 //  TripJournal
 //
 //  Created by Erica Sampson on 2024-09-04.
@@ -14,70 +14,6 @@ struct ImageHelperService {
     
     private init() {}
     
-    func fileName(for trip: Trip) -> String {
-        return "\(trip.id).png"
-    }
-    
-    func fileName(for day: Day) -> String {
-        return "\(day.id).png"
-    }
-    
-    func fileName(for content: ContentItem) -> String {
-        return "\(content.id).png"
-    }
-    
-    func imageURL(for trip: Trip) -> URL {
-        return directoryURLFor(trip: trip).appending(path: fileName(for: trip))
-    }
-    
-    func imageURL(for day: Day) -> URL {
-        return directoryURLFor(day: day).appending(path: fileName(for: day))
-    }
-    
-    func imageURL(for content: ContentItem) -> URL {
-        return directoryURLFor(day: content.day).appending(path: fileName(for: content))
-    }
-    
-    func directoryURLFor(trip: Trip) -> URL {
-        URL.documentsDirectory.appending(path: trip.id)
-    }
-    
-    func directoryURLFor(day: Day) -> URL {
-        return directoryURLFor(trip: day.trip).appending(path: day.id)
-    }
-    
-    func directoryURLFor(content: ContentItem) -> URL {
-        return directoryURLFor(day: content.day)
-    }
-    
-    func saveImage(data: Data, for day: Day) {
-        saveImage(data: data, directory: directoryURLFor(day: day), fileName: fileName(for: day))
-    }
-    
-    func saveImage(data: Data, for trip: Trip) {
-        print("ImageHelper: saving data for trip")
-        saveImage(data: data, directory: directoryURLFor(trip: trip), fileName: fileName(for: trip))
-    }
-    
-    func saveImage(data: Data, for content: ContentItem) {
-        print("ImageHelper: saving data for content")
-        saveImage(data: data, directory: directoryURLFor(content: content), fileName: fileName(for: content))
-    }
-    
-    func imageDataFor(trip: Trip) -> Data? {
-        imageDataFor(fileURL: directoryURLFor(trip: trip).appending(path: fileName(for: trip)))
-    }
-    
-    func imageDataFor(day: Day) -> Data? {
-        imageDataFor(fileURL: directoryURLFor(day: day).appending(path: fileName(for: day)))
-    }
-    
-    func imageDataFor(content: ContentItem) -> Data? {
-        imageDataFor(fileURL: directoryURLFor(day: content.day).appending(path: fileName(for: content)))
-    }
-    
-    
-    //MARK: Keep
     /**
      Fetches image data for passed ids. Day id's must be provided when fetching content image data.
      - Parameter tripId: The id of the associated trip
@@ -103,6 +39,15 @@ struct ImageHelperService {
                   fileName: fileName(for: contentId ?? dayId ?? tripId))
     }
     
+    /**
+     Creates the URL object needed to access a photo item with the associated trip, day, content path.
+     TripId must always be passed and associated dayId must be passed when attempting to create a URL for a content item.
+     - Parameter tripId: Id for either the trip associated with the photo to be fetched, or the parent trip for the day or content item photo.
+     - Parameter dayId: Id for either the day accociated with the photo to be fetched, or the parent day for the content item.
+     - Parameter contentId: Id for the content item associated with the photo to be fetched.
+     
+     - Returns: URL needed to access Photo content from Documents directory for associated item.
+     */
     func imageURLFor(tripId: String, dayId: String? = nil, contentId: String? = nil) -> URL {
         var imageURL: URL
         
