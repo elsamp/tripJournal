@@ -87,31 +87,26 @@ struct ImageHelperService {
     
     private func imageDataFor(fileURL: URL) -> Data? {
         
-        print("loading Image data")
-
         if FileManager.default.fileExists(atPath: fileURL.relativePath) {
             do {
-                print("Loading data at path \(fileURL)")
                 return try Data(contentsOf: fileURL)
             } catch {
                 print("Failed to load image, encountered errors: \(error.self)\(error.localizedDescription)")
             }
         } else {
-            print("Could not find image at path \(fileURL)")
+           print("Could not find image at path \(fileURL)")
         }
         return nil
     }
     
     private func saveImage(data: Data, directory: URL, fileName: String) {
-        print("ImageHelper: saving image data")
         do {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             
             let saveFileURL = directory.appending(path: fileName)
             
             try data.write(to: saveFileURL, options: [.atomic, .completeFileProtection])
-            
-            print("Saving Image at \(saveFileURL)")
+
         } catch {
             print("Error Saving: \(error.localizedDescription)")
         }
