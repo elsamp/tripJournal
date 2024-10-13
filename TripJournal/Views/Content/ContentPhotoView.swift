@@ -92,9 +92,9 @@ struct ContentPhotoView<ViewModel>: View where ViewModel: ContentViewModelProtoc
     }
 }
 
+
 #Preview {
-    Text("Broken Preview: Need to Fix")
-        .foregroundStyle(.red)
-        /*
-    ContentPhotoView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockPhotoContent(), contentChangeDelegate: PreviewHelper.shared), photoDataUpdateDelegate: PreviewHelper.shared)*/
+    ContentPhotoView(viewModel: PreviewHelper.shared.mockPhotoContent(),
+                     isSelected: false,
+                     photoDataUpdateDelegate: PreviewHelper.shared)
 }

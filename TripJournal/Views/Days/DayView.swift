@@ -255,10 +255,7 @@ struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSeq
 }
 
 
-
-
 #Preview {
-    Text("Broken Preview: Need to Fix")
-        .foregroundStyle(.red)
-    //DayView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
+
+    DayView<DayViewModel, ContentSequenceViewModel>(viewModel: PreviewHelper.shared.mockDay())
 }

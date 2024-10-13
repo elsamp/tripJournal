@@ -54,6 +54,7 @@ struct DayHeaderView<ViewModel>: View where ViewModel: DayViewModelProtocol{
     }
 }
 
+
 #Preview {
     
     struct PreviewView: View {
@@ -62,9 +63,7 @@ struct DayHeaderView<ViewModel>: View where ViewModel: DayViewModelProtocol{
         @State private var isEditing = false
        
         var body: some View {
-            Text("Broken Preview: Need to Fix")
-                .foregroundStyle(.red)
-            //DayHeaderView(day: day, isEditing: $isEditing)
+            DayHeaderView(day: day, isEditing: $isEditing)
         }
         
     }

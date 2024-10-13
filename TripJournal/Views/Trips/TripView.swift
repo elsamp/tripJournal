@@ -159,11 +159,7 @@ struct TripView<ViewModel>: View where ViewModel: TripViewModelProtocol {
 #Preview {
     NavigationStack {
         ZStack{
-            Text("Broken Preview: Need to Fix")
-                .foregroundStyle(.red)
-            /*
-            TripView(viewModel: TripViewModel(daySequenceProvider: PreviewHelper.shared, trip: PreviewHelper.shared.mockTrip(), tripUpdateDelegate: nil))
-             */
+            TripView(viewModel: PreviewHelper.shared.mockTrip())
         }
     }
 }

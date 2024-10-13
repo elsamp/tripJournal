@@ -23,6 +23,7 @@ struct TripYearView<ViewModel: TripViewModelProtocol>: View {
     }
 }
 
+
 #Preview {
     TripYearView(trips: [PreviewHelper.shared.mockTrip()])
 }

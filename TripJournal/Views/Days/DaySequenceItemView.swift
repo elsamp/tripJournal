@@ -72,7 +72,5 @@ struct DaySequenceItemView<ViewModel>: View where ViewModel: DayViewModelProtoco
 
 
 #Preview {
-    Text("Broken Preview: Need To Fix")
-        .foregroundStyle(.red)
-    //DaySequenceItemView(day: PreviewHelper.shared.mockDay())
+    DaySequenceItemView(day: PreviewHelper.shared.mockDay())
 }

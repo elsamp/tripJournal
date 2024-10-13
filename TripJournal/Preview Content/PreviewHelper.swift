@@ -40,7 +40,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                              lastSaveDate: Date.now)
     }
     
-    func mockDay() -> DayViewModel {
+    func mockDay(id: String = UUID().uuidString) -> DayViewModel {
         
         var dateComponents = DateComponents()
         dateComponents.year = 2019
@@ -50,7 +50,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
         let userCalendar = Calendar(identifier: .gregorian)
         let date = userCalendar.date(from: dateComponents)
         
-        return DayViewModel(id: UUID().uuidString,
+        return DayViewModel(id: id,
                             trip: mockTrip(),
                             date: date ?? Date.now,
                             title: "Day at the Beach!",
@@ -61,7 +61,11 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                             lastSaveDate: Date.now)
     }
     
-    func mockTextContent() -> ContentViewModel {
+    func mockDaySequence() -> DaySequenceViewModel {
+        return DaySequenceViewModel(trip: mockTrip(), days: [mockDay(id: UUID().uuidString), mockDay(id: UUID().uuidString), mockDay(id: UUID().uuidString)])
+    }
+    
+    func mockTextContent(id: String = UUID().uuidString) -> ContentViewModel {
         
         let text =
             """
@@ -71,7 +75,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
             I havn't figured out how to do that yet. Perhaps soon...
             """
         
-        return ContentViewModel(id: UUID().uuidString,
+        return ContentViewModel(id: id,
                 day: mockDay(),
                 sequenceIndex: 1,
                 type: .text,
@@ -109,6 +113,10 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
                 displayTimestamp: Date.now,
                 lastUpdateDate: Date.now,
                 lastSaveDate: Date.now)
+    }
+    
+    func mockContentSequence() -> ContentSequenceViewModel{
+        return ContentSequenceViewModel(day: mockDay(), contentItems: [mockTextContent(id: UUID().uuidString), mockTextContent(id: UUID().uuidString), mockTextContent(id: UUID().uuidString)])
     }
     
     func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel {

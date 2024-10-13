@@ -89,6 +89,7 @@ struct TripHeaderView<ViewModel>: View where ViewModel: TripViewModelProtocol {
     }
 }
 
+
 #Preview {
     struct Preview: View {
         
@@ -97,9 +98,7 @@ struct TripHeaderView<ViewModel>: View where ViewModel: TripViewModelProtocol {
         var body: some View {
             ZStack {
                 Color.gray
-                Text("Broken Preview: Need to Fix")
-                    .foregroundStyle(.red)
-                //TripHeaderView(trip: PreviewHelper.shared.mockTrip(), isEditing: $isEditing)
+                TripHeaderView(trip: PreviewHelper.shared.mockTrip(), isEditing: $isEditing)
             }
         }
     }

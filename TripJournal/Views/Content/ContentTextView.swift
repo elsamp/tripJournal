@@ -49,12 +49,10 @@ struct ContentTextView<ViewModel>: View where ViewModel: ContentViewModelProtoco
     }
 }
 
+
 #Preview {
-    Text("Broken Preview: Need to Fix")
-        .foregroundStyle(.red)
-    /*
-    ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
-                                                contentChangeDelegate: PreviewHelper.shared),
+    
+    ContentTextView(viewModel: PreviewHelper.shared.mockTextContent(),
                     isSelected: false)
-     */
+     
 }

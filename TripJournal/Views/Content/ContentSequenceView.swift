@@ -37,9 +37,7 @@ struct ContentSequenceView<ViewModel>: View where ViewModel: ContentSequenceView
     }
 }
 
-//TODO: Fix Preview
+
 #Preview {
-    Text("Broken Preview: Need to Fix")
-        .foregroundStyle(.red)
-    //ContentSequenceView(viewModel: DayViewModel(contentSequenceProvider: ViewContentSequenceExampleUseCase(), day: PreviewHelper.shared.mockDay()))
+    ContentSequenceView(viewModel: PreviewHelper.shared.mockContentSequence())
 }

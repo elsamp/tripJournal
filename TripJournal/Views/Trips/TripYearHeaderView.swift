@@ -33,6 +33,7 @@ struct TripYearHeaderView: View {
     }
 }
 
+
 #Preview {
     TripYearHeaderView(year: 2024)
 }

@@ -98,41 +98,32 @@ struct ContentView<ViewModel>: View where ViewModel: ContentViewModelProtocol {
 }
 
 
-
-
-//TODO: Fix Preview
 #Preview {
     VStack {
+        
+        ContentView(viewModel: PreviewHelper.shared.mockTextContent(),
+                    isSelected: false)
+        
+        ContentView(viewModel: PreviewHelper.shared.mockTextContent(),
+                    isSelected: true)
+        
         /*
-        ContentView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
-                                                contentChangeDelegate: PreviewHelper.shared),
-                    isSelected: false, content: PreviewHelper.shared.mockTextContent())
-        
-        ContentView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
-                                                contentChangeDelegate: PreviewHelper.shared),
-                    isSelected: true, content: PreviewHelper.shared.mockTextContent())
-        
-        
-        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
-                                                    contentChangeDelegate: PreviewHelper.shared),
+        ContentTextView(viewModel: PreviewHelper.shared.mockTextContent(),
                         isSelected: true)
         
-        ContentPhotoView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
-                                                     contentChangeDelegate: PreviewHelper.shared),
+        ContentPhotoView(viewModel: PreviewHelper.shared.mockTextContent(),
                          isSelected: true,
                          photoDataUpdateDelegate: PreviewHelper.shared)
         
-        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContent(),
-                                                    contentChangeDelegate: PreviewHelper.shared),
+        ContentTextView(viewModel: PreviewHelper.shared.mockTextContent(),
                         isSelected: false)
         
-        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContentWith(text: ""),
-                                                    contentChangeDelegate: PreviewHelper.shared),
+        ContentTextView(viewModel: PreviewHelper.shared.mockTextContentWith(text: ""),
                         isSelected: false)
         
-        ContentTextView(viewModel: ContentViewModel(content: PreviewHelper.shared.mockTextContentWith(text: "Sample Text"),
-                                                    contentChangeDelegate: PreviewHelper.shared),
+        ContentTextView(viewModel: PreviewHelper.shared.mockTextContentWith(text: "Sample Text"),
                         isSelected: false)
+        
          */
     }
 }

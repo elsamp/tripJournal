@@ -25,12 +25,9 @@ struct DaySequenceView<ViewModel>: View where ViewModel: DaySequenceViewModelPro
     }
 }
 
+
 #Preview {
-    Text("Broken Preview: Fix")
-        .foregroundStyle(.red)
-    /*
-    DaySequenceView(days:[PreviewHelper.shared.mockDay(),
-                          PreviewHelper.shared.mockDay(),
-                          PreviewHelper.shared.mockDay()])
-     */
+    
+    DaySequenceView(viewModel: PreviewHelper.shared.mockDaySequence())
+
 }
