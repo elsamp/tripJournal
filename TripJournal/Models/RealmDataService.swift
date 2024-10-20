@@ -16,8 +16,8 @@ protocol DataServiceProtocol {
     func delete(trip: Trip)
     
     //Days
-    func fetchDaysFor(trip: Trip) -> Set<Day>
-    func createDay(_ day: Day, for trip: Trip)
+    func fetchDaysFor(tripId: String) -> Set<Day>
+    func createDay(_ day: Day)
     func updateDay(_ day: Day)
     func delete(day: Day)
     
@@ -151,14 +151,14 @@ class RealmDataService: DataServiceProtocol {
     
     //MARK: Days
     
-    func fetchDaysFor(trip: Trip) -> Set<Day> {
-        if let tripObject = tripObjectModelFor(tripId: trip.id) {
+    func fetchDaysFor(tripId: String) -> Set<Day> {
+        if let tripObject = tripObjectModelFor(tripId: tripId) {
             
             print("found tripObject")
             var days = Set<Day>()
             
             for dayObject in tripObject.days {
-                days.insert(dayObject.toDay(for: trip))
+                days.insert(dayObject.toDay(for: tripObject.toTrip()))
             }
             print("returning days \(days.count)")
             return days
@@ -167,10 +167,10 @@ class RealmDataService: DataServiceProtocol {
         return []
     }
         
-    func createDay(_ day: Day, for trip: Trip) {
+    func createDay(_ day: Day) {
         
         let dayModel = DayObjectModel()
-        if let tripModel = tripObjectModelFor(tripId: trip.id) {
+        if let tripModel = tripObjectModelFor(tripId: day.trip.id) {
             
             dayModel.id = day.id
             dayModel.date = day.date

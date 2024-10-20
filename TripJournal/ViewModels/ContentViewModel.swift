@@ -7,9 +7,6 @@
 
 import Foundation
 
-protocol ContentChangeDelegateProtocol {
-    func delete(content: ContentViewModel)
-}
 
 protocol ContentViewModelProtocol: ObservableObject, Identifiable, Hashable, Comparable, Equatable, PhotoDataUpdateDelegatProtocol  {
     
@@ -33,7 +30,7 @@ protocol ContentViewModelProtocol: ObservableObject, Identifiable, Hashable, Com
 }
 
 
-class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol {
+class ContentViewModel: ContentViewModelProtocol{
     
     typealias DayModel = DayViewModel
 
@@ -58,7 +55,7 @@ class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol
         }
     }
     
-    private var contentChangeDelegate: ContentChangeDelegateProtocol?
+    private weak var contentChangeDelegate: (any SequencedItemChangeDelegateProtocol<ContentViewModel>)?
     private var saveContentUseCase: SaveContentUseCaseProtocol
     
     init(id: String,
@@ -71,7 +68,7 @@ class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol
          displayTimestamp: Date,
          lastUpdateDate: Date,
          lastSaveDate: Date?,
-         contentChangeDelegate: ContentChangeDelegateProtocol? = nil,
+         contentChangeDelegate: (any SequencedItemChangeDelegateProtocol<ContentViewModel>)? = nil,
          saveContentUseCase: SaveContentUseCaseProtocol = SaveContentUseCase()) {
         
         self.id = id
@@ -90,7 +87,7 @@ class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol
         self.saveContentUseCase = saveContentUseCase
     }
     
-    func registerChangeDelegate(_ delegate: ContentChangeDelegateProtocol) {
+    func registerChangeDelegate(_ delegate: (any SequencedItemChangeDelegateProtocol<ContentViewModel>)?) {
         contentChangeDelegate = delegate
     }
 
@@ -100,7 +97,7 @@ class ContentViewModel: ContentViewModelProtocol, PhotoDataUpdateDelegatProtocol
     
     func delete() {
         if let contentChangeDelegate = contentChangeDelegate {
-            contentChangeDelegate.delete(content: self)
+            contentChangeDelegate.delete(self)
         }
     }
     

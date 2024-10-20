@@ -41,7 +41,7 @@
 		B04382E52C879C4800AC21E4 /* DeleteTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */; };
 		B04382E72C87A40800AC21E4 /* DayObjectModel+toDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E62C87A40700AC21E4 /* DayObjectModel+toDay.swift */; };
 		B04382E92C87B11700AC21E4 /* SaveDayUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */; };
-		B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */; };
+		B081EC292C8B79B100F26607 /* FetchTripUseCase-Delete.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC282C8B79B100F26607 /* FetchTripUseCase-Delete.swift */; };
 		B081EC2C2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */; };
 		B081EC2E2C8B87E100F26607 /* CoverPhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */; };
 		B081EC302C8BCE5700F26607 /* ContentSequenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B081EC2F2C8BCE5700F26607 /* ContentSequenceViewModel.swift */; };
@@ -77,6 +77,7 @@
 		B0E534EE2CB80A0C00D23B8B /* Trip+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E534ED2CB80A0C00D23B8B /* Trip+ViewModel.swift */; };
 		B0E534F02CB80A3500D23B8B /* Day+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E534EF2CB80A3500D23B8B /* Day+ViewModel.swift */; };
 		B0E534F22CB80ABB00D23B8B /* TripUpdateDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E534F12CB80ABB00D23B8B /* TripUpdateDelegateProtocol.swift */; };
+		B0E534F42CBB47DD00D23B8B /* ContentChangeDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E534F32CBB47DC00D23B8B /* ContentChangeDelegateProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,7 +126,7 @@
 		B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTripUseCase.swift; sourceTree = "<group>"; };
 		B04382E62C87A40700AC21E4 /* DayObjectModel+toDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayObjectModel+toDay.swift"; sourceTree = "<group>"; };
 		B04382E82C87B11700AC21E4 /* SaveDayUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDayUseCase.swift; sourceTree = "<group>"; };
-		B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTripUseCase.swift; sourceTree = "<group>"; };
+		B081EC282C8B79B100F26607 /* FetchTripUseCase-Delete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchTripUseCase-Delete.swift"; sourceTree = "<group>"; };
 		B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDataProviderProtocol.swift; sourceTree = "<group>"; };
 		B081EC2D2C8B87E100F26607 /* CoverPhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverPhotoPickerView.swift; sourceTree = "<group>"; };
 		B081EC2F2C8BCE5700F26607 /* ContentSequenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSequenceViewModel.swift; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 		B0E534ED2CB80A0C00D23B8B /* Trip+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trip+ViewModel.swift"; sourceTree = "<group>"; };
 		B0E534EF2CB80A3500D23B8B /* Day+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Day+ViewModel.swift"; sourceTree = "<group>"; };
 		B0E534F12CB80ABB00D23B8B /* TripUpdateDelegateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripUpdateDelegateProtocol.swift; sourceTree = "<group>"; };
+		B0E534F32CBB47DC00D23B8B /* ContentChangeDelegateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentChangeDelegateProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +355,7 @@
 			children = (
 				B081EC2B2C8B81EE00F26607 /* PhotoDataProviderProtocol.swift */,
 				B0E534F12CB80ABB00D23B8B /* TripUpdateDelegateProtocol.swift */,
+				B0E534F32CBB47DC00D23B8B /* ContentChangeDelegateProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -431,7 +434,7 @@
 			children = (
 				B04382772C7E31E900AC21E4 /* ViewTripTimelineUseCase.swift */,
 				B04382E42C879C4800AC21E4 /* DeleteTripUseCase.swift */,
-				B081EC282C8B79B100F26607 /* FetchTripUseCase.swift */,
+				B081EC282C8B79B100F26607 /* FetchTripUseCase-Delete.swift */,
 				B043828E2C7F703E00AC21E4 /* SaveTripUseCase.swift */,
 			);
 			path = TripUseCases;
@@ -575,6 +578,7 @@
 			files = (
 				B04382A82C82646A00AC21E4 /* Router.swift in Sources */,
 				B081EC2E2C8B87E100F26607 /* CoverPhotoPickerView.swift in Sources */,
+				B0E534F42CBB47DD00D23B8B /* ContentChangeDelegateProtocol.swift in Sources */,
 				B0E534E32CB02B8000D23B8B /* SearchButton.swift in Sources */,
 				B0E534F02CB80A3500D23B8B /* Day+ViewModel.swift in Sources */,
 				B04382872C7EC70A00AC21E4 /* PreviewHelper.swift in Sources */,
@@ -632,7 +636,7 @@
 				B081EC3A2C8E3C0D00F26607 /* TripSummaryView.swift in Sources */,
 				B081EC382C8E3A9400F26607 /* TripHeaderView.swift in Sources */,
 				B042C3BD2C88D67000674B5D /* ImageHelperService.swift in Sources */,
-				B081EC292C8B79B100F26607 /* FetchTripUseCase.swift in Sources */,
+				B081EC292C8B79B100F26607 /* FetchTripUseCase-Delete.swift in Sources */,
 				B04382E32C879B1900AC21E4 /* DaySequenceViewModel.swift in Sources */,
 				B043826E2C7E222E00AC21E4 /* ContentItem.swift in Sources */,
 				B04382B32C850F5600AC21E4 /* ViewTripTimelineExampleUseCase.swift in Sources */,

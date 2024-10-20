@@ -12,17 +12,22 @@ protocol DaySequenceViewModelProtocol: ObservableObject {
     associatedtype DayModel: DayViewModelProtocol where DayModel.TripModel == TripModel
     associatedtype TripModel: TripViewModelProtocol
     
-    var trip: TripModel { get }
+    var trip: TripModel? { get }
     var sortedDays: [DayModel]  { get }
     
-    func newDay() -> DayModel
+    func loadDays()
+    func newDay() -> DayViewModel?
     func cancelEdit(for day: DayModel)
     func remove(day: DayModel)
     
 }
 
+enum DayViewModelCreationError: Error {
+    case tripNotSet
+}
+
 class DaySequenceViewModel: DaySequenceViewModelProtocol  {
-    
+
     typealias DayModel = DayViewModel
     typealias TripModel = TripViewModel
         
@@ -32,30 +37,48 @@ class DaySequenceViewModel: DaySequenceViewModelProtocol  {
         }
     }
     
-    var trip: TripViewModel
+    private let daySequenceProvider: ViewDaySequenceUseCaseProtocol
+    
+    var trip: TripViewModel?
     @Published var sortedDays: [DayViewModel]
     
-    init(trip: TripViewModel, days: Set<DayViewModel>) {
-        self.trip = trip
-        self.days = days
-        self.sortedDays = Array(days).sorted()
+    init(days: Set<DayViewModel>? = nil, daySequenceProvider: any ViewDaySequenceUseCaseProtocol = ViewDaySequenceUseCase()) {
+        
+        if let days = days {
+            self.days = days
+            self.sortedDays = Array(days).sorted()
+        } else {
+            self.days = []
+            self.sortedDays = []
+        }
+        self.daySequenceProvider = daySequenceProvider
     }
     
-    func newDay() -> DayViewModel {
+    func loadDays() {
+        if let trip = trip {
+            days = daySequenceProvider.fetchDaysFor(tripId: trip.id)
+        }
+    }
+    
+    func newDay() -> DayViewModel? {
         
-        let newDay = DayViewModel(id: UUID().uuidString,
-                                  trip: trip,
-                                  date: Date.now,
-                                  title: "",
-                                  coverPhotoPath: nil,
-                                  coverImageData: nil,
-                                  creationDate: Date.now,
-                                  lastUpdateDate: Date.now,
-                                  lastSaveDate: nil)
-        
-        days.insert(newDay)
-        
-        return newDay
+        if let trip = trip {
+            let newDay = DayViewModel(id: UUID().uuidString,
+                                      trip: trip,
+                                      date: Date.now,
+                                      title: "",
+                                      coverPhotoPath: nil,
+                                      coverImageData: nil,
+                                      creationDate: Date.now,
+                                      lastUpdateDate: Date.now,
+                                      lastSaveDate: nil)
+            
+            days.insert(newDay)
+            
+            return newDay
+        } else {
+            return nil
+        }
     }
     
     func cancelEdit(for day: DayViewModel) {
@@ -67,4 +90,5 @@ class DaySequenceViewModel: DaySequenceViewModelProtocol  {
     func remove(day: DayViewModel) {
         days.remove(day)
     }
+    
 }

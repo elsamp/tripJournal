@@ -110,7 +110,7 @@ class DayViewModel: DayViewModelProtocol {
             }
         }
         
-        saveDayUseCase.save(day: self, for: self.trip)
+        saveDayUseCase.save(day: self)
     }
     
     func updateCoverImage(data: Data) {

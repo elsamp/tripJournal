@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DaySequenceItemView<ViewModel>: View where ViewModel: DayViewModelProtocol {
+struct DaySequenceItemView<ViewModel: DayViewModelProtocol>: View {
     
     @ObservedObject var day: ViewModel
     
@@ -17,24 +17,45 @@ struct DaySequenceItemView<ViewModel>: View where ViewModel: DayViewModelProtoco
         return formatter
     }
     
+    init(day: ViewModel) {
+        self.day = day
+        print(day)
+    }
+    
     var body: some View {
         HStack(alignment: .center) {
-            
-            //TODO: make this async
-            if let data = ImageHelperService.shared.fetchImageDataFor(tripId: day.trip.id, dayId: day.id, contentId: nil), let uiImage = UIImage(data: data) {
+
                 Circle()
                     .overlay (
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
+                        
+                        Group {
+                            
+                            if let imageData = day.coverImageData, let uiImage = UIImage(data: imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                            } else {
+                                AsyncImage(url: ImageHelperService.shared.imageURLFor(tripId: day.trip.id, dayId: day.id)) { phase in
+                                    if let image = phase.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    } else if phase.error != nil {
+                                        ImageMissingView()
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: 300)
+                                    } else {
+                                        ImageLoadingView()
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: 300)
+                                    }
+                                }
+                            }
+                        }
                     )
                     .containerRelativeFrame(.horizontal, count:5, spacing: 20)
                     .clipShape(.circle)
-            } else {
-                Circle()
-                    .foregroundColor(.gray)
-                    .containerRelativeFrame(.horizontal, count:5, spacing: 20)
-            }
+            
             
             HStack {
                 VStack(alignment: .leading) {

@@ -25,6 +25,7 @@ protocol TripViewModelProtocol: ObservableObject, Hashable, Identifiable, PhotoD
     var daySequence: DaySequenceModel { get }
     var tripYear: Int { get }
     
+    func viewTripDetails()
     func saveTrip()
     func cancelEdit()
     func deleteTrip()
@@ -66,13 +67,9 @@ class TripViewModel: TripViewModelProtocol {
         return calendar.component(.year, from: self.startDate)
     }
     
-    lazy var daySequence: DaySequenceViewModel = {
-        daySequenceProvider.fetchDaysFor(trip: self)
-    }()
+    @Published var daySequence: DaySequenceViewModel
     
-    private var daySequenceProvider: ViewDaySequenceUseCaseProtocol
     private var saveTripUseCase: SaveTripUseCaseProtocol
-    private var fetchTripUseCase: FetchTripUseCaseProtocol
     private var deleteTripUseCase: DeleteTripUseCaseProtocol
     
     weak var tripUpdateDelegate: TripUpdateDelegateProtocol?
@@ -88,10 +85,8 @@ class TripViewModel: TripViewModelProtocol {
          creationDate: Date,
          lastUpdateDate: Date,
          lastSaveDate: Date?,
-         daySequenceProvider: any ViewDaySequenceUseCaseProtocol = ViewDaySequenceUseCase(),
          saveTripUseCase: SaveTripUseCaseProtocol = SaveTripUseCase(),
          deleteTripUseCase: DeleteTripUseCaseProtocol = DeleteTripUseCase(),
-         fetchTripUseCase: FetchTripUseCaseProtocol = FetchTripUseCase(),
          tripUpdateDelegate: TripUpdateDelegateProtocol? = nil) {
         
         self.id = id
@@ -104,12 +99,13 @@ class TripViewModel: TripViewModelProtocol {
         self.creationDate = creationDate
         self.lastUpdateDate = lastUpdateDate
         self.lastSaveDate = lastSaveDate
-        
-        self.daySequenceProvider = daySequenceProvider
+
         self.saveTripUseCase = saveTripUseCase
         self.deleteTripUseCase = deleteTripUseCase
-        self.fetchTripUseCase = fetchTripUseCase
         self.tripUpdateDelegate = tripUpdateDelegate
+        
+        self.daySequence = DaySequenceModel()
+        self.daySequence.trip = self
         
     }
     
@@ -123,6 +119,10 @@ class TripViewModel: TripViewModelProtocol {
 
         saveTripUseCase.save(trip: self)
         tripUpdateDelegate?.handleChanges(for: self)
+    }
+    
+    func viewTripDetails() {
+        self.daySequence.loadDays()
     }
     
     func updateCoverImage(data: Data) {

@@ -8,7 +8,7 @@
 import Foundation
 
 struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProtocol, ContentChangeDelegateProtocol {
-
+    
     static let shared = PreviewHelper()
     
     private init() {}
@@ -62,7 +62,7 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
     }
     
     func mockDaySequence() -> DaySequenceViewModel {
-        return DaySequenceViewModel(trip: mockTrip(), days: [mockDay(id: UUID().uuidString), mockDay(id: UUID().uuidString), mockDay(id: UUID().uuidString)])
+        return DaySequenceViewModel(days: [mockDay(id: UUID().uuidString), mockDay(id: UUID().uuidString), mockDay(id: UUID().uuidString)])
     }
     
     func mockTextContent(id: String = UUID().uuidString) -> ContentViewModel {
@@ -119,8 +119,8 @@ struct PreviewHelper: PhotoDataUpdateDelegatProtocol, ViewDaySequenceUseCaseProt
         return ContentSequenceViewModel(day: mockDay(), contentItems: [mockTextContent(id: UUID().uuidString), mockTextContent(id: UUID().uuidString), mockTextContent(id: UUID().uuidString)])
     }
     
-    func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel {
-        return DaySequenceViewModel(trip: trip, days: [mockDay(), mockDay(), mockDay()])
+    func fetchDaysFor(tripId: String) -> Set<DayViewModel> {
+        return [mockDay(), mockDay(), mockDay()]
     }
     
     func delete(content: ContentViewModel) {

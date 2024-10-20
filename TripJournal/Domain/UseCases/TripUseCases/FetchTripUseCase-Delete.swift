@@ -7,6 +7,7 @@
 
 import Foundation
 
+/*
 protocol FetchTripUseCaseProtocol {
     func fetchTrip(for id: String) -> Trip?
 }
@@ -23,3 +24,4 @@ struct FetchTripUseCase: FetchTripUseCaseProtocol {
         return dataService.fetchTrip(for: id)
     }
 }
+*/

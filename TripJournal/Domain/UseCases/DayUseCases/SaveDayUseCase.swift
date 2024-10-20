@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SaveDayUseCaseProtocol {
-    func save(day: DayViewModel, for trip: TripViewModel)
+    func save(day: DayViewModel)
     func saveCoverImage(data: Data, for day: DayViewModel)
 }
 
@@ -20,14 +20,14 @@ struct SaveDayUseCase: SaveDayUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func save(day: DayViewModel, for trip: TripViewModel) {
+    func save(day: DayViewModel) {
         
         if day.lastSaveDate != nil {
             day.lastSaveDate = Date.now
             dataService.updateDay(Day.fromViewModel(day))
         } else {
             day.lastSaveDate = Date.now
-            dataService.createDay(Day.fromViewModel(day), for: Trip.fromViewModel(trip))
+            dataService.createDay(Day.fromViewModel(day))
         }
     }
     

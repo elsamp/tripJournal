@@ -9,7 +9,7 @@ import Foundation
 
 protocol ViewDaySequenceUseCaseProtocol {
     
-    func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel
+    func fetchDaysFor(tripId: String) -> Set<DayViewModel>
 }
 
 struct ViewDaySequenceUseCase: ViewDaySequenceUseCaseProtocol {
@@ -23,15 +23,20 @@ struct ViewDaySequenceUseCase: ViewDaySequenceUseCaseProtocol {
         self.dataService = dataService
     }
     
-    func fetchDaysFor(trip: TripViewModel) -> DaySequenceViewModel {
+    func fetchDaysFor(tripId: String) -> Set<DayViewModel> {
         
-        let days = dataService.fetchDaysFor(trip: Trip.fromViewModel(trip))
+        let days = dataService.fetchDaysFor(tripId: tripId)
         var viewModels = Set<DayViewModel>()
+        var trip: TripViewModel?
         
         for item in days {
             viewModels.insert(item.toViewModel())
+            
+            if trip == nil {
+                trip = item.trip.toViewModel()
+            }
         }
         
-        return DaySequenceViewModel(trip: trip, days: viewModels)
+        return viewModels
     }
 }

@@ -17,6 +17,7 @@ struct TripView<ViewModel>: View where ViewModel: TripViewModelProtocol {
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
         _isEditing = State(initialValue: viewModel.hasUnsavedChanges)
+        self.viewModel.viewTripDetails()
     }
     
     var body: some View {
@@ -38,6 +39,9 @@ struct TripView<ViewModel>: View where ViewModel: TripViewModelProtocol {
                     }
                 }
             }
+            .onAppear() {
+                viewModel.viewTripDetails()
+            }
             .onChange(of: isEditing, {
                 withAnimation {
                     reader.scrollTo("Top", anchor: .top) // scroll to Top
@@ -46,8 +50,7 @@ struct TripView<ViewModel>: View where ViewModel: TripViewModelProtocol {
             .scrollDisabled(isEditing)
             .ignoresSafeArea(edges: .top)
             .navigationDestination(for: DayViewModel.self) { day in
-                //TODO: Exploe ways to decouple actual viewModel implementation
-                DayView<DayViewModel, ContentSequenceViewModel>(viewModel: day)
+                DayView(viewModel: day, photoDataUpdateDelegate: day)
             }
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -138,7 +141,10 @@ struct TripView<ViewModel>: View where ViewModel: TripViewModelProtocol {
     var addDayButton: some View {
         
         AddItemButton(label: "Add Day") {
-            router.path.append(viewModel.daySequence.newDay())
+            if let newDay = viewModel.daySequence.newDay() {
+                print("presenting new day \(newDay) with id \(newDay.id)")
+                router.path.append(newDay)
+            }
         }
     }
     

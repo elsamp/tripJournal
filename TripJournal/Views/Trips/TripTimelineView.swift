@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TripTimelineView<ViewModel: TripSequenceViewModelProtocol>: View {
     
-    let viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     @StateObject var router = Router.shared
     
     init(viewModel: ViewModel = TripSequenceViewModel()){

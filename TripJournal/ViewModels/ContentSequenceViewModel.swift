@@ -7,10 +7,10 @@
 
 import Foundation
 
-protocol ContentSequenceViewModelProtocol: ObservableObject, ContentChangeDelegateProtocol {
+protocol ContentSequenceViewModelProtocol: ObservableObject {
     
-    associatedtype ContentModel where ContentModel:ContentViewModelProtocol
-    associatedtype DayModel where DayModel:DayViewModelProtocol
+    associatedtype ContentModel: ContentViewModelProtocol
+    associatedtype DayModel: DayViewModelProtocol
     
     var day: DayModel { get }
     var sortedContentItems: [ContentModel] {get}
@@ -24,14 +24,14 @@ protocol ContentSequenceViewModelProtocol: ObservableObject, ContentChangeDelega
     func isAnySelected() -> Bool
 }
 
-class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
+class ContentSequenceViewModel: ContentSequenceViewModelProtocol, SequencedItemChangeDelegateProtocol {
 
     typealias ContentModel = ContentViewModel
     typealias DayModel = DayViewModel
     
     var day: DayViewModel
-    @Published var selectedItem: ContentViewModel? = nil
-    @Published var sortedContentItems: [ContentViewModel] = []
+    @Published var selectedItem: ContentModel? = nil
+    @Published var sortedContentItems: [ContentModel] = []
     
     private var saveContentUseCase: SaveContentUseCaseProtocol
     private var deleteContentUseCase: DeleteContentUseCaseProtocol
@@ -43,7 +43,7 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
     }
 
     init(day: DayViewModel,
-         contentItems: [ContentViewModel],
+         contentItems: [ContentModel],
          saveContentUseCase: SaveContentUseCaseProtocol = SaveContentUseCase(),
          deleteContentUseCase: DeleteContentUseCaseProtocol = DeleteContentUseCase()) {
         
@@ -56,38 +56,57 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
         registerContentChangeDelegate(self)
     }
     
-    func registerContentChangeDelegate(_ delegate: ContentChangeDelegateProtocol) {
+    func registerContentChangeDelegate(_ delegate: ContentSequenceViewModel) {
         
         for item in contentItems {
             item.registerChangeDelegate(delegate)
         }
     }
     
-    func add(content: ContentViewModel) {
+    func add(content: ContentModel) {
         contentItems.append(content)
     }
     
-    func add(content: ContentViewModel, at index: Int) {
+    func add(item: ContentModel, at index: Int? = nil) {
         contentItems.sort()
-        contentItems.insert(content, at: index)
+        
+        if let index = index {
+            contentItems.insert(item, at: index)
+        } else {
+            contentItems.append(item)
+        }
+        
         resetContentIdices()
     }
     
-    func remove(content: ContentViewModel) {
-        contentItems.sort()
+    func remove(content: ContentModel) {
+        
+    }
+    
+    func delete(_ content: ContentModel) {
+        deselectAll()
+
         contentItems.removeAll { item in
             item.id == content.id
         }
+        deleteContentUseCase.delete(content: content)
+        contentItems.sort()
+        
         resetContentIdices()
+
     }
     
     private func resetContentIdices() {
         for i in 0..<contentItems.count {
-            contentItems[i].sequenceIndex = i
+            
+            if contentItems[i].sequenceIndex != i {
+                contentItems[i].sequenceIndex = i
+                saveContentUseCase.save(content: contentItems[i])
+            }
         }
     }
     
-    func select(content: ContentViewModel) {
+    func select(content: ContentModel) {
         print("Selected \(content.id)")
         selectedItem = content
     }
@@ -135,7 +154,7 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
         saveContentUseCase.save(content: newContent)
     }
     
-    func isSelected(content: ContentViewModel) -> Bool {
+    func isSelected(content: ContentModel) -> Bool {
         if let selectedContent = selectedItem {
             
             if content.id == selectedContent.id {
@@ -152,14 +171,5 @@ class ContentSequenceViewModel: ContentSequenceViewModelProtocol {
         return selectedItem != nil
     }
     
-    func delete(content: ContentViewModel) {
-        deselectAll()
-        remove(content: content)
-        deleteContentUseCase.delete(content: content)
-        
-        //saving all other content sequence items as sequence indeces have been updated
-        for item in sortedContentItems {
-            saveContentUseCase.save(content: item)
-        }
-    }
+    
 }

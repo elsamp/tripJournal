@@ -66,8 +66,6 @@ struct ImageHelperService {
             imageURL.append(component: fileName(for: tripId))
         }
         
-        print(imageURL)
-        
         return imageURL
     }
     

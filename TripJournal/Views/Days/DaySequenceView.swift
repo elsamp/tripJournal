@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DaySequenceView<ViewModel>: View where ViewModel: DaySequenceViewModelProtocol {
+struct DaySequenceView<ViewModel: DaySequenceViewModelProtocol>: View {
     
     @ObservedObject var viewModel: ViewModel
     

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TripSummaryView<ViewModel>: View where ViewModel: TripViewModelProtocol {
+struct TripSummaryView<ViewModel: TripViewModelProtocol>: View {
     
     @ObservedObject var trip: ViewModel
     
@@ -16,22 +16,33 @@ struct TripSummaryView<ViewModel>: View where ViewModel: TripViewModelProtocol {
             VStack(alignment: .leading) {
                 Color.clear
                     .overlay (
-                        AsyncImage(url: ImageHelperService.shared.imageURLFor(tripId: trip.id)) { phase in
-                            if let image = phase.image {
-                                image
+                        Group {
+                            if let imageData = trip.coverImageData, let uiImage =  UIImage(data: imageData) {
+                                Image(uiImage: uiImage)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 300)
                                     .clipped()
-                            } else if phase.error != nil {
-                                ImageMissingView()
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 300)
                             } else {
-                                ImageLoadingView()
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 300)
+                                AsyncImage(url: ImageHelperService.shared.imageURLFor(tripId: trip.id)) { phase in
+                                    if let image = phase.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: 300)
+                                            .clipped()
+                                    } else if phase.error != nil {
+                                        ImageMissingView()
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: 300)
+                                    } else {
+                                        ImageLoadingView()
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: 300)
+                                    }
+                                }
                             }
                         }
                     )
@@ -60,15 +71,7 @@ struct TripSummaryView<ViewModel>: View where ViewModel: TripViewModelProtocol {
         .padding(.bottom, 5)
     }
     
-    func coverImageFor(trip: Trip) -> Image? {
-
-        if let data = trip.coverImageData, let uiImage = UIImage(data: data) {
-            return Image(uiImage: uiImage)
-        }
-        
-        return nil
-    }
-    
+    //TODO: move and unify
     func dateRange(for trip: ViewModel) -> String {
         
         let formatter = DateFormatter()
@@ -98,9 +101,7 @@ struct TripSummaryView<ViewModel>: View where ViewModel: TripViewModelProtocol {
         if let date = calendar.date(from: dateComponents) {
             dateRange.append(" - \(formatter.string(from: date))")
         }
-        
 
-        print(dateRange)
         return dateRange
     }
 }

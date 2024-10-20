@@ -8,9 +8,10 @@
 import SwiftUI
 import PhotosUI
 
-struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSequenceViewModelProtocol>: View {
+struct DayView<ViewModel: DayViewModelProtocol>: View {
         
     let topLocationKey = "Top"
+    var photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol
     @ObservedObject var viewModel: ViewModel
     @State private var isEditing: Bool
     @State private var selectedPhotoItem: PhotosPickerItem?
@@ -20,16 +21,17 @@ struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSeq
     private var tapGesture: some Gesture {
         TapGesture()
             .onEnded { _ in
-                print("tapped scrollview")
                 withAnimation {
                     viewModel.contentSequence.deselectAll()
                 }
             }
     }
     
-    init(viewModel: ViewModel) {
+    init(viewModel: ViewModel, photoDataUpdateDelegate: PhotoDataUpdateDelegatProtocol) {
         self.viewModel = viewModel
+        self.photoDataUpdateDelegate = photoDataUpdateDelegate
         _isEditing = State(initialValue: viewModel.hasUnsavedChanges)
+        print(viewModel)
     }
     
     var body: some View {
@@ -239,6 +241,7 @@ struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSeq
                 if let imageData = try await selectedPhotoItem?.loadTransferable(type: Data.self) {
                     
                     if let uiImage = UIImage(data: imageData), let pngData = uiImage.pngData() {
+                        photoDataUpdateDelegate.imageDataUpdatedTo(pngData)
                         viewModel.contentSequence.addNewPhotoContent(with: pngData)
                     }
                 }
@@ -257,5 +260,5 @@ struct DayView<ViewModel: DayViewModelProtocol, ContentSequenceModel: ContentSeq
 
 #Preview {
 
-    DayView<DayViewModel, ContentSequenceViewModel>(viewModel: PreviewHelper.shared.mockDay())
+    DayView(viewModel: PreviewHelper.shared.mockDay(), photoDataUpdateDelegate: PreviewHelper.shared)
 }
